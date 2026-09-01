@@ -442,7 +442,7 @@ export default function Dashboard({ onSelectLevel }) {
           </div>
 
           <div className={styles.footerBottom}>
-            <p>© 2026 GLOBY Fun Quest. Thiết kế với <Heart size={12} fill="#ff6b6b" color="#ff6b6b" style={{ display: 'inline', verticalAlign: 'middle' }} /> dành cho các bé.</p>
+            <p>© 2026 GLOBY Fun Quest. Thiết kế bởi <strong>Papa Pig</strong> <Heart size={13} fill="#ff6b6b" color="#ff6b6b" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 3px' }} /> dành cho các bé.</p>
           </div>
         </div>
       </footer>
