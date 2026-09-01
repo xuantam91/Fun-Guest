@@ -3,7 +3,7 @@ import { useApp } from '@/context/AppContext'
 import { AVATAR_LIST, AvatarImage } from './Avatars'
 import Leaderboard from './Leaderboard'
 import styles from './Dashboard.module.css'
-import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, Globe } from 'lucide-react'
+import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, Shield, Heart } from 'lucide-react'
 
 export default function Dashboard({ onSelectLevel }) {
   const {
@@ -57,6 +57,10 @@ export default function Dashboard({ onSelectLevel }) {
   const [errorMessage, setErrorMessage] = React.useState('')
   const [showHelp, setShowHelp] = React.useState(false)
   const [activeTab, setActiveTab] = React.useState('all') // 'all' | 'en' | 'zh' | 'math' | 'custom' | 'rank'
+  
+  // Modals
+  const [showKeyModal, setShowKeyModal] = React.useState(false)
+  const [showGuideModal, setShowGuideModal] = React.useState(false)
 
   // Sync state with customApiKey when customApiKey changes/loads
   React.useEffect(() => {
@@ -68,6 +72,7 @@ export default function Dashboard({ onSelectLevel }) {
       saveCustomApiKey('')
       setTestStatus('success')
       setErrorMessage('')
+      setShowKeyModal(false)
       return
     }
 
@@ -83,6 +88,7 @@ export default function Dashboard({ onSelectLevel }) {
         saveCustomApiKey(inputKey)
         setTestStatus('success')
         setErrorMessage('')
+        setTimeout(() => setShowKeyModal(false), 800)
       } else {
         setTestStatus('error')
         setErrorMessage(data.error || 'API Key không hợp lệ.')
@@ -146,26 +152,47 @@ export default function Dashboard({ onSelectLevel }) {
         <div className={styles.stats}>
           {/* Streak */}
           <div className={styles.statItem} title="Chuỗi ngày học liên tục!">
-            <Flame size={20} color="#ff922b" fill="#ff922b" />
+            <Flame size={18} color="#ff922b" fill="#ff922b" />
             <span className={styles.statValue}>{streak} ngày</span>
           </div>
 
           {/* Points */}
           <div className={styles.statItem} title="Tổng điểm của bé">
-            <Trophy size={20} color="#fcc419" fill="#fcc419" />
-            <span className={styles.statValue}>{score} điểm</span>
+            <Trophy size={18} color="#fcc419" fill="#fcc419" />
+            <span className={styles.statValue}>{score} đ</span>
           </div>
 
-          {/* Auth Area */}
-          <div className={styles.authArea}>
+          {/* Header Action Buttons: Guide, Key & Auth */}
+          <div className={styles.headerActions}>
+            {/* Guide Button */}
+            <button 
+              className={styles.guideHeaderBtn} 
+              onClick={() => setShowGuideModal(true)}
+              title="Hướng dẫn cách chơi cho bé"
+            >
+              <BookOpen size={16} color="var(--primary-color)" />
+              <span className={styles.guideBtnText}>Hướng Dẫn</span>
+            </button>
+
+            {/* Gemini API Key Button */}
+            <button 
+              className={styles.iconHeaderBtn} 
+              onClick={() => setShowKeyModal(true)}
+              title={customApiKey ? "Đang dùng Gemini API Key cá nhân" : "Cấu hình Gemini API Key"}
+            >
+              {customApiKey && <span className={styles.activeIndicatorDot} />}
+              <Key size={17} />
+            </button>
+
+            {/* Auth Button */}
             {user ? (
-              <button className={styles.logoutBtn} onClick={logout} title="Đăng xuất">
+              <button className={styles.logoutBtn} onClick={logout} title="Đăng xuất tài khoản">
                 <LogOut size={16} />
               </button>
             ) : (
-              <button className="playful-btn playful-btn-secondary styles_loginBtn__..." onClick={loginWithGoogle} style={{ fontSize: '13px', padding: '6px 14px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <button className="playful-btn playful-btn-secondary" onClick={loginWithGoogle} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <LogIn size={14} />
-                <span>Lưu tiến trình</span>
+                <span>Đăng nhập</span>
               </button>
             )}
           </div>
@@ -218,200 +245,99 @@ export default function Dashboard({ onSelectLevel }) {
         </button>
       </nav>
 
-      {/* 2. Customizer (Themes, Mode, Avatars) */}
+      {/* 2. Customizer (Themes, Mode, Avatars, Streak) */}
       {(activeTab === 'all' || activeTab === 'custom') && (
         <section className={styles.customizer}>
-        {/* Theme Card */}
-        <div className={styles.customizerCard}>
-          <h3 className={styles.cardTitle}>
-            <Palette size={18} />
-            <span>Đổi Giao Diện</span>
-          </h3>
-          <div className={styles.themeGrid}>
-            <button
-              className={`${styles.themeBtn} ${theme === 'forest' ? styles.themeBtnActive : ''}`}
-              onClick={() => setTheme('forest')}
-            >
-              🌳 Rừng Xanh
-            </button>
-            <button
-              className={`${styles.themeBtn} ${theme === 'sea' ? styles.themeBtnActive : ''}`}
-              onClick={() => setTheme('sea')}
-            >
-              🌊 Đại Dương
-            </button>
-            <button
-              className={`${styles.themeBtn} ${theme === 'space' ? styles.themeBtnActive : ''}`}
-              onClick={() => setTheme('space')}
-            >
-              🚀 Vũ Trụ
-            </button>
-          </div>
-
-          <div className={styles.modeToggles}>
-            <span style={{ fontSize: '14px', fontWeight: 600 }}>Chế độ Sáng / Tối:</span>
-            <button className={styles.toggleBtn} onClick={toggleMode} title={mode === 'light' ? 'Chế độ Tối' : 'Chế độ Sáng'}>
-              {mode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Avatar Card */}
-        <div className={styles.customizerCard}>
-          <h3 className={styles.cardTitle}>
-            <Smile size={18} />
-            <span>Chọn Bạn Đồng Hành</span>
-          </h3>
-          <div className={styles.avatarGrid}>
-            {AVATAR_LIST.map((av) => (
+          {/* Theme Card */}
+          <div className={styles.customizerCard}>
+            <h3 className={styles.cardTitle}>
+              <Palette size={18} />
+              <span>Đổi Giao Diện</span>
+            </h3>
+            <div className={styles.themeGrid}>
               <button
-                key={av.id}
-                className={`${styles.avatarBtn} ${avatar === av.id ? styles.avatarBtnActive : ''}`}
-                onClick={() => setAvatar(av.id)}
-                title={av.name}
+                className={`${styles.themeBtn} ${theme === 'forest' ? styles.themeBtnActive : ''}`}
+                onClick={() => setTheme('forest')}
               >
-                <AvatarImage id={av.id} size={54} />
+                🌳 Rừng Xanh
               </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Streak Card */}
-        <div className={styles.customizerCard}>
-          <h3 className={styles.cardTitle}>
-            <Flame size={18} color="#ff922b" fill="#ff922b" />
-            <span>Thử Thách Tuần</span>
-          </h3>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.4 }}>
-            Bé học mỗi ngày để duy trì ngọn lửa học tập nhé!
-          </p>
-          <div className={styles.weekRow}>
-            {['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((day, idx) => {
-              // Get current day of week (0 = Sunday, 1 = Monday...)
-              const todayDate = new Date()
-              const today = todayDate.getDay() 
-              const normalizedToday = today === 0 ? 6 : today - 1 // Mon=0, Tue=1... Sun=6
-              
-              let isActive = false
-              if (streak > 0) {
-                // Mock week visualization based on current streak
-                const diff = normalizedToday - idx
-                if (diff >= 0 && diff < streak) {
-                  isActive = true
-                }
-              }
-
-              return (
-                <div key={day} className={styles.dayCol}>
-                  <span className={styles.dayLabel}>{day}</span>
-                  <div className={`${styles.dayCircle} ${isActive ? styles.dayCircleActive : ''} ${normalizedToday === idx ? styles.dayCircleToday : ''}`}>
-                    {isActive ? '🔥' : '⭐'}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Gemini API Key Card */}
-        <div className={styles.customizerCard}>
-          <h3 className={styles.cardTitle} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Key size={18} />
-              <span>Cấu Hình Gemini API</span>
-            </span>
-            <button 
-              onClick={() => setShowHelp(!showHelp)} 
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)', padding: 0, display: 'flex', alignItems: 'center' }}
-              title="Hướng dẫn lấy API Key"
-            >
-              <HelpCircle size={18} />
-            </button>
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {showHelp && (
-              <div style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                padding: '10px 12px',
-                borderRadius: '12px',
-                fontSize: '12px',
-                lineHeight: 1.4,
-                border: '1px dashed var(--card-border)'
-              }}>
-                <strong style={{ display: 'block', marginBottom: '4px' }}>Cách lấy API Key miễn phí:</strong>
-                1. Truy cập <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary-color)', fontWeight: 'bold', textDecoration: 'underline' }}>Google AI Studio ↗</a><br />
-                2. Đăng nhập tài khoản Google của bạn.<br />
-                3. Nhấn nút <strong>"Get API key"</strong> ở góc trái.<br />
-                4. Nhấn <strong>"Create API key"</strong>, sao chép khóa (bắt đầu bằng <code>AIzaSy...</code>) và dán xuống ô dưới đây.
-              </div>
-            )}
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4 }}>
-              Nếu khóa mặc định hết hạn mức (Quota 429), bạn có thể nạp khóa Gemini API cá nhân của bạn ở đây:
-            </p>
-            
-            <input
-              type="password"
-              placeholder="Nhập Gemini API Key (AIzaSy...)"
-              value={inputKey}
-              onChange={(e) => setInputKey(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                borderRadius: '12px',
-                border: '2px solid var(--card-border)',
-                backgroundColor: 'var(--bg-gradient)',
-                color: 'var(--text-color)',
-                fontSize: '13px',
-                outline: 'none'
-              }}
-            />
-
-            <div style={{ display: 'flex', gap: '8px' }}>
               <button
-                className="playful-btn"
-                onClick={handleTestAndSave}
-                disabled={testStatus === 'testing'}
-                style={{
-                  flex: 1,
-                  fontSize: '12px',
-                  padding: '8px',
-                  borderRadius: '12px'
-                }}
+                className={`${styles.themeBtn} ${theme === 'sea' ? styles.themeBtnActive : ''}`}
+                onClick={() => setTheme('sea')}
               >
-                {testStatus === 'testing' ? 'Đang thử...' : 'Lưu & Sử Dụng'}
+                🌊 Đại Dương
               </button>
-              {customApiKey && (
+              <button
+                className={`${styles.themeBtn} ${theme === 'space' ? styles.themeBtnActive : ''}`}
+                onClick={() => setTheme('space')}
+              >
+                🚀 Vũ Trụ
+              </button>
+            </div>
+
+            <div className={styles.modeToggles}>
+              <span style={{ fontSize: '14px', fontWeight: 600 }}>Chế độ Sáng / Tối:</span>
+              <button className={styles.toggleBtn} onClick={toggleMode} title={mode === 'light' ? 'Chế độ Tối' : 'Chế độ Sáng'}>
+                {mode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Avatar Card */}
+          <div className={styles.customizerCard}>
+            <h3 className={styles.cardTitle}>
+              <Smile size={18} />
+              <span>Chọn Bạn Đồng Hành</span>
+            </h3>
+            <div className={styles.avatarGrid}>
+              {AVATAR_LIST.map((av) => (
                 <button
-                  className="playful-btn playful-btn-secondary"
-                  onClick={handleClearKey}
-                  style={{
-                    fontSize: '12px',
-                    padding: '8px 12px',
-                    borderRadius: '12px'
-                  }}
+                  key={av.id}
+                  className={`${styles.avatarBtn} ${avatar === av.id ? styles.avatarBtnActive : ''}`}
+                  onClick={() => setAvatar(av.id)}
+                  title={av.name}
                 >
-                  Xóa Khóa
+                  <AvatarImage id={av.id} size={54} />
                 </button>
-              )}
-            </div>
-
-            {/* API Key status indicator */}
-            <div style={{ fontSize: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
-              <span>Trạng thái:</span>
-              {testStatus === 'testing' && <span style={{ color: 'var(--text-muted)' }}>⏳ Đang kiểm tra...</span>}
-              {testStatus === 'success' && <span style={{ color: 'var(--correct-color, #2b8a3e)' }}>✅ Hoạt động tốt!</span>}
-              {testStatus === 'error' && <span style={{ color: 'var(--incorrect-color, #e03131)', fontSize: '11px' }}>❌ Lỗi: {errorMessage.slice(0, 24)}...</span>}
-              {testStatus === 'idle' && (
-                customApiKey ? (
-                  <span style={{ color: 'var(--correct-color, #2b8a3e)' }}>🔑 Đang dùng khóa cá nhân</span>
-                ) : (
-                  <span style={{ color: 'var(--primary-color)' }}>☁️ Đang dùng khóa máy chủ</span>
-                )
-              )}
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+
+          {/* Streak Card */}
+          <div className={styles.customizerCard}>
+            <h3 className={styles.cardTitle}>
+              <Flame size={18} color="#ff922b" fill="#ff922b" />
+              <span>Thử Thách Tuần</span>
+            </h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.4 }}>
+              Bé học mỗi ngày để duy trì ngọn lửa học tập nhé!
+            </p>
+            <div className={styles.weekRow}>
+              {['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((day, idx) => {
+                const todayDate = new Date()
+                const today = todayDate.getDay() 
+                const normalizedToday = today === 0 ? 6 : today - 1
+                
+                let isActive = false
+                if (streak > 0) {
+                  const diff = normalizedToday - idx
+                  if (diff >= 0 && diff < streak) {
+                    isActive = true
+                  }
+                }
+
+                return (
+                  <div key={day} className={styles.dayCol}>
+                    <span className={styles.dayLabel}>{day}</span>
+                    <div className={`${styles.dayCircle} ${isActive ? styles.dayCircleActive : ''} ${normalizedToday === idx ? styles.dayCircleToday : ''}`}>
+                      {isActive ? '🔥' : '⭐'}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* 3. English levels */}
@@ -489,7 +415,194 @@ export default function Dashboard({ onSelectLevel }) {
           <Leaderboard />
         </section>
       )}
+
+      {/* 7. Footer Section */}
+      <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <div className={styles.footerBrand}>
+            <img src="/logo.svg" alt="Globy Logo" width={36} height={36} />
+            <span>GLOBY Fun Quest</span>
+          </div>
+
+          <p className={styles.footerDesc}>
+            Nền tảng trò chơi học tập tương tác bằng cử chỉ AI dành riêng cho trẻ em. Giúp bé tự tin chinh phục Tiếng Anh Cambridge, Tiếng Trung HSK và Toán học tư duy.
+          </p>
+
+          <div className={styles.footerTip}>
+            <span>💡</span>
+            <span>Lời khuyên: Nhắc bé ngồi cách màn hình 50cm và nghỉ ngơi sau mỗi 20 phút nhé!</span>
+          </div>
+
+          <div className={styles.footerTechRow}>
+            <span className={styles.techBadge}>🤖 Google Gemini AI</span>
+            <span className={styles.techBadge}>📹 MediaPipe Vision</span>
+            <span className={styles.techBadge}>🗄️ Supabase Cloud DB</span>
+            <span className={styles.techBadge}>🔊 Web Speech TTS</span>
+          </div>
+
+          <div className={styles.footerBottom}>
+            <p>© 2026 GLOBY Fun Quest. Thiết kế với <Heart size={12} fill="#ff6b6b" color="#ff6b6b" style={{ display: 'inline', verticalAlign: 'middle' }} /> dành cho các bé.</p>
+          </div>
+        </div>
+      </footer>
+
+      {/* MODAL 1: Cấu hình Gemini API Key */}
+      {showKeyModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowKeyModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalCloseBtn} onClick={() => setShowKeyModal(false)}>
+              <X size={18} />
+            </button>
+
+            <h3 className={styles.modalTitle}>
+              <Key size={22} color="var(--primary-color)" />
+              <span>Cấu Hình Gemini API Key</span>
+            </h3>
+
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.4 }}>
+              Hệ thống đã nạp sẵn 37.000+ câu hỏi miễn phí. Nếu muốn dùng AI tự sinh thêm câu hỏi cá nhân hóa, bạn có thể nhập Gemini API Key của bạn dưới đây:
+            </p>
+
+            <div style={{ marginBottom: '14px' }}>
+              <input
+                type="password"
+                placeholder="Nhập Gemini API Key (bắt đầu bằng AIzaSy...)"
+                value={inputKey}
+                onChange={(e) => setInputKey(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  borderRadius: '14px',
+                  border: '2px solid var(--card-border)',
+                  backgroundColor: 'var(--bg-gradient)',
+                  color: 'var(--text-color)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+              <button
+                className="playful-btn"
+                onClick={handleTestAndSave}
+                disabled={testStatus === 'testing'}
+                style={{
+                  flex: 1,
+                  fontSize: '13px',
+                  padding: '10px',
+                  borderRadius: '14px'
+                }}
+              >
+                {testStatus === 'testing' ? '⏳ Đang kiểm tra...' : 'Lưu & Sử Dụng'}
+              </button>
+              {customApiKey && (
+                <button
+                  className="playful-btn playful-btn-secondary"
+                  onClick={handleClearKey}
+                  style={{
+                    fontSize: '13px',
+                    padding: '10px 14px',
+                    borderRadius: '14px'
+                  }}
+                >
+                  Xóa Khóa
+                </button>
+              )}
+            </div>
+
+            {/* Trạng thái key */}
+            <div style={{ fontSize: '13px', fontWeight: 600, padding: '8px 12px', background: 'var(--bg-gradient)', borderRadius: '12px', marginBottom: '12px' }}>
+              <span>Trạng thái: </span>
+              {testStatus === 'testing' && <span style={{ color: 'var(--text-muted)' }}>⏳ Đang kiểm tra kết nối...</span>}
+              {testStatus === 'success' && <span style={{ color: 'var(--correct-color, #2b8a3e)' }}>✅ Khóa hoạt động tốt!</span>}
+              {testStatus === 'error' && <span style={{ color: 'var(--incorrect-color, #e03131)' }}>❌ {errorMessage}</span>}
+              {testStatus === 'idle' && (
+                customApiKey ? (
+                  <span style={{ color: 'var(--correct-color, #2b8a3e)' }}>🔑 Đang dùng khóa cá nhân</span>
+                ) : (
+                  <span style={{ color: 'var(--primary-color)' }}>☁️ Đang dùng khóa máy chủ mặc định</span>
+                )
+              )}
+            </div>
+
+            <div style={{ borderTop: '1px dashed var(--card-border)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-muted)' }}>
+              <span>Chưa có khóa? </span>
+              <a 
+                href="https://aistudio.google.com/app/apikey" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                style={{ color: 'var(--primary-color)', fontWeight: 700, textDecoration: 'underline' }}
+              >
+                Lấy API Key miễn phí tại Google AI Studio ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: Hướng Dẫn Cách Chơi Cho Bé (Guide) */}
+      {showGuideModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowGuideModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalCloseBtn} onClick={() => setShowGuideModal(false)}>
+              <X size={18} />
+            </button>
+
+            <h3 className={styles.modalTitle}>
+              <BookOpen size={22} color="var(--primary-color)" />
+              <span>Hướng Dẫn Bé Phiêu Lưu! 🚀</span>
+            </h3>
+
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+              Chỉ với 4 bước đơn giản, bé sẽ sẵn sàng bắt đầu hành trình:
+            </p>
+
+            <div className={styles.guideSteps}>
+              <div className={styles.guideStep}>
+                <div className={styles.guideStepIcon}>📷</div>
+                <div>
+                  <h4 className={styles.guideStepTitle}>Bước 1: Cho Phép Camera</h4>
+                  <p className={styles.guideStepDesc}>Bấm "Cho phép" khi trình duyệt hỏi quyền camera để AI nhận diện khuôn mặt bé.</p>
+                </div>
+              </div>
+
+              <div className={styles.guideStep}>
+                <div className={styles.guideStepIcon}>🧘</div>
+                <div>
+                  <h4 className={styles.guideStepTitle}>Bước 2: Ngồi Thẳng Thắn</h4>
+                  <p className={styles.guideStepDesc}>Ngồi thẳng lưng, đối diện camera cách màn hình khoảng 50cm trong không gian đủ ánh sáng.</p>
+                </div>
+              </div>
+
+              <div className={styles.guideStep}>
+                <div className={styles.guideStepIcon}>👈👉</div>
+                <div>
+                  <h4 className={styles.guideStepTitle}>Bước 3: Nghiêng Đầu Chọn Đáp Án</h4>
+                  <p className={styles.guideStepDesc}>Đọc câu hỏi, nghiêng đầu sang <strong>Trái</strong> hoặc <strong>Phải</strong> và giữ 1 giây (hoặc chạm ngón tay vào thẻ).</p>
+                </div>
+              </div>
+
+              <div className={styles.guideStep}>
+                <div className={styles.guideStepIcon}>🌟</div>
+                <div>
+                  <h4 className={styles.guideStepTitle}>Bước 4: Thu Thập Điểm & Ngọn Lửa</h4>
+                  <p className={styles.guideStepDesc}>Mỗi câu đúng nhận ngay 10 điểm! Học mỗi ngày để giữ ngọn lửa Streak và leo top vinh danh!</p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              className="playful-btn"
+              onClick={() => setShowGuideModal(false)}
+              style={{ width: '100%', fontSize: '15px', padding: '12px', borderRadius: '18px' }}
+            >
+              Bé Đã Hiểu & Sẵn Sàng! 🎯
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
