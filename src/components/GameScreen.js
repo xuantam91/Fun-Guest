@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '@/context/AppContext'
 import useFaceTracker from '@/hooks/useFaceTracker'
+import { AvatarImage } from './Avatars'
 import CameraView from './CameraView'
 import styles from './GameScreen.module.css'
 import { speakText } from '@/lib/tts'
@@ -57,7 +58,7 @@ function detectQuestionLang(text, targetLang) {
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
-  const { addPoints, incrementStreak, customApiKey } = useApp()
+  const { addPoints, incrementStreak, customApiKey, avatar } = useApp()
   const tracker = useFaceTracker()
   const { tiltDirection, faceDetected } = tracker
 
