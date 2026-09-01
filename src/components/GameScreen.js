@@ -6,7 +6,7 @@ import useFaceTracker from '@/hooks/useFaceTracker'
 import { AvatarImage } from './Avatars'
 import CameraView from './CameraView'
 import styles from './GameScreen.module.css'
-import { speakText } from '@/lib/tts'
+import { speakText, autoDetectLang } from '@/lib/tts'
 import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle } from 'lucide-react'
 
 // Simple Sound effects using Web Audio API (completely client-side, no audio files needed!)
@@ -40,21 +40,6 @@ export function playCorrectSound() {
 
 export function playIncorrectSound() {
   playTone(220, 'sawtooth', 0.4) // A3
-}
-
-// Detects if the question text is written in Vietnamese or target language
-function detectQuestionLang(text, targetLang) {
-  if (!text) return 'vi'
-  // If the text contains Vietnamese accented characters, it's definitely Vietnamese
-  const hasVietnamese = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(text)
-  if (hasVietnamese) return 'vi'
-  
-  // Common Vietnamese question words
-  const commonViWords = ['đâu', 'là', 'gì', 'nào', 'từ', 'nghĩa', 'chữ', 'đúng', 'câu', 'sau', 'bên', 'trái', 'phải']
-  const words = text.toLowerCase().split(/[\s\?\,\.\!\:\-\"\']/)
-  if (words.some(w => commonViWords.includes(w))) return 'vi'
-  
-  return targetLang
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
@@ -199,8 +184,8 @@ export default function GameScreen({ language, level, onBackToLobby }) {
   useEffect(() => {
     if (questions.length > 0 && currentIndex < questions.length && !showCalibration && !showScoreboard) {
       const q = questions[currentIndex]
-      // TTS read question in detected language
-      const speakLang = detectQuestionLang(q.question, language)
+      // TTS read question with automatic language detection & native voice matching
+      const speakLang = autoDetectLang(q.question, language)
       speakText(q.question, speakLang)
     }
   }, [currentIndex, questions, showCalibration, showScoreboard, language])
