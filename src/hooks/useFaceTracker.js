@@ -12,6 +12,7 @@ export default function useFaceTracker() {
   const [tiltDirection, setTiltDirection] = useState('center') // 'left', 'right', 'center'
   const [calibrationOffset, setCalibrationOffset] = useState(0) // Calibration baseline
   const [faceDetected, setFaceDetected] = useState(false)
+  const [cameraReady, setCameraReady] = useState(false)
 
   const calibrationOffsetRef = useRef(0)
   const rawAngleRef = useRef(0)
@@ -25,47 +26,12 @@ export default function useFaceTracker() {
   useEffect(() => {
     let active = true
 
-    // Dynamically import MediaPipe on the client-side to prevent Next.js SSR errors
-    async function initMediaPipe() {
-      try {
-        const vision = await import('@mediapipe/tasks-vision')
-        const { FilesetResolver, FaceLandmarker } = vision
-
-        setIsLoading(true)
-        
-        // 1. Resolve fileset for WebAssembly files
-        const filesetResolver = await FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
-        )
-
-        // 2. Initialize FaceLandmarker
-        const landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
-          baseOptions: {
-            modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
-            delegate: 'GPU',
-          },
-          runningMode: 'VIDEO',
-          numFaces: 1,
-        })
-
-        if (!active) return
-
-        landmarkerRef.current = landmarker
-        setIsLoading(false)
-        
-        // 3. Start camera stream
-        startCamera()
-      } catch (err) {
-        console.error('Lỗi khởi tạo MediaPipe Face Landmarker:', err)
-        setError('Không thể tải bộ nhận diện khuôn mặt. Vui lòng kiểm tra kết nối mạng.')
-        setIsLoading(false)
-      }
-    }
-
+    // 1. Start Camera stream immediately (0s delay for video feed preview)
     async function startCamera() {
       try {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          setError('Trình duyệt của bạn không hỗ trợ truy cập camera.')
+          setError('Trình duyệt không hỗ trợ camera. Bạn hãy chọn chế độ chơi bằng cảm ứng nhé!')
+          setIsLoading(false)
           return
         }
 
@@ -84,82 +50,120 @@ export default function useFaceTracker() {
         }
 
         streamRef.current = stream
+
         if (videoRef.current) {
           const video = videoRef.current
           video.srcObject = stream
+          video.setAttribute('playsinline', 'true')
+          video.setAttribute('muted', 'true')
+          video.muted = true
           
-          // Explicitly play the video (browsers can block autoPlay without user interaction)
-          video.play().catch(e => console.log('Yêu cầu phát video bị chặn hoặc lỗi:', e))
-
-          if (video.readyState >= 2) {
-            console.log('Video đã tải dữ liệu xong (readyState >= 2), chạy vòng lặp nhận diện ngay.')
-            startDetectionLoop()
-          } else {
-            console.log('Đang chờ sự kiện loadeddata để chạy vòng lặp nhận diện.')
-            video.addEventListener('loadeddata', startDetectionLoop)
+          try {
+            await video.play()
+          } catch (playErr) {
+            console.log('Video play error/interaction warning:', playErr)
           }
+
+          setCameraReady(true)
+          setIsLoading(false)
+
+          // Once video stream is active, initialize MediaPipe AI detector
+          initMediaPipe(video)
         }
       } catch (err) {
         console.error('Lỗi truy cập camera:', err)
-        setError('Không thể truy cập camera. Vui lòng cấp quyền camera trong cài đặt trình duyệt.')
+        setError('Không thể mở camera. Bạn có thể bấm "Chơi bằng cảm ứng" bên dưới nhé!')
+        setIsLoading(false)
       }
     }
 
-    function startDetectionLoop() {
-      if (!videoRef.current || !landmarkerRef.current) return
+    // 2. Initialize MediaPipe FaceLandmarker with GPU & CPU fallback
+    async function initMediaPipe(videoElement) {
+      try {
+        const vision = await import('@mediapipe/tasks-vision')
+        const { FilesetResolver, FaceLandmarker } = vision
 
-      const video = videoRef.current
-      const landmarker = landmarkerRef.current
+        const filesetResolver = await FilesetResolver.forVisionTasks(
+          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm'
+        )
+
+        let landmarker = null
+
+        // Try GPU delegate first, fallback to CPU if WebGL fails on mobile/old laptops
+        try {
+          landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+            baseOptions: {
+              modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+              delegate: 'GPU',
+            },
+            runningMode: 'VIDEO',
+            numFaces: 1,
+          })
+        } catch (gpuErr) {
+          console.warn('GPU Delegate failed, trying CPU Delegate:', gpuErr)
+          landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+            baseOptions: {
+              modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+              delegate: 'CPU',
+            },
+            runningMode: 'VIDEO',
+            numFaces: 1,
+          })
+        }
+
+        if (!active) {
+          if (landmarker) landmarker.close()
+          return
+        }
+
+        landmarkerRef.current = landmarker
+        
+        // Start detection loop
+        startDetectionLoop(videoElement)
+      } catch (err) {
+        console.error('Lỗi tải MediaPipe AI:', err)
+        // Camera stays visible so user can still see themselves & use touch controls!
+      }
+    }
+
+    // 3. Frame detection loop
+    function startDetectionLoop(video) {
       let lastVideoTime = -1
 
       const detect = () => {
-        if (!video || video.paused || video.ended) {
+        if (!active || !video || video.paused || video.ended || !landmarkerRef.current) {
           requestRef.current = requestAnimationFrame(detect)
           return
         }
 
-        // Only run detection if we have a new video frame
         let nowInMs = Date.now()
-        if (video.currentTime !== lastVideoTime) {
+        if (video.currentTime !== lastVideoTime && video.readyState >= 2) {
           lastVideoTime = video.currentTime
           
           try {
-            const result = landmarker.detectForVideo(video, nowInMs)
+            const result = landmarkerRef.current.detectForVideo(video, nowInMs)
             
-            if (result.faceLandmarks && result.faceLandmarks.length > 0) {
+            if (result && result.faceLandmarks && result.faceLandmarks.length > 0) {
               setFaceDetected(true)
               const landmarks = result.faceLandmarks[0]
 
-              // Key landmarks for head tilt:
-              // - Left eye outer corner (landmark 33)
-              // - Right eye outer corner (landmark 263)
+              // Landmark 33: Outer left eye, Landmark 263: Outer right eye
               const leftEye = landmarks[33]
               const rightEye = landmarks[263]
 
               if (leftEye && rightEye) {
-                // Calculate the angle of the line connecting left and right eyes
                 const dy = rightEye.y - leftEye.y
                 const dx = rightEye.x - leftEye.x
                 
-                // Angle in degrees
                 const angleRad = Math.atan2(dy, dx)
                 let angleDeg = angleRad * (180 / Math.PI)
 
-                // Store raw angle for calibration reference
                 rawAngleRef.current = angleDeg
 
-                // Apply calibration offset
-                // (Webcam is mirrored, so we adapt tilt direction)
                 let calibratedAngle = angleDeg - calibrationOffsetRef.current
-
                 setTiltAngle(calibratedAngle)
 
-                // Define tilt thresholds (typically 12 to 15 degrees is standard)
-                // Since the video is mirrored:
-                // - Tilting head to physical Left causes rightEye to go higher in frame -> positive dy (positive angle)
-                // - Tilting head to physical Right causes leftEye to go higher in frame -> negative dy (negative angle)
-                // We'll normalize this so tilting physically left = 'left', physically right = 'right'
-                const THRESHOLD = 12 // degrees
+                const THRESHOLD = 10 // Threshold in degrees
                 if (calibratedAngle > THRESHOLD) {
                   setTiltDirection('left')
                 } else if (calibratedAngle < -THRESHOLD) {
@@ -173,7 +177,7 @@ export default function useFaceTracker() {
               setTiltDirection('center')
             }
           } catch (detectionErr) {
-            console.error('Error during landmark detection:', detectionErr)
+            console.error('Lỗi trong vòng lặp nhận diện:', detectionErr)
           }
         }
 
@@ -183,7 +187,7 @@ export default function useFaceTracker() {
       requestRef.current = requestAnimationFrame(detect)
     }
 
-    initMediaPipe()
+    startCamera()
 
     return () => {
       active = false
@@ -194,7 +198,11 @@ export default function useFaceTracker() {
         streamRef.current.getTracks().forEach((track) => track.stop())
       }
       if (landmarkerRef.current) {
-        landmarkerRef.current.close()
+        try {
+          landmarkerRef.current.close()
+        } catch (e) {
+          // Ignore close error
+        }
       }
     }
   }, [])
@@ -202,6 +210,7 @@ export default function useFaceTracker() {
   return {
     videoRef,
     isLoading,
+    cameraReady,
     error,
     tiltAngle,
     tiltDirection,

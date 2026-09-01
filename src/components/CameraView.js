@@ -1,45 +1,33 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './CameraView.module.css'
-import { Sparkles, Camera, RotateCcw, AlertCircle } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 
-export default function CameraView({ tracker, showCalibration = false, onCalibrated }) {
+export default function CameraView({ tracker }) {
   const {
     videoRef,
     isLoading,
     error,
     tiltDirection,
-    calibrate,
     faceDetected
   } = tracker
 
-  const [calibrated, setCalibrated] = useState(false)
-
-  const handleCalibrate = () => {
-    calibrate()
-    setCalibrated(true)
-    if (onCalibrated) {
-      onCalibrated()
-    }
-  }
-
   return (
     <div className={`${styles.cameraContainer} ${faceDetected ? styles.cameraContainerActive : ''}`}>
-      {/* Video element */}
+      {/* Video element - Always rendered with playsInline & muted for iOS Safari & Android Chrome */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         className={styles.videoFeed}
-        style={{ display: isLoading || error ? 'none' : 'block' }}
       />
 
       {/* Loading Overlay */}
       {isLoading && (
         <div className={styles.overlay}>
           <div className={styles.loader}></div>
-          <p style={{ fontSize: '13px', margin: 0, fontWeight: 500 }}>
-            Đang khởi động Camera...
+          <p style={{ fontSize: '12px', margin: 0, fontWeight: 600 }}>
+            Đang mở Camera...
           </p>
         </div>
       )}
@@ -47,19 +35,13 @@ export default function CameraView({ tracker, showCalibration = false, onCalibra
       {/* Error Overlay */}
       {error && (
         <div className={styles.overlay}>
-          <AlertCircle size={32} color="#ff6b6b" style={{ marginBottom: '8px' }} />
-          <p className={styles.errorText}>{error}</p>
-          <button 
-            className={styles.calibrationBtn} 
-            onClick={() => window.location.reload()}
-          >
-            Thử Lại
-          </button>
+          <AlertCircle size={28} color="#ff6b6b" style={{ marginBottom: '6px' }} />
+          <p className={styles.errorText} style={{ fontSize: '11px', margin: 0 }}>{error}</p>
         </div>
       )}
 
       {/* Tilt Left/Right Indicators */}
-      {!isLoading && !error && (
+      {!error && (
         <>
           <div className={styles.tiltGuide}>
             <span className={`${styles.tiltGuideLeft} ${tiltDirection === 'left' ? styles.tiltGuideActive : ''}`}>
