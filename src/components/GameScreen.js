@@ -589,7 +589,13 @@ export default function GameScreen({ language, level, onBackToLobby }) {
             </p>
 
             <div className={styles.readyCameraWrap}>
-              <CameraView tracker={tracker} />
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <AvatarImage id={avatar} size={84} />
+                <span style={{ position: 'absolute', bottom: 2, right: 2, background: '#51cf66', width: 18, height: 18, borderRadius: '50%', border: '3px solid white', boxShadow: '0 0 8px #51cf66' }} />
+              </div>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--primary-color)', margin: '8px 0 0 0' }}>
+                🟢 Camera đã hoạt động sẵn sàng!
+              </p>
             </div>
 
             <div className={styles.readyTips}>
