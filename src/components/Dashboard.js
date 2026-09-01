@@ -434,10 +434,11 @@ export default function Dashboard({ onSelectLevel }) {
           </div>
 
           <div className={styles.footerTechRow}>
-            <span className={styles.techBadge}>🤖 Google Gemini AI</span>
-            <span className={styles.techBadge}>📹 MediaPipe Vision</span>
-            <span className={styles.techBadge}>🗄️ Supabase Cloud DB</span>
-            <span className={styles.techBadge}>🔊 Web Speech TTS</span>
+            <span className={styles.techBadge}>🎮 Học Qua Cử Chỉ Vui Nhộn</span>
+            <span className={styles.techBadge}>🧠 Rèn Luyện Phản Xạ & Tư Duy</span>
+            <span className={styles.techBadge}>🗣️ Phát Âm Chuẩn Giọng Bản Xứ</span>
+            <span className={styles.techBadge}>🔥 Duy Trì Thói Quen Học Mỗi Ngày</span>
+            <span className={styles.techBadge}>🛡️ 100% Miễn Phí & An Toàn Cho Bé</span>
           </div>
 
           <div className={styles.footerBottom}>
