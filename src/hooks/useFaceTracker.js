@@ -28,7 +28,6 @@ export default function useFaceTracker() {
       throw new Error('Trình duyệt không hỗ trợ truy cập camera.')
     }
 
-    // Try primary constraints (front camera + preferred resolution)
     try {
       return await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
@@ -38,7 +37,6 @@ export default function useFaceTracker() {
       console.warn('Constrained getUserMedia failed, trying simple facingMode:', e1)
     }
 
-    // Fallback 1: simple facingMode
     try {
       return await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user' },
@@ -48,17 +46,16 @@ export default function useFaceTracker() {
       console.warn('FacingMode getUserMedia failed, trying default { video: true }:', e2)
     }
 
-    // Fallback 2: absolute basic camera constraint
     return await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false,
     })
   }
 
+  // 1. Camera Initialization Effect
   useEffect(() => {
     let active = true
 
-    // Safety timeout: Never stay stuck in loading mode for more than 3 seconds!
     const safetyTimer = setTimeout(() => {
       if (active) {
         setIsLoading(false)
@@ -76,50 +73,14 @@ export default function useFaceTracker() {
 
         streamRef.current = stream
         setCameraReady(true)
-        setIsLoading(false) // ALWAYS stop loading spinner as soon as stream arrives!
+        setIsLoading(false)
 
-        // Attempt immediate video element binding
-        bindStreamToVideo(stream)
-
-        // Initialize MediaPipe AI detector in parallel
         initMediaPipe()
       } catch (err) {
         console.error('Lỗi khởi tạo camera:', err)
         setError('Không thể mở camera. Bạn hãy chọn "Bỏ qua Camera" để chơi bằng chạm ngón tay nhé!')
         setIsLoading(false)
       }
-    }
-
-    function bindStreamToVideo(stream) {
-      let checkCount = 0
-      const interval = setInterval(() => {
-        if (!active) {
-          clearInterval(interval)
-          return
-        }
-
-        const video = videoRef.current
-        if (video) {
-          if (video.srcObject !== stream) {
-            video.srcObject = stream
-            video.setAttribute('playsinline', 'true')
-            video.setAttribute('webkit-playsinline', 'true')
-            video.setAttribute('muted', 'true')
-            video.muted = true
-
-            video.play().catch(pErr => {
-              console.log('Video play catch:', pErr)
-            })
-          }
-          clearInterval(interval)
-          startDetectionLoop(video)
-        }
-
-        checkCount++
-        if (checkCount > 50) { // 5 seconds max check
-          clearInterval(interval)
-        }
-      }, 100)
     }
 
     async function initMediaPipe() {
@@ -133,7 +94,6 @@ export default function useFaceTracker() {
 
         let landmarker = null
 
-        // Try GPU delegate first, fallback to CPU if WebGL fails
         try {
           landmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
             baseOptions: {
@@ -161,17 +121,19 @@ export default function useFaceTracker() {
         }
 
         landmarkerRef.current = landmarker
+        startDetectionLoop()
       } catch (err) {
         console.error('Lỗi tải bộ nhận diện MediaPipe:', err)
       }
     }
 
-    function startDetectionLoop(video) {
+    function startDetectionLoop() {
       let lastVideoTime = -1
 
       const detect = () => {
         if (!active) return
 
+        const video = videoRef.current
         if (video && !video.paused && !video.ended && landmarkerRef.current) {
           let nowInMs = Date.now()
           if (video.currentTime !== lastVideoTime && video.readyState >= 2) {
@@ -241,6 +203,31 @@ export default function useFaceTracker() {
         } catch (e) {}
       }
     }
+  }, [])
+
+  // 2. Persistent Playback Keeper: Runs continuously to guarantee video stream is ALWAYS bound & playing!
+  useEffect(() => {
+    const keepPlaying = () => {
+      const video = videoRef.current
+      const stream = streamRef.current
+      if (video && stream) {
+        if (video.srcObject !== stream) {
+          video.srcObject = stream
+          video.setAttribute('playsinline', 'true')
+          video.setAttribute('webkit-playsinline', 'true')
+          video.setAttribute('muted', 'true')
+          video.muted = true
+        }
+        if (video.paused) {
+          video.play().catch(() => {})
+        }
+      }
+    }
+
+    const interval = setInterval(keepPlaying, 250)
+    keepPlaying()
+
+    return () => clearInterval(interval)
   }, [])
 
   return {

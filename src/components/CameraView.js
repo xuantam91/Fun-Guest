@@ -21,6 +21,8 @@ export default function CameraView({ tracker }) {
         playsInline
         muted
         className={styles.videoFeed}
+        onLoadedData={(e) => e.target.play().catch(() => {})}
+        onCanPlay={(e) => e.target.play().catch(() => {})}
       />
 
       {/* Loading Overlay - Only shown when camera is actually loading and not ready yet */}
