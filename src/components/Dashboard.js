@@ -34,14 +34,34 @@ export default function Dashboard({ onSelectLevel }) {
   ]
 
   const chineseLevels = [
-    { code: 'hsk1', name: 'HSK 1', desc: 'Chữ Hán & phiên âm cơ bản nhất', icon: '🍎', count: '5.000' },
+    { code: 'hsk1', name: 'HSK 1', desc: 'Chữ Hán & phiên âm cơ bản', icon: '🍎', count: '5.000' },
     { code: 'hsk2', name: 'HSK 2', desc: 'Giao tiếp hàng ngày cơ bản', icon: '🚲', count: '5.000' },
     { code: 'hsk3', name: 'HSK 3', desc: 'Đọc hiểu & hội thoại ngắn', icon: '🎒', count: '5.000' },
     { code: 'hsk4', name: 'HSK 4', desc: 'Diễn đạt ý kiến trôi chảy', icon: '💬', count: '3.360' },
-    { code: 'hsk5', name: 'HSK 5', desc: 'Đọc báo & xem phim tiếng Trung', icon: '🎬', count: '1.440' },
-    { code: 'life', name: 'Đời Sống', desc: 'Từ vựng sinh hoạt thường ngày', icon: '🏡', count: '1.440' },
+    { code: 'hsk5', name: 'HSK 5', desc: 'Đọc báo & xem phim', icon: '🎬', count: '1.440' },
+    { code: 'life', name: 'Đời Sống', desc: 'Từ vựng sinh hoạt gia đình', icon: '🏡', count: '1.440' },
     { code: 'office', name: 'Văn Phòng', desc: 'Công sở & hành chính cơ bản', icon: '💻', count: '1.440' },
     { code: 'factory', name: 'Nhà Máy', desc: 'Sản xuất, công xưởng & kỹ thuật', icon: '⚙️', count: '1.440' },
+    { code: 'shopping', name: 'Mua Sắm', desc: 'Hỏi giá, giảm giá & quẹt thẻ', icon: '🛍️', count: '2.000' },
+    { code: 'dining', name: 'Ăn Uống', desc: 'Gọi món, thực đơn & thanh toán', icon: '🥟', count: '2.000' },
+    { code: 'travel', name: 'Giao Thông', desc: 'Xe buýt, tàu điện, xe taxi', icon: '🚗', count: '2.000' },
+    { code: 'work', name: 'Làm Việc', desc: 'Đi làm, phỏng vấn & công việc', icon: '💼', count: '2.000' },
+    { code: 'tourism', name: 'Du Lịch', desc: 'Tham quan, chụp ảnh & mua quà', icon: '🧳', count: '2.000' },
+    { code: 'hotel', name: 'Khách Sạn', desc: 'Đặt phòng, nhận phòng & thẻ cửa', icon: '🏨', count: '2.000' },
+    { code: 'health', name: 'Sức Khỏe', desc: 'Bác sĩ, đi khám & uống thuốc', icon: '🏥', count: '2.000' },
+    { code: 'sports', name: 'Thể Thao', desc: 'Đá bóng, cầu lông & bơi lội', icon: '⚽', count: '2.000' },
+    { code: 'entertainment', name: 'Giải Trí', desc: 'Xem phim, ca nhạc & nhảy múa', icon: '🍿', count: '2.000' },
+    { code: 'weather', name: 'Thời Tiết', desc: 'Nắng, mưa, dự báo & nhiệt độ', icon: '☀️', count: '2.000' },
+    { code: 'family', name: 'Gia Đình', desc: 'Ông bà, cha mẹ, anh chị em', icon: '👨‍👩‍👧', count: '2.000' },
+    { code: 'ecom', name: 'Mua Sắm Online', desc: 'Đặt hàng, shipper & mã giảm giá', icon: '📦', count: '2.000' },
+    { code: 'education', name: 'Trường Học', desc: 'Bài tập, thi cử & điểm số', icon: '🎓', count: '2.000' },
+    { code: 'technology', name: 'Công Nghệ', desc: 'Điện thoại, internet & AI', icon: '📱', count: '2.000' },
+    { code: 'nature', name: 'Thiên Nhiên', desc: 'Gấu trúc, rừng rậm & đại dương', icon: '🐼', count: '2.000' },
+    { code: 'fashion', name: 'Thời Trang', desc: 'Áo sơ mi, quần dài & kích cỡ', icon: '👗', count: '2.000' },
+    { code: 'feelings', name: 'Cảm Xúc', desc: 'Vui vẻ, dũng cảm & đáng yêu', icon: '😊', count: '2.000' },
+    { code: 'hobbies', name: 'Sở Thích', desc: 'Vẽ tranh, đánh cờ & âm nhạc', icon: '🎨', count: '2.000' },
+    { code: 'festivals', name: 'Lễ Hội', desc: 'Tết Nguyên Đán & lì xì', icon: '🏮', count: '2.000' },
+    { code: 'social', name: 'Mạng Xã Hội', desc: 'WeChat, thả tim & bình luận', icon: '💬', count: '2.000' },
   ]
 
   const mathLevels = [

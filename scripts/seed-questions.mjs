@@ -70,11 +70,17 @@ async function seedAll() {
     console.log(`   ✓ Tiếng Anh [${lvl.toUpperCase()}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
   }
 
-  // 2. Tiếng Trung (8 levels x 5000 = 40,000 câu)
-  const zhLevels = ['hsk1', 'hsk2', 'hsk3', 'hsk4', 'hsk5', 'life', 'office', 'factory']
-  console.log('\n🏮 Đang tạo ngân hàng câu hỏi Tiếng Trung (5.000 câu/cấp độ)...')
+  // 2. Tiếng Trung (28 levels x 2000 câu)
+  const zhLevels = [
+    'hsk1', 'hsk2', 'hsk3', 'hsk4', 'hsk5', 'life', 'office', 'factory',
+    'shopping', 'dining', 'travel', 'work', 'tourism', 'hotel', 'health',
+    'sports', 'entertainment', 'weather', 'family', 'ecom', 'education',
+    'technology', 'nature', 'fashion', 'feelings', 'hobbies', 'festivals', 'social'
+  ]
+  console.log('\n🏮 Đang tạo ngân hàng câu hỏi Tiếng Trung (28 chủ đề)...')
   for (const lvl of zhLevels) {
-    const list = generateChineseQuestions(lvl, TARGET_PER_LEVEL)
+    const countToGen = ['hsk1', 'hsk2', 'hsk3'].includes(lvl) ? 5000 : 2000
+    const list = generateChineseQuestions(lvl, countToGen)
     for (const q of list) {
       allQuestions.push({
         language: 'zh',
