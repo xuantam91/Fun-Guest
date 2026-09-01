@@ -1,0 +1,175 @@
+.leaderboardContainer {
+  background: var(--card-bg);
+  border: 3px solid var(--card-border);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-top: 32px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color);
+}
+
+/* Podium Design (top 3) */
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 30px;
+  border-bottom: 2px dashed var(--card-border);
+  padding-bottom: 24px;
+}
+
+.podiumPlace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+
+.podiumAvatar {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.crown {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  animation: bounce 2s infinite;
+}
+
+.podiumStand {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.podiumName {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90px;
+  margin-bottom: 4px;
+}
+
+.podiumScore {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* First place stand */
+.place1 .podiumStand {
+  height: 90px;
+  background-color: #ffd43b;
+  border: 2px solid #fab005;
+  color: #854000;
+}
+.place1 .podiumScore {
+  color: #e67e22;
+}
+
+/* Second place stand */
+.place2 .podiumStand {
+  height: 70px;
+  background-color: #e9ecef;
+  border: 2px solid #ced4da;
+  color: #495057;
+}
+
+/* Third place stand */
+.place3 .podiumStand {
+  height: 55px;
+  background-color: #ffd8a8;
+  border: 2px solid #fcc419;
+  color: #d9480f;
+}
+
+.numberLabel {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* List view for other players */
+.rankList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.rankItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background-color: var(--bg-gradient);
+  border: 2px solid var(--card-border);
+  transition: transform 0.2s ease;
+}
+
+.rankItem:hover {
+  transform: translateX(4px);
+}
+
+.rankItemUser {
+  border-color: var(--primary-color);
+  background-color: var(--correct-bg);
+}
+
+.playerInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rankNum {
+  font-size: 16px;
+  font-weight: 800;
+  width: 24px;
+  color: var(--text-muted);
+}
+
+.playerName {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.playerScore {
+  font-weight: 800;
+  color: var(--primary-color);
+  font-size: 15px;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 16px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
+}

@@ -1,0 +1,334 @@
+.gameLayout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Game Header */
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quitBtn {
+  background-color: transparent;
+  border: 2px solid var(--text-muted);
+  color: var(--text-muted);
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quitBtn:hover {
+  background-color: rgba(255,107,107,0.1);
+  border-color: var(--incorrect-color);
+  color: var(--incorrect-color);
+}
+
+.progressContainer {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+  background-color: rgba(0,0,0,0.1);
+  height: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--card-border);
+}
+
+.progressBar {
+  background-color: var(--primary-color);
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.3s ease;
+}
+
+.scoreBadge {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-color);
+  background-color: var(--card-bg);
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 2px solid var(--card-border);
+}
+
+/* Question Area */
+.questionBox {
+  background: var(--card-bg);
+  border: 3px solid var(--card-border);
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.questionText {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+.ttsBtn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg-gradient);
+  border: 2px solid var(--card-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: transform 0.2s;
+}
+
+.ttsBtn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Play Zone: Left, Camera, Right */
+.playZone {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .playZone {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+  }
+  .leftOption, .rightOption {
+    order: 2;
+  }
+  .centerCamera {
+    order: 1;
+  }
+}
+
+.centerCamera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Option bubbles */
+.optionBubble {
+  background: var(--card-bg);
+  border: 4px solid var(--card-border);
+  border-radius: 30px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.optionLabel {
+  position: absolute;
+  top: -16px;
+  background-color: var(--text-muted);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.leftBubble .optionLabel {
+  background-color: var(--balloon-left);
+}
+
+.rightBubble .optionLabel {
+  background-color: var(--balloon-right);
+}
+
+.optionText {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-color);
+}
+
+/* Holding/Charging indicator */
+.chargeIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 8px;
+  background-color: var(--primary-color);
+  border-bottom-left-radius: 26px;
+  border-bottom-right-radius: 26px;
+  transition: width 0.1s linear;
+}
+
+/* Active tilting state */
+.bubbleTilting {
+  transform: scale(1.06);
+  border-color: transparent !important;
+  box-shadow: 0 0 25px rgba(253, 126, 20, 0.35);
+  background-color: var(--correct-bg);
+}
+
+/* Border progress SVG wrapping */
+.borderProgressSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.borderProgressSvg rect {
+  transition: stroke-dashoffset 0.1s linear;
+  filter: drop-shadow(0 0 6px var(--accent-color, #ffcd3c));
+}
+
+/* Canvas overlay for fireworks */
+.canvasOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Selection feedback colors */
+.bubbleCorrect {
+  border-color: var(--correct-color) !important;
+  background-color: var(--correct-bg) !important;
+  animation: bounce 0.6s ease;
+}
+
+.bubbleIncorrect {
+  border-color: var(--incorrect-color) !important;
+  background-color: var(--incorrect-bg) !important;
+  animation: shake 0.5s ease;
+}
+
+/* Explanation Panel */
+.explanationPanel {
+  background-color: var(--card-bg);
+  border: 3px solid var(--incorrect-color);
+  border-radius: 24px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  margin-top: 20px;
+  animation: slideUp 0.3s ease;
+}
+
+.explanationText {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 12px;
+}
+
+/* Fireworks and overlay animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px) scale(1.05); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Scoreboard screen */
+.scoreboard {
+  background: var(--card-bg);
+  border: 4px solid var(--card-border);
+  border-radius: 32px;
+  padding: 40px 24px;
+  text-align: center;
+  max-width: 500px;
+  margin: 40px auto;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.4s ease;
+}
+
+.scoreboardTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 16px;
+}
+
+.scoreboardStats {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px 0;
+}
+
+.scoreboardStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statNum {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-color);
+}
+
+.statLbl {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.actionRow {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Confetti effect placeholder styling */
+.confettiOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
