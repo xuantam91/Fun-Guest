@@ -56,6 +56,7 @@ export default function Dashboard({ onSelectLevel }) {
   const [testStatus, setTestStatus] = React.useState('idle') // 'idle' | 'testing' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = React.useState('')
   const [showHelp, setShowHelp] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState('all') // 'all' | 'en' | 'zh' | 'math' | 'custom' | 'rank'
 
   // Sync state with customApiKey when customApiKey changes/loads
   React.useEffect(() => {
@@ -157,8 +158,55 @@ export default function Dashboard({ onSelectLevel }) {
         </div>
       </header>
 
+      {/* Category Navigation Bar (Mobile & Desktop) */}
+      <nav className={styles.tabBar} aria-label="Danh mục học tập">
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'all' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('all')}
+        >
+          <span>🌟</span>
+          <span>Tất Cả</span>
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'en' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('en')}
+        >
+          <span>🇬🇧</span>
+          <span>Tiếng Anh</span>
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'zh' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('zh')}
+        >
+          <span>🇨🇳</span>
+          <span>Tiếng Trung</span>
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'math' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('math')}
+        >
+          <span>🔢</span>
+          <span>Toán Học</span>
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'custom' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('custom')}
+        >
+          <span>🎨</span>
+          <span>Tùy Chỉnh</span>
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'rank' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('rank')}
+        >
+          <span>🏆</span>
+          <span>Xếp Hạng</span>
+        </button>
+      </nav>
+
       {/* 2. Customizer (Themes, Mode, Avatars) */}
-      <section className={styles.customizer}>
+      {(activeTab === 'all' || activeTab === 'custom') && (
+        <section className={styles.customizer}>
         {/* Theme Card */}
         <div className={styles.customizerCard}>
           <h3 className={styles.cardTitle}>
@@ -350,75 +398,83 @@ export default function Dashboard({ onSelectLevel }) {
           </div>
         </div>
       </section>
-
+      )}
 
       {/* 3. English levels */}
-      <section className={styles.questSection}>
-        <h2 className={styles.sectionHeading}>
-          <Sparkles size={22} color="var(--primary-color)" />
-          <span>English Quest (Tiếng Anh)</span>
-        </h2>
-        <div className={styles.grid}>
-          {englishLevels.map((lvl) => (
-            <div
-              key={lvl.code}
-              className={styles.questCard}
-              onClick={() => onSelectLevel('en', lvl.code)}
-            >
-              <span className={styles.cardIcon}>{lvl.icon}</span>
-              <h3 className={styles.cardLevel}>{lvl.name}</h3>
-              <p className={styles.cardDesc}>{lvl.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {(activeTab === 'all' || activeTab === 'en') && (
+        <section className={styles.questSection}>
+          <h2 className={styles.sectionHeading}>
+            <Sparkles size={22} color="var(--primary-color)" />
+            <span>English Quest (Tiếng Anh)</span>
+          </h2>
+          <div className={styles.grid}>
+            {englishLevels.map((lvl) => (
+              <div
+                key={lvl.code}
+                className={styles.questCard}
+                onClick={() => onSelectLevel('en', lvl.code)}
+              >
+                <span className={styles.cardIcon}>{lvl.icon}</span>
+                <h3 className={styles.cardLevel}>{lvl.name}</h3>
+                <p className={styles.cardDesc}>{lvl.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 4. Chinese levels */}
-      <section className={styles.questSection}>
-        <h2 className={styles.sectionHeading}>
-          <Sparkles size={22} color="var(--accent-color)" />
-          <span>Chinese Quest (Tiếng Trung)</span>
-        </h2>
-        <div className={styles.grid}>
-          {chineseLevels.map((lvl) => (
-            <div
-              key={lvl.code}
-              className={styles.questCard}
-              onClick={() => onSelectLevel('zh', lvl.code)}
-            >
-              <span className={styles.cardIcon}>{lvl.icon}</span>
-              <h3 className={styles.cardLevel}>{lvl.name}</h3>
-              <p className={styles.cardDesc}>{lvl.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {(activeTab === 'all' || activeTab === 'zh') && (
+        <section className={styles.questSection}>
+          <h2 className={styles.sectionHeading}>
+            <Sparkles size={22} color="var(--accent-color)" />
+            <span>Chinese Quest (Tiếng Trung)</span>
+          </h2>
+          <div className={styles.grid}>
+            {chineseLevels.map((lvl) => (
+              <div
+                key={lvl.code}
+                className={styles.questCard}
+                onClick={() => onSelectLevel('zh', lvl.code)}
+              >
+                <span className={styles.cardIcon}>{lvl.icon}</span>
+                <h3 className={styles.cardLevel}>{lvl.name}</h3>
+                <p className={styles.cardDesc}>{lvl.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 5. Math Quest levels */}
-      <section className={styles.questSection}>
-        <h2 className={styles.sectionHeading}>
-          <Sparkles size={22} color="#fd7e14" />
-          <span>Math Quest (Toán Tiểu Học)</span>
-        </h2>
-        <div className={styles.grid}>
-          {mathLevels.map((lvl) => (
-            <div
-              key={lvl.code}
-              className={styles.questCard}
-              onClick={() => onSelectLevel('math', lvl.code)}
-            >
-              <span className={styles.cardIcon}>{lvl.icon}</span>
-              <h3 className={styles.cardLevel}>{lvl.name}</h3>
-              <p className={styles.cardDesc}>{lvl.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {(activeTab === 'all' || activeTab === 'math') && (
+        <section className={styles.questSection}>
+          <h2 className={styles.sectionHeading}>
+            <Sparkles size={22} color="#fd7e14" />
+            <span>Math Quest (Toán Tiểu Học)</span>
+          </h2>
+          <div className={styles.grid}>
+            {mathLevels.map((lvl) => (
+              <div
+                key={lvl.code}
+                className={styles.questCard}
+                onClick={() => onSelectLevel('math', lvl.code)}
+              >
+                <span className={styles.cardIcon}>{lvl.icon}</span>
+                <h3 className={styles.cardLevel}>{lvl.name}</h3>
+                <p className={styles.cardDesc}>{lvl.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 6. Leaderboard Section */}
-      <section style={{ marginTop: '32px' }}>
-        <Leaderboard />
-      </section>
+      {(activeTab === 'all' || activeTab === 'rank') && (
+        <section style={{ marginTop: '24px' }}>
+          <Leaderboard />
+        </section>
+      )}
     </div>
   )
 }

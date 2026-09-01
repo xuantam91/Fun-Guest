@@ -284,6 +284,15 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
     const isCorrect = choice === currentQuestion.correct_option
 
+    // Haptic feedback for mobile devices
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try {
+        navigator.vibrate(isCorrect ? [40, 50, 40] : [120, 60, 120])
+      } catch (e) {
+        // Ignore devices that block vibration without full gestures
+      }
+    }
+
     if (isCorrect) {
       playCorrectSound()
       triggerFireworks()

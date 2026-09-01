@@ -1,14 +1,30 @@
 .cameraContainer {
   position: relative;
-  width: 240px;
-  height: 240px;
+  width: 220px;
+  height: 220px;
   margin: 0 auto;
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  border: 6px solid var(--accent-color, #ffcd3c);
+  border: 5px solid var(--accent-color, #ffcd3c);
   background-color: #222;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .cameraContainer {
+    width: 140px;
+    height: 140px;
+    border-width: 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cameraContainer {
+    width: 120px;
+    height: 120px;
+    border-width: 3px;
+  }
 }
 
 .cameraContainerActive {
