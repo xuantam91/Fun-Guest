@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Glow Gradient -->
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff9db" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#fff9db" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Globy Body Gradient -->
+    <linearGradient id="globeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#74c0fc"/>
+      <stop offset="40%" stop-color="#339af0"/>
+      <stop offset="100%" stop-color="#1c7ed6"/>
+    </linearGradient>
+
+    <!-- Green Continents Gradient -->
+    <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8ce99a"/>
+      <stop offset="100%" stop-color="#40c057"/>
+    </linearGradient>
+
+    <!-- Explorer Cap Gradient -->
+    <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd43b"/>
+      <stop offset="100%" stop-color="#f59f00"/>
+    </linearGradient>
+
+    <!-- Cheeks Blush Gradient -->
+    <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff8787" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ff8787" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Eye Gradient -->
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#212529"/>
+      <stop offset="100%" stop-color="#495057"/>
+    </linearGradient>
+
+    <!-- Shadow -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#1864ab" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="256" cy="265" r="220" fill="url(#glowGrad)"/>
+
+  <!-- Magic Sparkles -->
+  <path d="M100 120 Q100 145 75 145 Q100 145 100 170 Q100 145 125 145 Q100 145 100 120 Z" fill="#ffd43b"/>
+  <path d="M420 160 Q420 180 400 180 Q420 180 420 200 Q420 180 440 180 Q420 180 420 160 Z" fill="#ff922b"/>
+  <path d="M390 380 Q390 395 375 395 Q390 395 390 410 Q390 395 405 395 Q390 395 390 380 Z" fill="#51cf66"/>
+  <circle cx="90" cy="320" r="8" fill="#ff6b6b"/>
+  <circle cx="430" cy="290" r="10" fill="#cc5de8"/>
+
+  <!-- Floating ABC & 123 Badges -->
+  <!-- ABC Bubble -->
+  <g transform="translate(60, 200) rotate(-12)">
+    <rect width="64" height="42" rx="14" fill="#ff6b6b" filter="url(#dropShadow)"/>
+    <text x="32" y="27" font-family="'Fredoka', sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">ABC</text>
+  </g>
+
+  <!-- 123 Bubble -->
+  <g transform="translate(390, 220) rotate(15)">
+    <rect width="64" height="42" rx="14" fill="#51cf66" filter="url(#dropShadow)"/>
+    <text x="32" y="28" font-family="'Fredoka', sans-serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">123</text>
+  </g>
+
+  <!-- Main Globe Body -->
+  <g filter="url(#dropShadow)">
+    <circle cx="256" cy="275" r="160" fill="url(#globeGrad)" stroke="#ffffff" stroke-width="8"/>
+    
+    <!-- Continents / Cute Land Patches -->
+    <!-- Top Left Land -->
+    <path d="M140 210 Q180 180 220 200 Q240 230 200 260 Q160 270 130 240 Z" fill="url(#landGrad)"/>
+    <!-- Bottom Right Land -->
+    <path d="M280 320 Q330 300 370 330 Q390 380 340 405 Q290 410 270 360 Z" fill="url(#landGrad)"/>
+    <!-- Top Right Small Island -->
+    <ellipse cx="340" cy="210" rx="35" ry="25" fill="url(#landGrad)"/>
+
+    <!-- Light Reflection / Specular Highlight -->
+    <path d="M150 175 A130 130 0 0 1 290 145" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Cute Cheeks -->
+    <circle cx="185" cy="295" r="24" fill="url(#blushGrad)"/>
+    <circle cx="327" cy="295" r="24" fill="url(#blushGrad)"/>
+
+    <!-- Big Sparkling Anime / Cartoon Eyes -->
+    <!-- Left Eye -->
+    <ellipse cx="205" cy="265" rx="18" ry="24" fill="url(#eyeGrad)"/>
+    <circle cx="200" cy="254" r="8" fill="#ffffff"/>
+    <circle cx="212" cy="274" r="4" fill="#ffffff"/>
+
+    <!-- Right Eye -->
+    <ellipse cx="307" cy="265" rx="18" ry="24" fill="url(#eyeGrad)"/>
+    <circle cx="302" cy="254" r="8" fill="#ffffff"/>
+    <circle cx="314" cy="274" r="4" fill="#ffffff"/>
+
+    <!-- Joyful Big Smile -->
+    <path d="M228 290 Q256 325 284 290" fill="#c92a2a" stroke="#212529" stroke-width="4" stroke-linecap="round"/>
+    <!-- Tongue in Smile -->
+    <path d="M242 304 Q256 322 270 304 Z" fill="#ff8787"/>
+
+    <!-- Cute Little Waving Hands -->
+    <!-- Left Hand -->
+    <circle cx="95" cy="285" r="22" fill="#74c0fc" stroke="#ffffff" stroke-width="5"/>
+    <!-- Right Hand (Waving) -->
+    <g transform="translate(415, 275) rotate(-20)">
+      <ellipse cx="0" cy="0" rx="22" ry="20" fill="#74c0fc" stroke="#ffffff" stroke-width="5"/>
+    </g>
+  </g>
+
+  <!-- Explorer Cap / Graduation Hat on Top of Head -->
+  <g transform="translate(256, 115)" filter="url(#dropShadow)">
+    <!-- Cap Brim -->
+    <path d="M-90 25 Q0 -10 90 25 Q0 10 -90 25 Z" fill="#e67700"/>
+    <ellipse cx="0" cy="18" rx="85" ry="16" fill="url(#capGrad)" stroke="#ffffff" stroke-width="4"/>
+    
+    <!-- Cap Dome -->
+    <path d="M-60 14 C-60 -30 60 -30 60 14 Z" fill="url(#capGrad)" stroke="#ffffff" stroke-width="4"/>
+    
+    <!-- Cap Star Badge -->
+    <path d="M0 -6 L3 3 L12 3 L5 9 L8 18 L0 12 L-8 18 L-5 9 L-12 3 L-3 3 Z" fill="#ffffff"/>
+    
+    <!-- Propeller / Little Sprout on Cap -->
+    <path d="M0 -30 Q-15 -50 0 -60 Q15 -50 0 -30 Z" fill="#51cf66"/>
+    <circle cx="0" cy="-30" r="6" fill="#f59f00"/>
+  </g>
+</svg>

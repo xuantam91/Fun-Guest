@@ -117,14 +117,28 @@ export default function Dashboard({ onSelectLevel }) {
       {/* 1. Header Section */}
       <header className={styles.header}>
         <div className={styles.brand}>
-          <AvatarImage id={avatar} size={48} />
+          <img 
+            src="/logo.svg" 
+            alt="Globy Logo" 
+            width={52} 
+            height={52} 
+            style={{ 
+              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.12))', 
+              animation: 'float 3s ease-in-out infinite',
+              flexShrink: 0
+            }} 
+          />
           <div>
             <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Globe size={26} className={styles.globeIcon} style={{ animation: 'spinGlobe 8s linear infinite', color: 'var(--primary-color)' }} />
               <span>GLOBY Fun Quest</span>
+              <Sparkles size={18} color="#ffd43b" />
             </h1>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-              Chào mừng {user ? (user.user_metadata?.full_name || user.email) : 'Bé Thám Hiểm'}!
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>Chào mừng</span>
+              <AvatarImage id={avatar} size={22} />
+              <strong style={{ color: 'var(--text-color)' }}>
+                {user ? (user.user_metadata?.full_name || user.email) : 'Bé Thám Hiểm'}!
+              </strong>
             </p>
           </div>
         </div>
