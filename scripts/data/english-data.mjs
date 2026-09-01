@@ -381,7 +381,7 @@ export const englishVocabulary = {
  * @param {string} level 
  * @param {number} targetCount 
  */
-export function generateEnglishQuestions(level, targetCount = 2000) {
+export function generateEnglishQuestions(level, targetCount = 5000) {
   const bank = englishVocabulary[level] || englishVocabulary['starters']
   const questions = []
   const seen = new Set()

@@ -191,7 +191,7 @@ export const chineseVocabulary = {
  * @param {string} level 
  * @param {number} targetCount 
  */
-export function generateChineseQuestions(level, targetCount = 2000) {
+export function generateChineseQuestions(level, targetCount = 5000) {
   const bank = chineseVocabulary[level] || chineseVocabulary['hsk1']
   const questions = []
   const seen = new Set()

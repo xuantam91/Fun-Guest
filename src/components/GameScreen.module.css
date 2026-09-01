@@ -370,3 +370,95 @@
   pointer-events: none;
   z-index: 999;
 }
+
+/* Ready / Calibration Modal Screen (Mobile Optimized) */
+.readyModalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: fadeIn 0.25s ease;
+}
+
+.readyModalCard {
+  background: var(--card-bg);
+  border: 4px solid var(--card-border);
+  border-radius: 28px;
+  padding: 24px 20px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.readyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.readyTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.readySub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.readyCameraWrap {
+  margin: 12px 0 16px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.readyTips {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-gradient);
+  padding: 10px 14px;
+  border-radius: 18px;
+  border: 2px solid var(--card-border);
+  margin-bottom: 18px;
+}
+
+.readyTipItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.readyTipItem span:first-child {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.readyActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

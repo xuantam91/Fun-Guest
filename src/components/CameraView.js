@@ -72,23 +72,9 @@ export default function CameraView({ tracker, showCalibration = false, onCalibra
 
           <div className={styles.statusIndicator}>
             <span className={`${styles.statusDot} ${faceDetected ? styles.statusDotActive : ''}`} />
-            <span>{faceDetected ? 'Sẵn sàng!' : 'Không tìm thấy bé'}</span>
+            <span>{faceDetected ? 'Sẵn sàng!' : 'Chưa nhận diện khuôn mặt'}</span>
           </div>
         </>
-      )}
-
-      {/* Calibration Screen (Triggered at the start of a session) */}
-      {showCalibration && !isLoading && !error && !calibrated && (
-        <div className={styles.calibrationOverlay}>
-          <Sparkles size={24} style={{ marginBottom: '4px', color: '#333' }} />
-          <h4 className={styles.calibrationTitle}>Chào Bé Nhé!</h4>
-          <p className={styles.calibrationDesc}>
-            Hãy ngồi thẳng lưng và căn giữa khuôn mặt vào camera nhé!
-          </p>
-          <button className={styles.calibrationBtn} onClick={handleCalibrate}>
-            Đã sẵn sàng! 🚀
-          </button>
-        </div>
       )}
     </div>
   )

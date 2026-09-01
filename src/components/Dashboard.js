@@ -24,32 +24,32 @@ export default function Dashboard({ onSelectLevel }) {
   } = useApp()
 
   const englishLevels = [
-    { code: 'starters', name: 'Starters', desc: 'Từ vựng Cambridge cấp độ 1', icon: '🐣' },
-    { code: 'movers', name: 'Movers', desc: 'Từ vựng Cambridge cấp độ 2', icon: '🐰' },
-    { code: 'flyers', name: 'Flyers', desc: 'Từ vựng Cambridge cấp độ 3', icon: '🦜' },
-    { code: 'a1', name: 'A1 Primary', desc: 'Tiếng Anh sơ cấp A1', icon: '🎈' },
-    { code: 'a2', name: 'A2 Key', desc: 'Tiếng Anh sơ cấp A2', icon: '🛹' },
-    { code: 'b1', name: 'B1 Preliminary', desc: 'Tiếng Anh trung cấp B1', icon: '🚀' },
-    { code: 'b2', name: 'B2 First', desc: 'Tiếng Anh trung cấp B2', icon: '🏆' },
+    { code: 'starters', name: 'Starters', desc: 'Từ vựng Cambridge cấp độ 1', icon: '🐣', count: '5.000' },
+    { code: 'movers', name: 'Movers', desc: 'Từ vựng Cambridge cấp độ 2', icon: '🐰', count: '5.000' },
+    { code: 'flyers', name: 'Flyers', desc: 'Từ vựng Cambridge cấp độ 3', icon: '🦜', count: '5.000' },
+    { code: 'a1', name: 'A1 Primary', desc: 'Tiếng Anh sơ cấp A1', icon: '🎈', count: '5.000' },
+    { code: 'a2', name: 'A2 Key', desc: 'Tiếng Anh sơ cấp A2', icon: '🛹', count: '5.000' },
+    { code: 'b1', name: 'B1 Preliminary', desc: 'Tiếng Anh trung cấp B1', icon: '🚀', count: '5.000' },
+    { code: 'b2', name: 'B2 First', desc: 'Tiếng Anh trung cấp B2', icon: '🏆', count: '5.000' },
   ]
 
   const chineseLevels = [
-    { code: 'hsk1', name: 'HSK 1', desc: 'Chữ Hán & phiên âm cơ bản nhất', icon: '🍎' },
-    { code: 'hsk2', name: 'HSK 2', desc: 'Giao tiếp hàng ngày cơ bản', icon: '🚲' },
-    { code: 'hsk3', name: 'HSK 3', desc: 'Đọc hiểu & hội thoại ngắn', icon: '🎒' },
-    { code: 'hsk4', name: 'HSK 4', desc: 'Diễn đạt ý kiến trôi chảy', icon: '💬' },
-    { code: 'hsk5', name: 'HSK 5', desc: 'Đọc báo & xem phim tiếng Trung', icon: '🎬' },
-    { code: 'life', name: 'Đời Sống', desc: 'Từ vựng sinh hoạt thường ngày', icon: '🏡' },
-    { code: 'office', name: 'Văn Phòng', desc: 'Công sở & hành chính cơ bản', icon: '💻' },
-    { code: 'factory', name: 'Nhà Máy', desc: 'Sản xuất, công xưởng & kỹ thuật', icon: '⚙️' },
+    { code: 'hsk1', name: 'HSK 1', desc: 'Chữ Hán & phiên âm cơ bản nhất', icon: '🍎', count: '5.000' },
+    { code: 'hsk2', name: 'HSK 2', desc: 'Giao tiếp hàng ngày cơ bản', icon: '🚲', count: '5.000' },
+    { code: 'hsk3', name: 'HSK 3', desc: 'Đọc hiểu & hội thoại ngắn', icon: '🎒', count: '5.000' },
+    { code: 'hsk4', name: 'HSK 4', desc: 'Diễn đạt ý kiến trôi chảy', icon: '💬', count: '3.360' },
+    { code: 'hsk5', name: 'HSK 5', desc: 'Đọc báo & xem phim tiếng Trung', icon: '🎬', count: '1.440' },
+    { code: 'life', name: 'Đời Sống', desc: 'Từ vựng sinh hoạt thường ngày', icon: '🏡', count: '1.440' },
+    { code: 'office', name: 'Văn Phòng', desc: 'Công sở & hành chính cơ bản', icon: '💻', count: '1.440' },
+    { code: 'factory', name: 'Nhà Máy', desc: 'Sản xuất, công xưởng & kỹ thuật', icon: '⚙️', count: '1.440' },
   ]
 
   const mathLevels = [
-    { code: 'grade1', name: 'Toán Lớp 1', desc: 'Cộng trừ phạm vi 20, đếm số', icon: '🔢' },
-    { code: 'grade2', name: 'Toán Lớp 2', desc: 'Bảng nhân chia 2-5, cộng trừ 100', icon: '🧮' },
-    { code: 'grade3', name: 'Toán Lớp 3', desc: 'Tính chu vi, phân số cơ bản', icon: '📐' },
-    { code: 'grade4', name: 'Toán Lớp 4', desc: 'Tìm X, trung bình cộng, phân số', icon: '📊' },
-    { code: 'grade5', name: 'Toán Lớp 5', desc: 'Diện tích hình tròn, phần trăm, vận tốc', icon: '📈' },
+    { code: 'grade1', name: 'Toán Lớp 1', desc: 'Cộng trừ phạm vi 20, đếm số', icon: '🔢', count: '5.000' },
+    { code: 'grade2', name: 'Toán Lớp 2', desc: 'Bảng nhân chia 2-5, cộng trừ 100', icon: '🧮', count: '5.000' },
+    { code: 'grade3', name: 'Toán Lớp 3', desc: 'Tính chu vi, phân số cơ bản', icon: '📐', count: '5.000' },
+    { code: 'grade4', name: 'Toán Lớp 4', desc: 'Tìm X, trung bình cộng, phân số', icon: '📊', count: '5.000' },
+    { code: 'grade5', name: 'Toán Lớp 5', desc: 'Diện tích hình tròn, phần trăm, vận tốc', icon: '📈', count: '5.000' },
   ]
 
   const [inputKey, setInputKey] = React.useState('')
@@ -354,6 +354,7 @@ export default function Dashboard({ onSelectLevel }) {
                 className={styles.questCard}
                 onClick={() => onSelectLevel('en', lvl.code)}
               >
+                <span className={styles.questionCountBadge}>⚡ {lvl.count} câu</span>
                 <span className={styles.cardIcon}>{lvl.icon}</span>
                 <h3 className={styles.cardLevel}>{lvl.name}</h3>
                 <p className={styles.cardDesc}>{lvl.desc}</p>
@@ -377,6 +378,7 @@ export default function Dashboard({ onSelectLevel }) {
                 className={styles.questCard}
                 onClick={() => onSelectLevel('zh', lvl.code)}
               >
+                <span className={styles.questionCountBadge}>⚡ {lvl.count} câu</span>
                 <span className={styles.cardIcon}>{lvl.icon}</span>
                 <h3 className={styles.cardLevel}>{lvl.name}</h3>
                 <p className={styles.cardDesc}>{lvl.desc}</p>
@@ -400,6 +402,7 @@ export default function Dashboard({ onSelectLevel }) {
                 className={styles.questCard}
                 onClick={() => onSelectLevel('math', lvl.code)}
               >
+                <span className={styles.questionCountBadge}>⚡ {lvl.count} câu</span>
                 <span className={styles.cardIcon}>{lvl.icon}</span>
                 <h3 className={styles.cardLevel}>{lvl.name}</h3>
                 <p className={styles.cardDesc}>{lvl.desc}</p>

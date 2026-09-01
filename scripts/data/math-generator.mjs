@@ -21,7 +21,7 @@ function makeQuestion(question, correctVal, wrongVal, explanation) {
 // ----------------------------------------------------
 // GRADE 1: 2,000 questions
 // ----------------------------------------------------
-export function generateGrade1Questions(targetCount = 2000) {
+export function generateGrade1Questions(targetCount = 5000) {
   const questions = []
   const seen = new Set()
   const names = ['Nam', 'Lan', 'Hoa', 'Minh', 'An', 'Bình', 'Hà', 'Linh', 'Khánh', 'Tú']
@@ -160,7 +160,7 @@ export function generateGrade1Questions(targetCount = 2000) {
 // ----------------------------------------------------
 // GRADE 2: 2,000 questions
 // ----------------------------------------------------
-export function generateGrade2Questions(targetCount = 2000) {
+export function generateGrade2Questions(targetCount = 5000) {
   const questions = []
   const seen = new Set()
 
@@ -274,7 +274,7 @@ export function generateGrade2Questions(targetCount = 2000) {
 // ----------------------------------------------------
 // GRADE 3: 2,000 questions
 // ----------------------------------------------------
-export function generateGrade3Questions(targetCount = 2000) {
+export function generateGrade3Questions(targetCount = 5000) {
   const questions = []
   const seen = new Set()
 
@@ -432,7 +432,7 @@ export function generateGrade3Questions(targetCount = 2000) {
 // ----------------------------------------------------
 // GRADE 4: 2,000 questions
 // ----------------------------------------------------
-export function generateGrade4Questions(targetCount = 2000) {
+export function generateGrade4Questions(targetCount = 5000) {
   const questions = []
   const seen = new Set()
 
@@ -584,7 +584,7 @@ export function generateGrade4Questions(targetCount = 2000) {
 // ----------------------------------------------------
 // GRADE 5: 2,000 questions
 // ----------------------------------------------------
-export function generateGrade5Questions(targetCount = 2000) {
+export function generateGrade5Questions(targetCount = 5000) {
   const questions = []
   const seen = new Set()
 

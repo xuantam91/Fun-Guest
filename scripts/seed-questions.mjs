@@ -45,15 +45,15 @@ async function insertBatch(batch, label) {
 }
 
 async function seedAll() {
-  const TARGET_PER_LEVEL = 2000
-  console.log('🚀 Bắt đầu quá trình sinh và nạp 2.000 CÂU HỎI CHO MỖI CHỦ ĐỀ vào Supabase...')
+  const TARGET_PER_LEVEL = 5000
+  console.log('🚀 Bắt đầu quá trình sinh và nạp 5.000 CÂU HỎI CHO MỖI CHỦ ĐỀ vào Supabase...')
   console.log(`🔗 Supabase URL: ${supabaseUrl}`)
 
   const allQuestions = []
 
-  // 1. Tiếng Anh (7 levels x 2000 = 14,000 câu)
+  // 1. Tiếng Anh (7 levels x 5000 = 35,000 câu)
   const enLevels = ['starters', 'movers', 'flyers', 'a1', 'a2', 'b1', 'b2']
-  console.log('\n📚 Đang tạo ngân hàng câu hỏi Tiếng Anh (2.000 câu/cấp độ)...')
+  console.log('\n📚 Đang tạo ngân hàng câu hỏi Tiếng Anh (5.000 câu/cấp độ)...')
   for (const lvl of enLevels) {
     const list = generateEnglishQuestions(lvl, TARGET_PER_LEVEL)
     for (const q of list) {
@@ -67,12 +67,12 @@ async function seedAll() {
         explanation: q.explanation
       })
     }
-    console.log(`   ✓ Tiếng Anh [${lvl.toUpperCase()}]: Tạo thành công ${list.length} câu`)
+    console.log(`   ✓ Tiếng Anh [${lvl.toUpperCase()}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
   }
 
-  // 2. Tiếng Trung (8 levels x 2000 = 16,000 câu)
+  // 2. Tiếng Trung (8 levels x 5000 = 40,000 câu)
   const zhLevels = ['hsk1', 'hsk2', 'hsk3', 'hsk4', 'hsk5', 'life', 'office', 'factory']
-  console.log('\n🏮 Đang tạo ngân hàng câu hỏi Tiếng Trung (2.000 câu/cấp độ)...')
+  console.log('\n🏮 Đang tạo ngân hàng câu hỏi Tiếng Trung (5.000 câu/cấp độ)...')
   for (const lvl of zhLevels) {
     const list = generateChineseQuestions(lvl, TARGET_PER_LEVEL)
     for (const q of list) {
@@ -86,11 +86,11 @@ async function seedAll() {
         explanation: q.explanation
       })
     }
-    console.log(`   ✓ Tiếng Trung [${lvl.toUpperCase()}]: Tạo thành công ${list.length} câu`)
+    console.log(`   ✓ Tiếng Trung [${lvl.toUpperCase()}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
   }
 
-  // 3. Toán học (5 levels x 2000 = 10,000 câu)
-  console.log('\n🔢 Đang tạo ngân hàng câu hỏi Toán học (2.000 câu/lớp)...')
+  // 3. Toán học (5 levels x 5000 = 25,000 câu)
+  console.log('\n🔢 Đang tạo ngân hàng câu hỏi Toán học (5.000 câu/lớp)...')
   const mathGenerators = [
     { lvl: 'grade1', name: 'Lớp 1', fn: generateGrade1Questions },
     { lvl: 'grade2', name: 'Lớp 2', fn: generateGrade2Questions },
@@ -112,13 +112,13 @@ async function seedAll() {
         explanation: q.explanation
       })
     }
-    console.log(`   ✓ Toán học [${item.name}]: Tạo thành công ${list.length} câu`)
+    console.log(`   ✓ Toán học [${item.name}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
   }
 
   console.log(`\n📦 TỔNG CỘNG ĐÃ SINH: ${allQuestions.length.toLocaleString('vi-VN')} CÂU HỎI (0 token tốn kém).`)
-  console.log('⏳ Đang ghi vào Supabase database theo từng gói 500 câu...')
+  console.log('⏳ Đang ghi vào Supabase database theo từng gói 1.000 câu...')
 
-  const BATCH_SIZE = 500
+  const BATCH_SIZE = 1000
   let insertedCount = 0
   const startTime = Date.now()
 

@@ -507,16 +507,10 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
           {/* Center Webcam Preview */}
           <div className={styles.centerCamera}>
-            <CameraView 
-              tracker={tracker} 
-              showCalibration={showCalibration} 
-              onCalibrated={() => setShowCalibration(false)} 
-            />
-            {!showCalibration && (
-              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', margin: 0, textAlign: 'center' }}>
-                {showExplanation ? 'Nghiêng đầu để tiếp tục!' : 'Nghiêng đầu Trái / Phải để chọn!'}
-              </p>
-            )}
+            <CameraView tracker={tracker} />
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', margin: 0, textAlign: 'center' }}>
+              {showExplanation ? 'Nghiêng đầu để tiếp tục!' : 'Nghiêng đầu Trái / Phải để chọn!'}
+            </p>
           </div>
 
           {/* Right Answer Option */}
@@ -580,6 +574,75 @@ export default function GameScreen({ language, level, onBackToLobby }) {
           </div>
         </section>
       )}
+
+      {/* 🚀 Calibration & Ready Modal Overlay (Foolproof & Super Touch-Friendly for Mobile) */}
+      {showCalibration && (
+        <div className={styles.readyModalOverlay}>
+          <div className={styles.readyModalCard}>
+            <div className={styles.readyHeader}>
+              <Sparkles size={28} color="#ffd43b" />
+              <h2 className={styles.readyTitle}>Chào Bé Thám Hiểm! 🎒</h2>
+            </div>
+            
+            <p className={styles.readySub}>
+              Bé đã sẵn sàng khám phá bài học <strong>{level.toUpperCase()}</strong> chưa?
+            </p>
+
+            <div className={styles.readyCameraWrap}>
+              <CameraView tracker={tracker} />
+            </div>
+
+            <div className={styles.readyTips}>
+              <div className={styles.readyTipItem}>
+                <span>👈👉</span>
+                <span>Nghiêng đầu Trái / Phải để chọn</span>
+              </div>
+              <div className={styles.readyTipItem}>
+                <span>👆</span>
+                <span>Hoặc chạm ngón tay vào đáp án</span>
+              </div>
+            </div>
+
+            <div className={styles.readyActions}>
+              <button 
+                className="playful-btn"
+                onClick={() => {
+                  tracker.calibrate()
+                  setShowCalibration(false)
+                }}
+                style={{ 
+                  width: '100%', 
+                  fontSize: '17px', 
+                  padding: '16px', 
+                  borderRadius: '22px',
+                  boxShadow: '0 8px 24px rgba(85, 166, 48, 0.4)',
+                  touchAction: 'manipulation',
+                  cursor: 'pointer'
+                }}
+              >
+                🚀 SẴN SÀNG BẮT ĐẦU!
+              </button>
+
+              <button 
+                className="playful-btn playful-btn-secondary"
+                onClick={() => setShowCalibration(false)}
+                style={{ 
+                  width: '100%', 
+                  fontSize: '13px', 
+                  padding: '11px', 
+                  borderRadius: '16px',
+                  marginTop: '8px',
+                  touchAction: 'manipulation',
+                  cursor: 'pointer'
+                }}
+              >
+                👆 Bỏ qua Camera (Chơi bằng cảm ứng tay)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <canvas ref={canvasRef} className={styles.canvasOverlay} />
     </div>
   )
