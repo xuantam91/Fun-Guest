@@ -6,6 +6,7 @@ export default function CameraView({ tracker }) {
   const {
     videoRef,
     isLoading,
+    cameraReady,
     error,
     tiltDirection,
     faceDetected
@@ -22,8 +23,8 @@ export default function CameraView({ tracker }) {
         className={styles.videoFeed}
       />
 
-      {/* Loading Overlay */}
-      {isLoading && (
+      {/* Loading Overlay - Only shown when camera is actually loading and not ready yet */}
+      {isLoading && !cameraReady && (
         <div className={styles.overlay}>
           <div className={styles.loader}></div>
           <p style={{ fontSize: '12px', margin: 0, fontWeight: 600 }}>
@@ -35,7 +36,7 @@ export default function CameraView({ tracker }) {
       {/* Error Overlay */}
       {error && (
         <div className={styles.overlay}>
-          <AlertCircle size={28} color="#ff6b6b" style={{ marginBottom: '6px' }} />
+          <AlertCircle size={24} color="#ff6b6b" style={{ marginBottom: '4px' }} />
           <p className={styles.errorText} style={{ fontSize: '11px', margin: 0 }}>{error}</p>
         </div>
       )}
@@ -54,7 +55,7 @@ export default function CameraView({ tracker }) {
 
           <div className={styles.statusIndicator}>
             <span className={`${styles.statusDot} ${faceDetected ? styles.statusDotActive : ''}`} />
-            <span>{faceDetected ? 'Sẵn sàng!' : 'Chưa nhận diện khuôn mặt'}</span>
+            <span>{faceDetected ? 'Sẵn sàng!' : 'Chưa thấy mặt'}</span>
           </div>
         </>
       )}
