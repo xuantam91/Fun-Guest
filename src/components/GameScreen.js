@@ -279,6 +279,8 @@ export default function GameScreen({ language, level, onBackToLobby }) {
       }
     }
 
+    const correctText = currentQuestion.correct_option === 'left' ? currentQuestion.option_left : currentQuestion.option_right
+
     if (isCorrect) {
       playCorrectSound()
       triggerFireworks()
@@ -293,15 +295,20 @@ export default function GameScreen({ language, level, onBackToLobby }) {
         return next
       })
       
-      // Auto move to next after 1.8 seconds
+      // Speak the correct answer word loudly & clearly for the child to remember
+      setTimeout(() => {
+        speakText(`Đúng rồi! ${correctText}`, language)
+      }, 200)
+
+      // Auto move to next question after 2.8 seconds so child can hear full speech
       setTimeout(() => {
         handleNextQuestion()
-      }, 1800)
+      }, 2800)
     } else {
       playIncorrectSound()
       setShowExplanation(true)
-      // Read explanation
-      speakText(currentQuestion.explanation || 'Tiếc quá, sai rồi!', 'vi')
+      // Read correct answer word and full explanation
+      speakText(`Tiếc quá! Đáp án đúng là: ${correctText}. ${currentQuestion.explanation || ''}`, language)
     }
   }
 
