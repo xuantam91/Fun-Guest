@@ -4,6 +4,11 @@ import { generateQuestionsFromGemini } from '@/lib/gemini'
 
 // Built-in emergency fallbacks if both DB and AI are temporarily unreachable
 const emergencyFallbacks = {
+  vi: [
+    { id: 'fb-vi-1', question: 'Chữ cái "A" viết thường tương ứng là chữ nào?', option_left: 'Chữ "a"', option_right: 'Chữ "b"', correct_option: 'left', explanation: 'Chữ hoa "A" có chữ viết thường tương ứng là "a".' },
+    { id: 'fb-vi-2', question: 'Từ "Bà" mang dấu thanh nào?', option_left: 'Dấu Huyền ( ` )', option_right: 'Dấu Sắc ( ´ )', correct_option: 'left', explanation: 'Từ "Bà" mang dấu huyền.' },
+    { id: 'fb-vi-3', question: 'Cuối câu hỏi (ví dụ: "Bé tên là gì?") ta dùng dấu gì?', option_left: 'Dấu hỏi ( ? )', option_right: 'Dấu chấm ( . )', correct_option: 'left', explanation: 'Cuối câu hỏi kết thúc bằng Dấu hỏi ( ? ).' }
+  ],
   en: [
     { id: 'fb-en-1', question: 'Từ nào có nghĩa là "Quả Táo"?', option_left: 'Apple', option_right: 'Banana', correct_option: 'left', explanation: '"Apple" dịch sang tiếng Việt nghĩa là quả táo.' },
     { id: 'fb-en-2', question: 'Từ nào có nghĩa là "Con Mèo"?', option_left: 'Dog', option_right: 'Cat', correct_option: 'right', explanation: '"Cat" dịch sang tiếng Việt nghĩa là con mèo.' },
@@ -28,7 +33,7 @@ export async function GET(request) {
 
     const customKey = request.headers.get('x-gemini-api-key') || null
 
-    if (!['en', 'zh', 'math'].includes(lang)) {
+    if (!['en', 'zh', 'math', 'vi'].includes(lang)) {
       return NextResponse.json({ error: 'Ngôn ngữ hoặc môn học không hợp lệ.' }, { status: 400 })
     }
 
@@ -44,7 +49,6 @@ export async function GET(request) {
         .range(offset, offset + 40)
 
       if (!fetchError && cachedQuestions && cachedQuestions.length >= count) {
-        // Shuffle the fetched window and select `count` questions
         const shuffled = [...cachedQuestions].sort(() => 0.5 - Math.random())
         const selected = shuffled.slice(0, count)
 
@@ -92,20 +96,14 @@ export async function GET(request) {
     }
 
     // 4. Ultimate Emergency Fallback (Guarantees app NEVER crashes with 500 error!)
-    const list = emergencyFallbacks[lang] || emergencyFallbacks.en
+    const list = emergencyFallbacks[lang] || emergencyFallbacks.vi || emergencyFallbacks.en
     return NextResponse.json({
       questions: list,
       refill: false,
       source: 'emergency-fallback'
     })
-
   } catch (err) {
-    console.error('Lỗi bất ngờ trong API questions:', err)
-    const list = emergencyFallbacks.en
-    return NextResponse.json({
-      questions: list,
-      refill: false,
-      source: 'emergency-fallback'
-    })
+    console.error('Lỗi hệ thống trong API route questions:', err)
+    return NextResponse.json({ error: 'Không thể xử lý yêu cầu.' }, { status: 500 })
   }
 }

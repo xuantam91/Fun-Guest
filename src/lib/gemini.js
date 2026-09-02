@@ -95,6 +95,27 @@ Yêu cầu định dạng đáp án:
     "explanation": "Giải thích..."
   }
 ]`
+  } else if (lang === 'vi') {
+    prompt = `Bạn là chuyên gia thiết kế trò chơi học Tiếng Việt cho trẻ em mầm non và tiểu học.
+Hãy tạo đúng ${count} câu hỏi trắc nghiệm Tiếng Việt theo chủ đề: "${level}" (alphabet: bảng chữ cái, tones: thanh điệu/dấu, vowels: nguyên âm/phụ âm, spelling: đánh vần, rhymes: ghép vần, words: từ vựng, sentences: câu/dấu câu, proverbs: ca dao tục ngữ).
+
+Yêu cầu cho mỗi câu hỏi:
+1. "question": Câu hỏi ngắn gọn, dễ thương bằng tiếng Việt phù hợp cho trẻ em.
+2. "option_left": Đáp án lựa chọn bên trái.
+3. "option_right": Đáp án lựa chọn bên phải.
+4. "correct_option": Chỉ nhận giá trị "left" hoặc "right".
+5. "explanation": Giải thích ngắn gọn bằng tiếng Việt để bé ghi nhớ.
+
+Định dạng trả về bắt buộc phải là một mảng JSON chứa các đối tượng có cấu trúc chính xác như sau:
+[
+  {
+    "question": "Câu hỏi...",
+    "option_left": "Đáp án A...",
+    "option_right": "Đáp án B...",
+    "correct_option": "left",
+    "explanation": "Giải thích..."
+  }
+]`
   } else {
     throw new Error('Ngôn ngữ không hỗ trợ: ' + lang)
   }
