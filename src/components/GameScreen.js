@@ -179,7 +179,17 @@ export default function GameScreen({ language, level, onBackToLobby }) {
           throw new Error(data.error)
         }
 
-        setQuestions(data.questions || [])
+        const rawList = data.questions || []
+        const seenText = new Set()
+        const uniqueList = rawList.filter(q => {
+          if (!q || !q.question) return false
+          const key = q.question.trim().toLowerCase()
+          if (seenText.has(key)) return false
+          seenText.add(key)
+          return true
+        })
+
+        setQuestions(uniqueList)
         currentIndexRef.current = 0
         answeredRef.current = false
         

@@ -376,7 +376,7 @@ export function generateChineseQuestions(level, targetCount = 5000) {
     const optLeft = isLeft ? `${item.hanzi} (${item.pinyin})` : `${other.hanzi} (${other.pinyin})`
     const optRight = isLeft ? `${other.hanzi} (${other.pinyin})` : `${item.hanzi} (${item.pinyin})`
 
-    const hashKey = `${level}_${item.hanzi}_${other.hanzi}_${tplIdx}_${isLeft}`
+    const hashKey = tpl.q.trim().toLowerCase()
     if (!seen.has(hashKey)) {
       seen.add(hashKey)
       questions.push({

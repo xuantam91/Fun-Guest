@@ -749,7 +749,13 @@ export function generateGrade5Questions(targetCount = 5000) {
       }
     }
 
-    if (qObj) questions.push(qObj)
+    if (qObj) {
+      const normKey = qObj.question.trim().toLowerCase()
+      if (!seen.has(normKey)) {
+        seen.add(normKey)
+        questions.push(qObj)
+      }
+    }
   }
 
   return questions

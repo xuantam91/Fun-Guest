@@ -24,6 +24,20 @@ const emergencyFallbacks = {
   ]
 }
 
+/**
+ * Deduplicates question objects strictly by normalized question text string.
+ */
+function deduplicateQuestions(list) {
+  const seen = new Set()
+  return list.filter(q => {
+    if (!q || !q.question) return false
+    const key = q.question.trim().toLowerCase()
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -37,8 +51,8 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Ngôn ngữ hoặc môn học không hợp lệ.' }, { status: 400 })
     }
 
-    // 1. Fast random window offset within [0..200] to ensure 100% row availability
-    const offset = Math.floor(Math.random() * 100)
+    // 1. Fetch a broad random range from Supabase (up to 60 rows)
+    const offset = Math.floor(Math.random() * 50)
 
     try {
       const { data: cachedQuestions, error: fetchError } = await supabaseAdmin
@@ -46,33 +60,37 @@ export async function GET(request) {
         .select('id, question, option_left, option_right, correct_option, explanation')
         .eq('language', lang)
         .eq('level', level)
-        .range(offset, offset + 40)
+        .range(offset, offset + 60)
 
-      if (!fetchError && cachedQuestions && cachedQuestions.length >= count) {
-        const shuffled = [...cachedQuestions].sort(() => 0.5 - Math.random())
-        const selected = shuffled.slice(0, count)
+      if (!fetchError && cachedQuestions && cachedQuestions.length > 0) {
+        // Filter out duplicate questions and shuffle
+        const uniqueQuestions = deduplicateQuestions(cachedQuestions)
+        const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
 
-        return NextResponse.json({
-          questions: selected,
-          refill: false,
-          source: 'cache'
-        })
+        if (shuffled.length >= Math.min(count, 3)) {
+          return NextResponse.json({
+            questions: shuffled.slice(0, count),
+            refill: false,
+            source: 'cache'
+          })
+        }
       }
     } catch (dbErr) {
       console.warn('Cảnh báo DB Cache:', dbErr)
     }
 
-    // 2. If DB cache range returns empty, try full level fetch with limit
+    // 2. Fallback: Query full level pool up to 80 rows
     try {
       const { data: fallbackDbData } = await supabaseAdmin
         .from('question_cache')
         .select('id, question, option_left, option_right, correct_option, explanation')
         .eq('language', lang)
         .eq('level', level)
-        .limit(40)
+        .limit(80)
 
       if (fallbackDbData && fallbackDbData.length > 0) {
-        const shuffled = [...fallbackDbData].sort(() => 0.5 - Math.random())
+        const uniqueQuestions = deduplicateQuestions(fallbackDbData)
+        const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
         return NextResponse.json({
           questions: shuffled.slice(0, count),
           refill: false,
@@ -83,11 +101,12 @@ export async function GET(request) {
       console.warn('Cảnh báo DB Fallback:', fbDbErr)
     }
 
-    // 3. If cache is empty, call Gemini API
+    // 3. Call Gemini API if cache is completely empty
     try {
       const newQuestions = await generateQuestionsFromGemini(lang, level, count, customKey)
+      const uniqueNew = deduplicateQuestions(newQuestions)
       return NextResponse.json({
-        questions: newQuestions.map((q, idx) => ({ id: `temp-${idx}`, ...q })),
+        questions: uniqueNew.map((q, idx) => ({ id: `temp-${idx}`, ...q })),
         refill: false,
         source: 'gemini-direct'
       })
@@ -95,10 +114,10 @@ export async function GET(request) {
       console.error('Lỗi Gemini Direct:', geminiErr)
     }
 
-    // 4. Ultimate Emergency Fallback (Guarantees app NEVER crashes with 500 error!)
+    // 4. Emergency Fallback
     const list = emergencyFallbacks[lang] || emergencyFallbacks.vi || emergencyFallbacks.en
     return NextResponse.json({
-      questions: list,
+      questions: deduplicateQuestions(list),
       refill: false,
       source: 'emergency-fallback'
     })

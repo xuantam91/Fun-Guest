@@ -412,7 +412,7 @@ export function generateEnglishQuestions(level, targetCount = 5000) {
     const tpl = templates[tplIdx](item)
     const isLeft = Math.random() < 0.5
 
-    const hashKey = `${level}_${item.word}_${other.word}_${tplIdx}_${isLeft}`
+    const hashKey = tpl.q.trim().toLowerCase()
     if (!seen.has(hashKey)) {
       seen.add(hashKey)
       questions.push({

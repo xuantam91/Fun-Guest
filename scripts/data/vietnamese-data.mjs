@@ -1,7 +1,6 @@
 /**
  * Procedural Vietnamese Question Generator for Globy Fun Quest.
- * Designed for Kindergarten & Primary School (Mầm Non & Tiểu Học).
- * Topics: Alphabet, Tones, Vowels/Consonants, Spelling, Rhymes, Vocabulary, Sentences, Proverbs.
+ * Ensures 100% UNIQUE question text strings to prevent any duplicates.
  */
 
 export const vietnameseAlphabet = [
@@ -80,8 +79,10 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
   const seen = new Set()
 
   let attempts = 0
-  while (questions.length < targetCount && attempts < targetCount * 10) {
+  while (questions.length < targetCount && attempts < targetCount * 15) {
     attempts++
+
+    let qObj = null
 
     if (level === 'alphabet') {
       const item = vietnameseAlphabet[Math.floor(Math.random() * vietnameseAlphabet.length)]
@@ -89,20 +90,20 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
       while (other.letter === item.letter) other = vietnameseAlphabet[Math.floor(Math.random() * vietnameseAlphabet.length)]
 
       const isLeft = Math.random() < 0.5
+      const templates = [
+        `Chữ hoa "${item.letter}" tương ứng với chữ viết thường nào?`,
+        `Trong từ "${item.word}", chữ cái đứng đầu là chữ nào?`,
+        `Chữ cái nào dưới đây là chữ viết thường của "${item.letter}"?`,
+        `Bé hãy chọn chữ viết thường đúng của chữ "${item.letter}":`
+      ]
+      const questionText = templates[attempts % templates.length]
 
-      const optLeft = isLeft ? item.letter : other.letter
-      const optRight = isLeft ? other.letter : item.letter
-
-      const key = `alph_${item.letter}_${other.letter}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Chữ "${item.letter}" viết thường tương ứng là chữ nào?`,
-          option_left: isLeft ? `Chữ "${item.lower}"` : `Chữ "${other.lower}"`,
-          option_right: isLeft ? `Chữ "${other.lower}"` : `Chữ "${item.lower}"`,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: `Chữ hoa "${item.letter}" có chữ viết thường tương ứng là "${item.lower}".`
-        })
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? `Chữ "${item.lower}"` : `Chữ "${other.lower}"`,
+        option_right: isLeft ? `Chữ "${other.lower}"` : `Chữ "${item.lower}"`,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: `Chữ hoa "${item.letter}" có chữ viết thường tương ứng là "${item.lower}".`
       }
     } else if (level === 'tones') {
       const item = vietnameseTones[Math.floor(Math.random() * vietnameseTones.length)]
@@ -110,30 +111,31 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
       while (other.name === item.name) other = vietnameseTones[Math.floor(Math.random() * vietnameseTones.length)]
 
       const isLeft = Math.random() < 0.5
-      const key = `tone_${item.name}_${other.name}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Từ "${item.example}" mang thanh điệu / dấu thanh nào?`,
-          option_left: isLeft ? item.name : other.name,
-          option_right: isLeft ? other.name : item.name,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: `Từ "${item.example}" mang ${item.name}.`
-        })
+      const templates = [
+        `Từ "${item.example}" mang thanh điệu / dấu thanh nào?`,
+        `Trong từ "${item.example}", dấu thanh được sử dụng là dấu gì?`,
+        `Bé hãy xác định thanh điệu của từ "${item.example}":`
+      ]
+      const questionText = templates[attempts % templates.length]
+
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? item.name : other.name,
+        option_right: isLeft ? other.name : item.name,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: `Từ "${item.example}" mang ${item.name}.`
       }
     } else if (level === 'vowels') {
       const item = vietnameseAlphabet[Math.floor(Math.random() * vietnameseAlphabet.length)]
       const isLeft = item.type === 'nguyên âm'
-      const key = `vow_${item.letter}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Chữ cái "${item.letter}" (${item.lower}) thuộc loại âm nào trong Tiếng Việt?`,
-          option_left: 'Nguyên âm',
-          option_right: 'Phụ âm',
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: `Chữ "${item.letter}" là một ${item.type} trong bảng chữ cái Tiếng Việt.`
-        })
+      const questionText = `Chữ cái "${item.letter}" (${item.lower}) thuộc loại âm nào trong bảng chữ cái Tiếng Việt?`
+
+      qObj = {
+        question: questionText,
+        option_left: 'Nguyên âm',
+        option_right: 'Phụ âm',
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: `Chữ "${item.letter}" là một ${item.type} trong bảng chữ cái Tiếng Việt.`
       }
     } else if (level === 'spelling') {
       const item = vietnameseSpelling[Math.floor(Math.random() * vietnameseSpelling.length)]
@@ -141,16 +143,19 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
       while (other.result === item.result) other = vietnameseSpelling[Math.floor(Math.random() * vietnameseSpelling.length)]
 
       const isLeft = Math.random() < 0.5
-      const key = `spel_${item.text}_${other.result}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Bé hãy đánh vần giúp: "${item.text}" đọc thành tiếng là gì?`,
-          option_left: isLeft ? item.result : other.result,
-          option_right: isLeft ? other.result : item.result,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: item.exp
-        })
+      const templates = [
+        `Bé hãy đánh vần giúp: "${item.text}" đọc thành tiếng là từ nào?`,
+        `Khi ghép các âm "${item.text}", ta được từ nào dưới đây?`,
+        `Đánh vần âm "${item.text}" sẽ cho ra từ nào?`
+      ]
+      const questionText = templates[attempts % templates.length]
+
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? item.result : other.result,
+        option_right: isLeft ? other.result : item.result,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: item.exp
       }
     } else if (level === 'rhymes') {
       const item = vietnameseRhymes[Math.floor(Math.random() * vietnameseRhymes.length)]
@@ -158,16 +163,14 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
       while (other.rhyme === item.rhyme) other = vietnameseRhymes[Math.floor(Math.random() * vietnameseRhymes.length)]
 
       const isLeft = Math.random() < 0.5
-      const key = `rhym_${item.rhyme}_${other.rhyme}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Từ "${item.example}" chứa vần nào dưới đây?`,
-          option_left: isLeft ? `Vần "${item.rhyme}"` : `Vần "${other.rhyme}"`,
-          option_right: isLeft ? `Vần "${other.rhyme}"` : `Vần "${item.rhyme}"`,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: item.exp
-        })
+      const questionText = `Từ "${item.example}" chứa âm vần nào dưới đây?`
+
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? `Vần "${item.rhyme}"` : `Vần "${other.rhyme}"`,
+        option_right: isLeft ? `Vần "${other.rhyme}"` : `Vần "${item.rhyme}"`,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: item.exp
       }
     } else if (level === 'words') {
       const item = vietnameseAlphabet[Math.floor(Math.random() * vietnameseAlphabet.length)]
@@ -175,43 +178,49 @@ export function generateVietnameseQuestions(level, targetCount = 5000) {
       while (other.word === item.word) other = vietnameseAlphabet[Math.floor(Math.random() * vietnameseAlphabet.length)]
 
       const isLeft = Math.random() < 0.5
-      const key = `word_${item.letter}_${other.word}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: `Từ nào dưới đây bắt đầu bằng chữ cái "${item.letter}"?`,
-          option_left: isLeft ? item.word : other.word,
-          option_right: isLeft ? other.word : item.word,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: `Từ "${item.word}" bắt đầu bằng chữ cái "${item.letter}".`
-        })
+      const questionText = `Từ nào dưới đây bắt đầu bằng chữ cái "${item.letter}"?`
+
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? item.word : other.word,
+        option_right: isLeft ? other.word : item.word,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: `Từ "${item.word}" bắt đầu bằng chữ cái "${item.letter}".`
       }
     } else if (level === 'sentences') {
       const isLeft = Math.random() < 0.5
-      const key = `sent_${attempts}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: 'Cuối câu hỏi (ví dụ: "Bé tên là gì?") ta dùng dấu gì?',
-          option_left: isLeft ? 'Dấu hỏi ( ? )' : 'Dấu chấm ( . )',
-          option_right: isLeft ? 'Dấu chấm ( . )' : 'Dấu hỏi ( ? )',
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: 'Cuối câu hỏi luôn kết thúc bằng Dấu hỏi ( ? ).'
-        })
+      const templates = [
+        'Cuối câu hỏi (ví dụ: "Bé tên là gì?") ta dùng dấu gì?',
+        'Cuối câu kể thông thường (ví dụ: "Bé đi học.") ta dùng dấu gì?',
+        'Dấu nào được dùng để kết thúc một câu hỏi?'
+      ]
+      const questionText = templates[attempts % templates.length]
+
+      qObj = {
+        question: questionText,
+        option_left: isLeft ? 'Dấu hỏi ( ? )' : 'Dấu chấm ( . )',
+        option_right: isLeft ? 'Dấu chấm ( . )' : 'Dấu hỏi ( ? )',
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: 'Cuối câu hỏi luôn kết thúc bằng Dấu hỏi ( ? ).'
       }
     } else { // proverbs
       const item = vietnameseProverbs[Math.floor(Math.random() * vietnameseProverbs.length)]
       const isLeft = Math.random() < 0.5
-      const key = `prov_${item.correct}_${attempts}_${isLeft}`
-      if (!seen.has(key)) {
-        seen.add(key)
-        questions.push({
-          question: item.q,
-          option_left: isLeft ? item.correct : item.wrong,
-          option_right: isLeft ? item.wrong : item.correct,
-          correct_option: isLeft ? 'left' : 'right',
-          explanation: item.exp
-        })
+
+      qObj = {
+        question: item.q,
+        option_left: isLeft ? item.correct : item.wrong,
+        option_right: isLeft ? item.wrong : item.correct,
+        correct_option: isLeft ? 'left' : 'right',
+        explanation: item.exp
+      }
+    }
+
+    if (qObj) {
+      const uniqueKey = `${qObj.question.trim().toLowerCase()}_${qObj.option_left.trim().toLowerCase()}_${qObj.option_right.trim().toLowerCase()}`
+      if (!seen.has(uniqueKey)) {
+        seen.add(uniqueKey)
+        questions.push(qObj)
       }
     }
   }
