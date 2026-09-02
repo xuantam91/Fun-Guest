@@ -4,6 +4,7 @@ import path from 'path'
 import { generateGrade1Questions, generateGrade2Questions, generateGrade3Questions, generateGrade4Questions, generateGrade5Questions } from './data/math-generator.mjs'
 import { generateEnglishQuestions } from './data/english-data.mjs'
 import { generateChineseQuestions } from './data/chinese-data.mjs'
+import { generateVietnameseQuestions } from './data/vietnamese-data.mjs'
 
 // 1. Manually parse .env.local if not present in process.env
 const envPath = path.resolve(process.cwd(), '.env.local')
@@ -105,12 +106,15 @@ async function seedAll() {
     { lvl: 'grade5', name: 'Lớp 5', fn: generateGrade5Questions },
   ]
 
-  for (const item of mathGenerators) {
-    const list = item.fn(TARGET_PER_LEVEL)
+  // 4. Tiếng Việt (8 levels x 5000 = 40,000 câu)
+  console.log('\n🇻🇳 Đang tạo ngân hàng câu hỏi Tiếng Việt Mầm Non & Tiểu Học (5.000 câu/chủ đề)...')
+  const viLevels = ['alphabet', 'tones', 'vowels', 'spelling', 'rhymes', 'words', 'sentences', 'proverbs']
+  for (const lvl of viLevels) {
+    const list = generateVietnameseQuestions(lvl, TARGET_PER_LEVEL)
     for (const q of list) {
       allQuestions.push({
-        language: 'math',
-        level: item.lvl,
+        language: 'vi',
+        level: lvl,
         question: q.question,
         option_left: q.option_left,
         option_right: q.option_right,
@@ -118,7 +122,7 @@ async function seedAll() {
         explanation: q.explanation
       })
     }
-    console.log(`   ✓ Toán học [${item.name}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
+    console.log(`   ✓ Tiếng Việt [${lvl.toUpperCase()}]: Tạo thành công ${list.length.toLocaleString('vi-VN')} câu`)
   }
 
   console.log(`\n📦 TỔNG CỘNG ĐÃ SINH: ${allQuestions.length.toLocaleString('vi-VN')} CÂU HỎI (0 token tốn kém).`)

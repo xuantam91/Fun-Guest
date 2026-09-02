@@ -1,7 +1,7 @@
 /**
  * Advanced Text-To-Speech (TTS) Engine for GLOBY Fun Quest.
  * Supports:
- * 1. Microsoft Edge Neural TTS (Giọng đọc AI Cao Cấp - Hoài My, Ana, 晓晓)
+ * 1. Microsoft Edge Neural TTS (Giọng đọc AI Cao Cấp - Nữ / Nam)
  * 2. Web Speech API (Giọng đọc mặc định trình duyệt)
  */
 
@@ -46,7 +46,7 @@ export function autoDetectLang(text, fallbackLang = 'vi') {
   return fallbackLang
 }
 
-function findBestVoice(lang) {
+function findBestVoice(lang, gender = 'female') {
   if (!cachedVoices || cachedVoices.length === 0) {
     loadVoices()
   }
@@ -78,7 +78,7 @@ function findBestVoice(lang) {
   return null
 }
 
-function speakBrowserTTS(cleanText, detectedLang) {
+function speakBrowserTTS(cleanText, detectedLang, gender = 'female') {
   if (!window.speechSynthesis) return
 
   try {
@@ -95,13 +95,13 @@ function speakBrowserTTS(cleanText, detectedLang) {
       utterance.lang = 'vi-VN'
     }
 
-    const voice = findBestVoice(detectedLang)
+    const voice = findBestVoice(detectedLang, gender)
     if (voice) {
       utterance.voice = voice
     }
 
     utterance.rate = 0.88
-    utterance.pitch = 1.1
+    utterance.pitch = gender === 'male' ? 0.95 : 1.1
 
     window.speechSynthesis.speak(utterance)
   } catch (err) {
@@ -110,12 +110,13 @@ function speakBrowserTTS(cleanText, detectedLang) {
 }
 
 /**
- * Speak text with selected engine ('ms' for Microsoft Neural AI, 'browser' for local SpeechSynthesis).
+ * Speak text with selected engine and gender.
  * @param {string} text - Text to speak
  * @param {string} targetLang - Language ('en', 'zh', or 'vi')
  * @param {string} engineMode - 'ms' or 'browser'
+ * @param {string} gender - 'female' or 'male'
  */
-export function speakText(text, targetLang = 'vi', engineMode = 'ms') {
+export function speakText(text, targetLang = 'vi', engineMode = 'ms', gender = 'female') {
   if (typeof window === 'undefined') return
 
   const cleanText = text.replace(/[\[\]]/g, '').trim()
@@ -140,12 +141,12 @@ export function speakText(text, targetLang = 'vi', engineMode = 'ms') {
   // 3. Play with Microsoft Neural AI voice
   if (engineMode === 'ms' || engineMode === 'edge') {
     try {
-      const audioUrl = `/api/tts?text=${encodeURIComponent(cleanText)}&lang=${detectedLang}&engine=ms`
+      const audioUrl = `/api/tts?text=${encodeURIComponent(cleanText)}&lang=${detectedLang}&engine=ms&gender=${gender}`
       const audio = new Audio(audioUrl)
       currentAudio = audio
       audio.play().catch(err => {
         console.warn('Không thể phát Microsoft Neural audio tự động, fallback sang giọng trình duyệt:', err)
-        speakBrowserTTS(cleanText, detectedLang)
+        speakBrowserTTS(cleanText, detectedLang, gender)
       })
       return
     } catch (err) {
@@ -154,5 +155,5 @@ export function speakText(text, targetLang = 'vi', engineMode = 'ms') {
   }
 
   // Fallback to browser voice
-  speakBrowserTTS(cleanText, detectedLang)
+  speakBrowserTTS(cleanText, detectedLang, gender)
 }

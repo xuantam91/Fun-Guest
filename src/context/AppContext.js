@@ -16,12 +16,14 @@ export function AppProvider({ children }) {
   const [streak, setStreak] = useState(0)
   const [customApiKey, setCustomApiKey] = useState('')
   const [ttsEngine, setTtsEngine] = useState('ms') // 'ms' (Microsoft Neural AI) | 'browser' (Browser Default)
+  const [ttsGender, setTtsGender] = useState('female') // 'female' | 'male'
 
-  // Load custom API key and TTS Engine preference on client mount
+  // Load custom API key and TTS Engine & Gender preference on client mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCustomApiKey(localStorage.getItem('globy_gemini_api_key') || '')
       setTtsEngine(localStorage.getItem('globy_tts_engine') || 'ms')
+      setTtsGender(localStorage.getItem('globy_tts_gender') || 'female')
     }
   }, [])
 
@@ -40,6 +42,13 @@ export function AppProvider({ children }) {
     setTtsEngine(engine)
     if (typeof window !== 'undefined') {
       localStorage.setItem('globy_tts_engine', engine)
+    }
+  }
+
+  const saveTtsGender = (gender) => {
+    setTtsGender(gender)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('globy_tts_gender', gender)
     }
   }
 
@@ -268,6 +277,8 @@ export function AppProvider({ children }) {
         saveCustomApiKey,
         ttsEngine,
         saveTtsEngine,
+        ttsGender,
+        saveTtsGender,
         setTheme: changeTheme,
         toggleMode,
         setAvatar: changeAvatar,

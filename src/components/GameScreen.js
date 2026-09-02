@@ -43,7 +43,7 @@ export function playIncorrectSound() {
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
-  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine } = useApp()
+  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender } = useApp()
   const tracker = useFaceTracker()
   const { tiltDirection, faceDetected } = tracker
 
@@ -317,7 +317,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
       
       // Speak the correct answer word loudly & clearly for the child to remember
       setTimeout(() => {
-        speakText(`Đúng rồi! ${correctText}`, language, ttsEngine)
+        speakText(`Đúng rồi! ${correctText}`, language, ttsEngine, ttsGender)
       }, 200)
 
       // Auto move to next question after 2.8 seconds so child can hear full speech
@@ -328,7 +328,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
       playIncorrectSound()
       setShowExplanation(true)
       // Read correct answer word and full explanation
-      speakText(`Tiếc quá! Đáp án đúng là: ${correctText}. ${currentQuestion.explanation || ''}`, language, ttsEngine)
+      speakText(`Tiếc quá! Đáp án đúng là: ${correctText}. ${currentQuestion.explanation || ''}`, language, ttsEngine, ttsGender)
     }
   }
 

@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server'
 import WebSocket from 'ws'
 import crypto from 'crypto'
 
-// Microsoft Edge Neural Voices mapping
+// Microsoft Edge Neural Voices mapping (Female & Male for VI, EN, ZH)
 const EDGE_VOICES = {
-  vi: 'vi-VN-HoaiMyNeural', // Microsoft Hoài My (Tiếng Việt ngọt ngào)
-  en: 'en-US-AnaNeural',    // Microsoft Ana (Tiếng Anh nhí nhảnh chuẩn Mỹ)
-  zh: 'zh-CN-XiaoxiaoNeural' // Microsoft 晓晓 (Tiếng Trung chuẩn Phổ Thông)
+  female: {
+    vi: 'vi-VN-HoaiMyNeural',      // Microsoft Hoài My (Nữ Việt Nam ngọt ngào)
+    en: 'en-US-AnaNeural',         // Microsoft Ana (Nữ Mỹ nhí nhảnh)
+    zh: 'zh-CN-XiaoxiaoNeural'    // Microsoft 晓晓 (Nữ Trung Phổ Thông)
+  },
+  male: {
+    vi: 'vi-VN-NamMinhNeural',     // Microsoft Nam Minh (Nam Việt Nam trầm ấm)
+    en: 'en-US-ChristopherNeural', // Microsoft Christopher (Nam Mỹ truyền cảm)
+    zh: 'zh-CN-YunxiNeural'        // Microsoft 云希 (Nam Trung Phổ Thông)
+  }
 }
 
 function escapeXml(unsafe) {
@@ -25,13 +32,11 @@ function escapeXml(unsafe) {
 
 /**
  * Builds smart multi-voice SSML to switch native voices seamlessly for mixed language sentences.
- * Example: "Từ 'Leather' nghĩa là gì?" ->
- * Hoài My reads "Từ ", Ana reads "Leather", Hoài My reads " nghĩa là gì?"
  */
-function buildMultiVoiceSSML(text, primaryLang = 'vi') {
-  const defaultVoice = EDGE_VOICES[primaryLang] || EDGE_VOICES.vi
+function buildMultiVoiceSSML(text, primaryLang = 'vi', gender = 'female') {
+  const voiceMap = EDGE_VOICES[gender] || EDGE_VOICES.female
+  const defaultVoice = voiceMap[primaryLang] || voiceMap.vi
 
-  // Split by quotes '...' or "..." or Chinese Hanzi blocks
   const parts = text.split(/(['"][^'"]+['"]|[\u4e00-\u9fa5]+)/g)
   let ssmlBody = ''
 
@@ -43,34 +48,32 @@ function buildMultiVoiceSSML(text, primaryLang = 'vi') {
       continue
     }
 
-    // Quoted text (e.g. 'Leather' or "Apple" or '今天')
     if ((part.startsWith("'") && part.endsWith("'")) || (part.startsWith('"') && part.endsWith('"'))) {
       const inner = part.slice(1, -1).trim()
       if (/[\u4e00-\u9fa5]/.test(inner)) {
-        ssmlBody += `<voice name="${EDGE_VOICES.zh}">${escapeXml(inner)}</voice>`
+        ssmlBody += `<voice name="${voiceMap.zh}">${escapeXml(inner)}</voice>`
       } else if (/^[a-zA-Z0-9\s\-\.\,\!\?]+$/.test(inner)) {
-        ssmlBody += `<voice name="${EDGE_VOICES.en}">${escapeXml(inner)}</voice>`
+        ssmlBody += `<voice name="${voiceMap.en}">${escapeXml(inner)}</voice>`
       } else {
         ssmlBody += `<voice name="${defaultVoice}">${escapeXml(part)}</voice>`
       }
     } 
-    // Chinese Hanzi block
     else if (/^[\u4e00-\u9fa5]+$/.test(trimmed)) {
-      ssmlBody += `<voice name="${EDGE_VOICES.zh}">${escapeXml(trimmed)}</voice>`
+      ssmlBody += `<voice name="${voiceMap.zh}">${escapeXml(trimmed)}</voice>`
     } 
-    // Default narrative text (Vietnamese)
     else {
-      ssmlBody += `<voice name="${EDGE_VOICES.vi}">${escapeXml(part)}</voice>`
+      ssmlBody += `<voice name="${voiceMap.vi}">${escapeXml(part)}</voice>`
     }
   }
 
   return `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'><pitch amount='0Hz'><rate speed='-5%'>${ssmlBody}</rate></pitch></speak>`
 }
 
-function synthesizeEdgeTTS(text, primaryLang = 'vi') {
+function synthesizeEdgeTTS(text, primaryLang = 'vi', gender = 'female') {
   return new Promise((resolve, reject) => {
     const requestId = crypto.randomBytes(16).toString('hex')
-    const defaultVoice = EDGE_VOICES[primaryLang] || EDGE_VOICES.vi
+    const voiceMap = EDGE_VOICES[gender] || EDGE_VOICES.female
+    const defaultVoice = voiceMap[primaryLang] || voiceMap.vi
 
     const ws = new WebSocket(
       `wss://speech.platform.bing.com/consumer/speech/synthesize/readaloud/edge/v1?TrustedClientToken=6A5AA1D4EA634081836C887971295790&ConnectionId=${requestId}`,
@@ -90,12 +93,10 @@ function synthesizeEdgeTTS(text, primaryLang = 'vi') {
     }, 4000)
 
     ws.on('open', () => {
-      // 1. Config header
       const configHeader = `Content-Type:application/json; charset=utf-8\r\nPath:speech.config\r\n\r\n{"context":{"synthesis":{"audio":{"outputFormat":"audio-24khz-48kbitrate-mono-mp3","voiceMix":{"voices":[{"name":"${defaultVoice}"}]}}}}}`
       ws.send(configHeader)
 
-      // 2. Multi-voice SSML header
-      const ssml = buildMultiVoiceSSML(text, primaryLang)
+      const ssml = buildMultiVoiceSSML(text, primaryLang, gender)
       const ssmlHeader = `X-RequestId:${requestId}\r\nContent-Type:application/ssml+xml\r\nPath:ssml\r\n\r\n${ssml}`
       ws.send(ssmlHeader)
     })
@@ -142,6 +143,7 @@ export async function GET(request) {
     const text = searchParams.get('text') || ''
     const lang = searchParams.get('lang') || 'vi'
     const engine = searchParams.get('engine') || 'ms'
+    const gender = searchParams.get('gender') || 'female' // 'female' or 'male'
 
     const cleanText = text.replace(/[\[\]]/g, '').trim()
     if (!cleanText) {
@@ -152,7 +154,7 @@ export async function GET(request) {
 
     if (engine === 'ms') {
       try {
-        audioBuffer = await synthesizeEdgeTTS(cleanText, lang)
+        audioBuffer = await synthesizeEdgeTTS(cleanText, lang, gender)
       } catch (msErr) {
         console.warn('Lỗi Edge Multi-Voice SSML, đang chuyển sang Fallback:', msErr.message)
         const langCode = lang === 'zh' ? 'zh-CN' : lang === 'en' ? 'en' : 'vi'

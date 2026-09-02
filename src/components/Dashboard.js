@@ -18,6 +18,8 @@ export default function Dashboard({ onSelectLevel }) {
     saveCustomApiKey,
     ttsEngine,
     saveTtsEngine,
+    ttsGender,
+    saveTtsGender,
     setTheme,
     toggleMode,
     setAvatar,
@@ -64,6 +66,17 @@ export default function Dashboard({ onSelectLevel }) {
     { code: 'hobbies', name: 'Sở Thích', desc: 'Vẽ tranh, đánh cờ & âm nhạc', icon: '🎨', count: '2.000' },
     { code: 'festivals', name: 'Lễ Hội', desc: 'Tết Nguyên Đán & lì xì', icon: '🏮', count: '2.000' },
     { code: 'social', name: 'Mạng Xã Hội', desc: 'WeChat, thả tim & bình luận', icon: '💬', count: '2.000' },
+  ]
+
+  const vietnameseLevels = [
+    { code: 'alphabet', name: 'Bảng Chữ Cái', desc: 'Nhận biết 29 chữ cái Tiếng Việt hoa & thường', icon: '🅰️', count: '5.000' },
+    { code: 'tones', name: 'Thanh Điệu & Dấu', desc: 'Dấu huyền, sắc, hỏi, ngã, nặng & không dấu', icon: '🎶', count: '5.000' },
+    { code: 'vowels', name: 'Nguyên Âm & Phụ Âm', desc: 'Phân biệt nguyên âm và phụ âm Tiếng Việt', icon: '🔤', count: '5.000' },
+    { code: 'spelling', name: 'Đánh Vần Cơ Bản', desc: 'Tập ghép vần b-a ba, m-ẹ mẹ, c-á cá', icon: '🗣️', count: '5.000' },
+    { code: 'rhymes', name: 'Ghép Vần & Âm Vần', desc: 'Vần an, at, am, em, in, ong, uon', icon: '📖', count: '5.000' },
+    { code: 'words', name: 'Từ Vựng Việt Nam', desc: 'Con vật, đồ vật, cây cối & người thân', icon: '🌳', count: '5.000' },
+    { code: 'sentences', name: 'Câu & Dấu Câu', desc: 'Dấu chấm, dấu hỏi & cấu trúc câu', icon: '✍️', count: '5.000' },
+    { code: 'proverbs', name: 'Ca Dao & Tục Ngữ', desc: 'Ca dao tục ngữ Việt Nam giàu ý nghĩa', icon: '🌾', count: '5.000' },
   ]
 
   const mathLevels = [
@@ -242,6 +255,13 @@ export default function Dashboard({ onSelectLevel }) {
           <span>Tất Cả</span>
         </button>
         <button
+          className={`${styles.tabBtn} ${activeTab === 'vi' ? styles.tabBtnActive : ''}`}
+          onClick={() => setActiveTab('vi')}
+        >
+          <span>🇻🇳</span>
+          <span>Tiếng Việt</span>
+        </button>
+        <button
           className={`${styles.tabBtn} ${activeTab === 'en' ? styles.tabBtnActive : ''}`}
           onClick={() => setActiveTab('en')}
         >
@@ -373,7 +393,31 @@ export default function Dashboard({ onSelectLevel }) {
         </section>
       )}
 
-      {/* 3. English levels */}
+      {/* 3. Vietnamese levels */}
+      {(activeTab === 'all' || activeTab === 'vi') && (
+        <section className={styles.questSection}>
+          <h2 className={styles.sectionHeading}>
+            <Sparkles size={22} color="#51cf66" />
+            <span>Tiếng Việt Quest (Mầm Non & Tiểu Học)</span>
+          </h2>
+          <div className={styles.grid}>
+            {vietnameseLevels.map((lvl) => (
+              <div
+                key={lvl.code}
+                className={styles.questCard}
+                onClick={() => onSelectLevel('vi', lvl.code)}
+              >
+                <span className={styles.questionCountBadge}>⚡ {lvl.count} câu</span>
+                <span className={styles.cardIcon}>{lvl.icon}</span>
+                <h3 className={styles.cardLevel}>{lvl.name}</h3>
+                <p className={styles.cardDesc}>{lvl.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 4. English levels */}
       {(activeTab === 'all' || activeTab === 'en') && (
         <section className={styles.questSection}>
           <h2 className={styles.sectionHeading}>
@@ -397,7 +441,7 @@ export default function Dashboard({ onSelectLevel }) {
         </section>
       )}
 
-      {/* 4. Chinese levels */}
+      {/* 5. Chinese levels */}
       {(activeTab === 'all' || activeTab === 'zh') && (
         <section className={styles.questSection}>
           <h2 className={styles.sectionHeading}>
@@ -421,7 +465,7 @@ export default function Dashboard({ onSelectLevel }) {
         </section>
       )}
 
-      {/* 5. Math Quest levels */}
+      {/* 6. Math Quest levels */}
       {(activeTab === 'all' || activeTab === 'math') && (
         <section className={styles.questSection}>
           <h2 className={styles.sectionHeading}>
@@ -710,6 +754,58 @@ export default function Dashboard({ onSelectLevel }) {
                   </p>
                 </div>
                 {ttsEngine === 'browser' && <CheckCircle size={20} color="var(--primary-color)" />}
+              </div>
+            </div>
+
+            {/* Gender Selection Section */}
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px dashed var(--card-border)', marginBottom: '18px' }}>
+              <p style={{ fontSize: '12.5px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--text-color)' }}>
+                👤 Chọn Giọng Nam hoặc Giọng Nữ:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => saveTtsGender('female')}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '14px',
+                    border: ttsGender === 'female' ? '2.5px solid var(--primary-color)' : '1.5px solid var(--card-border)',
+                    background: ttsGender === 'female' ? 'rgba(51, 154, 240, 0.12)' : 'var(--card-bg)',
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    color: ttsGender === 'female' ? 'var(--primary-color)' : 'var(--text-color)'
+                  }}
+                >
+                  <span>👩 Giọng Nữ</span>
+                  <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)' }}>(Hoài My)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => saveTtsGender('male')}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '14px',
+                    border: ttsGender === 'male' ? '2.5px solid var(--primary-color)' : '1.5px solid var(--card-border)',
+                    background: ttsGender === 'male' ? 'rgba(51, 154, 240, 0.12)' : 'var(--card-bg)',
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    color: ttsGender === 'male' ? 'var(--primary-color)' : 'var(--text-color)'
+                  }}
+                >
+                  <span>👨 Giọng Nam</span>
+                  <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)' }}>(Nam Minh)</span>
+                </button>
               </div>
             </div>
 
