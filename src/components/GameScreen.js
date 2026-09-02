@@ -206,9 +206,9 @@ export default function GameScreen({ language, level, onBackToLobby }) {
       const q = questions[currentIndex]
       // TTS read question with automatic language detection & native voice matching
       const speakLang = autoDetectLang(q.question, language)
-      speakText(q.question, speakLang)
+      speakText(q.question, speakLang, ttsEngine, ttsGender)
     }
-  }, [currentIndex, questions, showCalibration, showScoreboard, language])
+  }, [currentIndex, questions, showCalibration, showScoreboard, language, ttsEngine, ttsGender])
 
   // 3. Handle option charging (head tilting integration)
   useEffect(() => {

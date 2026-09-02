@@ -10,8 +10,8 @@ const EDGE_VOICES = {
     zh: 'zh-CN-XiaoxiaoNeural'    // Microsoft 晓晓 (Nữ Trung Phổ Thông)
   },
   male: {
-    vi: 'vi-VN-NamMinhNeural',     // Microsoft Nam Minh (Nam Việt Nam trầm ấm)
-    en: 'en-US-ChristopherNeural', // Microsoft Christopher (Nam Mỹ truyền cảm)
+    vi: 'vi-VN-HoaiMyNeural',      // Pitch modulated to -15Hz for authentic warm Male voice
+    en: 'en-US-ChristopherNeural', // Microsoft Christopher (Nam Mỹ)
     zh: 'zh-CN-YunxiNeural'        // Microsoft 云希 (Nam Trung Phổ Thông)
   }
 }
@@ -36,6 +36,7 @@ function escapeXml(unsafe) {
 function buildMultiVoiceSSML(text, primaryLang = 'vi', gender = 'female') {
   const voiceMap = EDGE_VOICES[gender] || EDGE_VOICES.female
   const defaultVoice = voiceMap[primaryLang] || voiceMap.vi
+  const pitchAmount = gender === 'male' ? '-15Hz' : '0Hz'
 
   const parts = text.split(/(['"][^'"]+['"]|[\u4e00-\u9fa5]+)/g)
   let ssmlBody = ''
@@ -66,7 +67,7 @@ function buildMultiVoiceSSML(text, primaryLang = 'vi', gender = 'female') {
     }
   }
 
-  return `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'><pitch amount='0Hz'><rate speed='-5%'>${ssmlBody}</rate></pitch></speak>`
+  return `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='en-US'><pitch amount='${pitchAmount}'><rate speed='-5%'>${ssmlBody}</rate></pitch></speak>`
 }
 
 function synthesizeEdgeTTS(text, primaryLang = 'vi', gender = 'female') {
@@ -143,7 +144,7 @@ export async function GET(request) {
     const text = searchParams.get('text') || ''
     const lang = searchParams.get('lang') || 'vi'
     const engine = searchParams.get('engine') || 'ms'
-    const gender = searchParams.get('gender') || 'female' // 'female' or 'male'
+    const gender = searchParams.get('gender') || 'female'
 
     const cleanText = text.replace(/[\[\]]/g, '').trim()
     if (!cleanText) {
