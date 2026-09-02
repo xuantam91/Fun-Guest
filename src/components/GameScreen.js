@@ -7,7 +7,7 @@ import { AvatarImage } from './Avatars'
 import CameraView from './CameraView'
 import styles from './GameScreen.module.css'
 import { speakText, autoDetectLang } from '@/lib/tts'
-import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle } from 'lucide-react'
+import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle, Flag } from 'lucide-react'
 
 // Simple Sound effects using Web Audio API (completely client-side, no audio files needed!)
 function playTone(freq, type, duration) {
@@ -43,7 +43,7 @@ export function playIncorrectSound() {
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
-  const { addPoints, incrementStreak, customApiKey, avatar } = useApp()
+  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine } = useApp()
   const tracker = useFaceTracker()
   const { tiltDirection, faceDetected } = tracker
 
@@ -61,6 +61,26 @@ export default function GameScreen({ language, level, onBackToLobby }) {
   const [showExplanation, setShowExplanation] = useState(false)
   const [showScoreboard, setShowScoreboard] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
+  const [reportStatus, setReportStatus] = useState(null)
+
+  const handleReportQuestion = async () => {
+    if (!currentQuestion) return
+    setReportStatus('reporting')
+    try {
+      await fetch('/api/questions/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: currentQuestion.id })
+      })
+      setReportStatus('reported')
+      setTimeout(() => {
+        setReportStatus(null)
+        handleNextQuestion()
+      }, 1400)
+    } catch (e) {
+      setReportStatus(null)
+    }
+  }
 
   const chargeTimerRef = useRef(null)
 
@@ -559,10 +579,32 @@ export default function GameScreen({ language, level, onBackToLobby }) {
             {currentQuestion.explanation}
           </p>
           
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <button className="playful-btn" onClick={handleNextQuestion} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '15px', padding: '8px 20px' }}>
               <span>Tiếp tục</span>
               <ArrowRight size={16} />
+            </button>
+
+            <button 
+              onClick={handleReportQuestion}
+              disabled={reportStatus === 'reporting' || reportStatus === 'reported'}
+              style={{
+                background: 'none',
+                border: '1.5px dashed var(--incorrect-color, #ff6b6b)',
+                color: 'var(--incorrect-color, #ff6b6b)',
+                borderRadius: '16px',
+                padding: '7px 14px',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+              title="Loại bỏ câu hỏi này khỏi hệ thống"
+            >
+              <Flag size={13} />
+              <span>{reportStatus === 'reported' ? '✅ Đã xóa câu hỏi lỗi' : '🚩 Báo câu hỏi ngớ ngẩn / lỗi'}</span>
             </button>
           </div>
         </section>
