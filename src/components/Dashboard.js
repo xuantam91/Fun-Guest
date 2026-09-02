@@ -3,7 +3,7 @@ import { useApp } from '@/context/AppContext'
 import { AVATAR_LIST, AvatarImage } from './Avatars'
 import Leaderboard from './Leaderboard'
 import styles from './Dashboard.module.css'
-import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, Shield, Heart } from 'lucide-react'
+import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, CheckCircle, Shield, Heart, Volume2 } from 'lucide-react'
 
 export default function Dashboard({ onSelectLevel }) {
   const {
@@ -16,6 +16,8 @@ export default function Dashboard({ onSelectLevel }) {
     loading,
     customApiKey,
     saveCustomApiKey,
+    ttsEngine,
+    saveTtsEngine,
     setTheme,
     toggleMode,
     setAvatar,
@@ -81,6 +83,7 @@ export default function Dashboard({ onSelectLevel }) {
   // Modals
   const [showKeyModal, setShowKeyModal] = React.useState(false)
   const [showGuideModal, setShowGuideModal] = React.useState(false)
+  const [showVoiceModal, setShowVoiceModal] = React.useState(false)
 
   // Sync state with customApiKey when customApiKey changes/loads
   React.useEffect(() => {
@@ -202,6 +205,16 @@ export default function Dashboard({ onSelectLevel }) {
             >
               {customApiKey && <span className={styles.activeIndicatorDot} />}
               <Key size={17} />
+            </button>
+
+            {/* Voice Engine Selector Button (Microsoft Neural AI vs Browser) */}
+            <button 
+              className={styles.iconHeaderBtn} 
+              onClick={() => setShowVoiceModal(true)}
+              title={ttsEngine === 'ms' ? "Đang chọn: Giọng đọc Microsoft AI Neural (Siêu tự nhiên)" : "Đang chọn: Giọng đọc Mặc định Trình duyệt"}
+            >
+              {ttsEngine === 'ms' && <span className={styles.activeIndicatorDot} style={{ background: '#339af0', boxShadow: '0 0 6px #339af0' }} />}
+              <Volume2 size={17} />
             </button>
 
             {/* Auth Button */}
@@ -623,6 +636,89 @@ export default function Dashboard({ onSelectLevel }) {
               style={{ width: '100%', fontSize: '15px', padding: '12px', borderRadius: '18px' }}
             >
               Bé Đã Hiểu & Sẵn Sàng! 🎯
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: Cấu Hình Giọng Đọc (TTS Engine Selection) */}
+      {showVoiceModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowVoiceModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
+            <button className={styles.modalCloseBtn} onClick={() => setShowVoiceModal(false)}>
+              <X size={18} />
+            </button>
+
+            <h3 className={styles.modalTitle}>
+              <Volume2 size={22} color="var(--primary-color)" />
+              <span>Cấu Hình Giọng Đọc (TTS)</span>
+            </h3>
+
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '0 0 16px 0', lineHeight: '1.4' }}>
+              Chọn công nghệ đọc câu hỏi và từ vựng tự nhiên cho bé:
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+              {/* Option 1: Microsoft Neural AI */}
+              <div 
+                onClick={() => saveTtsEngine('ms')}
+                style={{
+                  padding: '14px',
+                  borderRadius: '16px',
+                  border: ttsEngine === 'ms' ? '2.5px solid var(--primary-color)' : '2px solid var(--card-border)',
+                  background: ttsEngine === 'ms' ? 'rgba(51, 154, 240, 0.08)' : 'var(--card-bg)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span style={{ fontSize: '24px' }}>✨</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <strong style={{ fontSize: '14px' }}>Microsoft AI Neural (Khuyên Dùng)</strong>
+                    <span style={{ background: '#339af0', color: 'white', fontSize: '10px', padding: '1px 6px', borderRadius: '8px', fontWeight: 700 }}>Miễn phí</span>
+                  </div>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: '3px 0 0 0', lineHeight: '1.3' }}>
+                    Giọng đọc Microsoft Hoài My, Ana & 晓晓 siêu truyền cảm, chuẩn âm 100% như người thật.
+                  </p>
+                </div>
+                {ttsEngine === 'ms' && <CheckCircle size={20} color="var(--primary-color)" />}
+              </div>
+
+              {/* Option 2: Browser Default */}
+              <div 
+                onClick={() => saveTtsEngine('browser')}
+                style={{
+                  padding: '14px',
+                  borderRadius: '16px',
+                  border: ttsEngine === 'browser' ? '2.5px solid var(--primary-color)' : '2px solid var(--card-border)',
+                  background: ttsEngine === 'browser' ? 'rgba(51, 154, 240, 0.08)' : 'var(--card-bg)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span style={{ fontSize: '24px' }}>🗣️</span>
+                <div style={{ flex: 1 }}>
+                  <strong style={{ fontSize: '14px' }}>Giọng Mặc Định Trình Duyệt</strong>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: '3px 0 0 0', lineHeight: '1.3' }}>
+                    Sử dụng Web Speech API có sẵn trên thiết bị (hoạt động offline).
+                  </p>
+                </div>
+                {ttsEngine === 'browser' && <CheckCircle size={20} color="var(--primary-color)" />}
+              </div>
+            </div>
+
+            <button
+              className="playful-btn"
+              onClick={() => setShowVoiceModal(false)}
+              style={{ width: '100%', fontSize: '14px', padding: '11px', borderRadius: '16px' }}
+            >
+              Hoàn Tất Chọn Giọng Đọc 🔊
             </button>
           </div>
         </div>

@@ -15,11 +15,13 @@ export function AppProvider({ children }) {
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
   const [customApiKey, setCustomApiKey] = useState('')
+  const [ttsEngine, setTtsEngine] = useState('ms') // 'ms' (Microsoft Neural AI) | 'browser' (Browser Default)
 
-  // Load custom API key on client mount
+  // Load custom API key and TTS Engine preference on client mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCustomApiKey(localStorage.getItem('globy_gemini_api_key') || '')
+      setTtsEngine(localStorage.getItem('globy_tts_engine') || 'ms')
     }
   }, [])
 
@@ -31,6 +33,13 @@ export function AppProvider({ children }) {
       } else {
         localStorage.removeItem('globy_gemini_api_key')
       }
+    }
+  }
+
+  const saveTtsEngine = (engine) => {
+    setTtsEngine(engine)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('globy_tts_engine', engine)
     }
   }
 
@@ -257,6 +266,8 @@ export function AppProvider({ children }) {
         loading,
         customApiKey,
         saveCustomApiKey,
+        ttsEngine,
+        saveTtsEngine,
         setTheme: changeTheme,
         toggleMode,
         setAvatar: changeAvatar,

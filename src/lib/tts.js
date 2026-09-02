@@ -1,10 +1,12 @@
 /**
- * Web Speech API text-to-speech utility for GLOBY Fun Quest.
- * Features automatic language detection & native voice matching for Vietnamese, English, and Chinese.
- * Runs 100% client-side, offline, free.
+ * Advanced Text-To-Speech (TTS) Engine for GLOBY Fun Quest.
+ * Supports:
+ * 1. Microsoft Edge Neural TTS (Giọng đọc AI Cao Cấp - Hoài My, Ana, 晓晓)
+ * 2. Web Speech API (Giọng đọc mặc định trình duyệt)
  */
 
 let cachedVoices = []
+let currentAudio = null
 
 function loadVoices() {
   if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -20,14 +22,11 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
 }
 
 /**
- * Automatically detect if text is written in Vietnamese, Chinese, or English.
- * @param {string} text 
- * @param {string} fallbackLang 
+ * Automatically detect language of a text string.
  */
 export function autoDetectLang(text, fallbackLang = 'vi') {
   if (!text) return fallbackLang
 
-  // 1. Detect Vietnamese diacritics or keywords
   const viRegex = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i
   if (viRegex.test(text)) {
     return 'vi'
@@ -39,7 +38,6 @@ export function autoDetectLang(text, fallbackLang = 'vi') {
     return 'vi'
   }
 
-  // 2. Detect Chinese Hanzi characters
   const zhRegex = /[\u4e00-\u9fa5]/
   if (zhRegex.test(text) && text.length <= 15) {
     return 'zh'
@@ -48,10 +46,6 @@ export function autoDetectLang(text, fallbackLang = 'vi') {
   return fallbackLang
 }
 
-/**
- * Find the best native system voice for the given language code.
- * @param {string} lang - 'vi', 'en', or 'zh'
- */
 function findBestVoice(lang) {
   if (!cachedVoices || cachedVoices.length === 0) {
     loadVoices()
@@ -60,7 +54,6 @@ function findBestVoice(lang) {
   const lowerLang = (lang || 'vi').toLowerCase()
 
   if (lowerLang === 'vi') {
-    // Look for Vietnamese voice
     return (
       cachedVoices.find(v => v.lang.toLowerCase().includes('vi')) ||
       cachedVoices.find(v => v.name.toLowerCase().includes('vietnamese') || v.name.toLowerCase().includes('viet'))
@@ -68,7 +61,6 @@ function findBestVoice(lang) {
   }
 
   if (lowerLang === 'zh') {
-    // Look for Mandarin Chinese voice
     return (
       cachedVoices.find(v => v.lang.toLowerCase().startsWith('zh')) ||
       cachedVoices.find(v => v.name.toLowerCase().includes('chinese') || v.name.toLowerCase().includes('mandarin'))
@@ -76,7 +68,6 @@ function findBestVoice(lang) {
   }
 
   if (lowerLang === 'en') {
-    // Look for English voice
     return (
       cachedVoices.find(v => v.lang.toLowerCase().startsWith('en-us')) ||
       cachedVoices.find(v => v.lang.toLowerCase().startsWith('en')) ||
@@ -87,29 +78,13 @@ function findBestVoice(lang) {
   return null
 }
 
-/**
- * Speak text with automatic language detection and native voice matching.
- * @param {string} text - Text to speak
- * @param {string} targetLang - Preferred fallback language ('en', 'zh', or 'vi')
- */
-export function speakText(text, targetLang = 'vi') {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return
+function speakBrowserTTS(cleanText, detectedLang) {
+  if (!window.speechSynthesis) return
 
   try {
-    // 1. Cancel active speech synthesis
     window.speechSynthesis.cancel()
-
-    // 2. Clean markdown and brackets
-    const cleanText = text.replace(/[\[\]]/g, '').trim()
-    if (!cleanText) return
-
-    // 3. Detect actual language of the text string
-    const detectedLang = autoDetectLang(cleanText, targetLang)
-
-    // 4. Create Utterance
     const utterance = new SpeechSynthesisUtterance(cleanText)
 
-    // 5. Assign BCP-47 language tag
     if (detectedLang === 'vi') {
       utterance.lang = 'vi-VN'
     } else if (detectedLang === 'zh') {
@@ -120,19 +95,64 @@ export function speakText(text, targetLang = 'vi') {
       utterance.lang = 'vi-VN'
     }
 
-    // 6. Assign explicit native voice object if available on system
     const voice = findBestVoice(detectedLang)
     if (voice) {
       utterance.voice = voice
     }
 
-    // 7. Kid-friendly TTS settings
-    utterance.rate = 0.88 // Comfortable speed for children
-    utterance.pitch = 1.1 // Friendly tone
+    utterance.rate = 0.88
+    utterance.pitch = 1.1
 
-    // 8. Speak
     window.speechSynthesis.speak(utterance)
   } catch (err) {
-    console.error('Lỗi khi phát giọng đọc TTS:', err)
+    console.error('Lỗi khi phát giọng đọc Browser TTS:', err)
   }
+}
+
+/**
+ * Speak text with selected engine ('ms' for Microsoft Neural AI, 'browser' for local SpeechSynthesis).
+ * @param {string} text - Text to speak
+ * @param {string} targetLang - Language ('en', 'zh', or 'vi')
+ * @param {string} engineMode - 'ms' or 'browser'
+ */
+export function speakText(text, targetLang = 'vi', engineMode = 'ms') {
+  if (typeof window === 'undefined') return
+
+  const cleanText = text.replace(/[\[\]]/g, '').trim()
+  if (!cleanText) return
+
+  const detectedLang = autoDetectLang(cleanText, targetLang)
+
+  // 1. Cancel previous HTML5 audio
+  if (currentAudio) {
+    try {
+      currentAudio.pause()
+      currentAudio.currentTime = 0
+    } catch (e) {}
+    currentAudio = null
+  }
+
+  // 2. Cancel previous Web Speech API utterance
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel()
+  }
+
+  // 3. Play with Microsoft Neural AI voice
+  if (engineMode === 'ms' || engineMode === 'edge') {
+    try {
+      const audioUrl = `/api/tts?text=${encodeURIComponent(cleanText)}&lang=${detectedLang}&engine=ms`
+      const audio = new Audio(audioUrl)
+      currentAudio = audio
+      audio.play().catch(err => {
+        console.warn('Không thể phát Microsoft Neural audio tự động, fallback sang giọng trình duyệt:', err)
+        speakBrowserTTS(cleanText, detectedLang)
+      })
+      return
+    } catch (err) {
+      console.warn('Lỗi kết nối Microsoft Neural TTS:', err)
+    }
+  }
+
+  // Fallback to browser voice
+  speakBrowserTTS(cleanText, detectedLang)
 }
