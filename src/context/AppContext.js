@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
+import { bgSoundEngine } from '@/lib/bgSound'
 
 const AppContext = createContext()
 
@@ -17,6 +18,7 @@ export function AppProvider({ children }) {
   const [customApiKey, setCustomApiKey] = useState('')
   const [ttsEngine, setTtsEngine] = useState('ms') // 'ms' (Microsoft Neural AI) | 'browser' (Browser Default)
   const [ttsGender, setTtsGender] = useState('female') // 'female' | 'male'
+  const [bgMusicEnabled, setBgMusicEnabled] = useState(true)
 
   // Load custom API key and TTS Engine & Gender preference on client mount
   useEffect(() => {
@@ -24,6 +26,8 @@ export function AppProvider({ children }) {
       setCustomApiKey(localStorage.getItem('globy_gemini_api_key') || '')
       setTtsEngine(localStorage.getItem('globy_tts_engine') || 'ms')
       setTtsGender(localStorage.getItem('globy_tts_gender') || 'female')
+      const storedMusic = localStorage.getItem('globy_bg_music')
+      setBgMusicEnabled(storedMusic !== 'false') // default to true unless explicitly 'false'
     }
   }, [])
 
@@ -172,6 +176,24 @@ export function AppProvider({ children }) {
     }
   }, [theme, mode, user])
 
+  // Sync background audio with theme & mute state
+  useEffect(() => {
+    bgSoundEngine.setMuted(!bgMusicEnabled)
+    if (bgMusicEnabled && theme) {
+      bgSoundEngine.playTheme(theme)
+    }
+  }, [theme, bgMusicEnabled])
+
+  const toggleBgMusic = () => {
+    setBgMusicEnabled((prev) => {
+      const nextVal = !prev
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('globy_bg_music', nextVal ? 'true' : 'false')
+      }
+      return nextVal
+    })
+  }
+
   const changeTheme = (newTheme) => {
     if (['forest', 'sea', 'space'].includes(newTheme)) {
       setTheme(newTheme)
@@ -310,6 +332,8 @@ export function AppProvider({ children }) {
         saveTtsEngine,
         ttsGender,
         saveTtsGender,
+        bgMusicEnabled,
+        toggleBgMusic,
         setTheme: changeTheme,
         toggleMode,
         setAvatar: changeAvatar,

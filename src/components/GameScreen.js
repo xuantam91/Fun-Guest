@@ -8,7 +8,7 @@ import CameraView from './CameraView'
 import ThemeBackground from './ThemeBackground'
 import styles from './GameScreen.module.css'
 import { speakText, autoDetectLang } from '@/lib/tts'
-import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle, Flag } from 'lucide-react'
+import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle, Flag, Music, VolumeX } from 'lucide-react'
 
 // Simple Sound effects using Web Audio API (completely client-side, no audio files needed!)
 function playTone(freq, type, duration) {
@@ -44,7 +44,7 @@ export function playIncorrectSound() {
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
-  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender, theme } = useApp()
+  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender, theme, bgMusicEnabled, toggleBgMusic } = useApp()
   const [isTouchMode, setIsTouchMode] = useState(false)
   const tracker = useFaceTracker(isTouchMode)
   const { tiltDirection, faceDetected } = tracker
@@ -525,6 +525,15 @@ export default function GameScreen({ language, level, onBackToLobby }) {
             <Trophy size={16} fill="var(--accent-color)" color="var(--accent-color)" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
             <span>{sessionPoints} điểm</span>
           </div>
+
+          {/* Background Ambient Audio Toggle Button */}
+          <button 
+            className={styles.bgMusicBtn} 
+            onClick={toggleBgMusic}
+            title={bgMusicEnabled ? "Đang bật Âm thanh nền chủ đề (Bấm để Tắt)" : "Âm thanh nền đang Tắt (Bấm để Bật)"}
+          >
+            {bgMusicEnabled ? <Music size={17} color="var(--primary-color)" /> : <VolumeX size={17} color="#888" />}
+          </button>
         </div>
       </header>
 

@@ -4,7 +4,7 @@ import { AVATAR_LIST, AvatarImage } from './Avatars'
 import Leaderboard from './Leaderboard'
 import ThemeBackground from './ThemeBackground'
 import styles from './Dashboard.module.css'
-import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, CheckCircle, Shield, Heart, Volume2 } from 'lucide-react'
+import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, CheckCircle, Shield, Heart, Volume2, Music, VolumeX } from 'lucide-react'
 
 export default function Dashboard({ onSelectLevel }) {
   const {
@@ -22,6 +22,8 @@ export default function Dashboard({ onSelectLevel }) {
     saveTtsEngine,
     ttsGender,
     saveTtsGender,
+    bgMusicEnabled,
+    toggleBgMusic,
     setTheme,
     toggleMode,
     setAvatar,
@@ -291,6 +293,16 @@ export default function Dashboard({ onSelectLevel }) {
             >
               {ttsEngine === 'ms' && <span className={styles.activeIndicatorDot} style={{ background: '#339af0', boxShadow: '0 0 6px #339af0' }} />}
               <Volume2 size={17} />
+            </button>
+
+            {/* Background Ambient Audio Toggle Button */}
+            <button 
+              className={styles.iconHeaderBtn} 
+              onClick={toggleBgMusic}
+              title={bgMusicEnabled ? "Đang bật Âm thanh nền chủ đề (Bấm để Tắt)" : "Âm thanh nền đang Tắt (Bấm để Bật)"}
+            >
+              {bgMusicEnabled && <span className={styles.activeIndicatorDot} style={{ background: '#51cf66', boxShadow: '0 0 6px #51cf66' }} />}
+              {bgMusicEnabled ? <Music size={17} color="var(--primary-color)" /> : <VolumeX size={17} color="#888" />}
             </button>
 
             {/* Auth Button */}

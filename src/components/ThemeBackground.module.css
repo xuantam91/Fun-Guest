@@ -15,8 +15,8 @@
    =================================================== */
 .leaf {
   position: absolute;
-  font-size: 24px;
-  opacity: 0.7;
+  font-size: 26px;
+  opacity: 0.75;
   animation: floatLeaf 8s linear infinite;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
@@ -64,7 +64,7 @@
 .butterfly {
   position: absolute;
   font-size: 28px;
-  animation: floatButterfly 12s ease-in-out infinite;
+  animation: floatButterfly 14s ease-in-out infinite;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
 }
 
@@ -83,6 +83,59 @@
   }
   100% {
     transform: translate(110vw, 50vh) scale(0.8);
+  }
+}
+
+.bee {
+  position: absolute;
+  font-size: 24px;
+  animation: floatBee 9s ease-in-out infinite alternate;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.15));
+}
+
+@keyframes floatBee {
+  0% {
+    transform: translate(0, 0) rotate(-5deg);
+  }
+  50% {
+    transform: translate(40px, -30px) rotate(10deg);
+  }
+  100% {
+    transform: translate(-20px, 40px) rotate(-8deg);
+  }
+}
+
+.bird {
+  position: absolute;
+  font-size: 30px;
+  animation: flyBird 16s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+@keyframes flyBird {
+  0% {
+    transform: translate(110vw, 15vh) scaleX(-1);
+  }
+  50% {
+    transform: translate(50vw, 25vh) scaleX(-1) rotate(5deg);
+  }
+  100% {
+    transform: translate(-10vw, 10vh) scaleX(-1);
+  }
+}
+
+.forestAnimal {
+  position: absolute;
+  animation: swayAnimal 4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+}
+
+@keyframes swayAnimal {
+  0% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(3deg);
   }
 }
 
@@ -151,6 +204,21 @@
   }
 }
 
+.seabedDecor {
+  position: absolute;
+  animation: coralSway 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+@keyframes coralSway {
+  0% {
+    transform: rotate(-4deg);
+  }
+  100% {
+    transform: rotate(4deg);
+  }
+}
+
 /* ===================================================
    3. SPACE THEME (VŨ TRỤ 🌌🚀)
    =================================================== */
@@ -190,6 +258,57 @@
   }
   100% {
     transform: translate(110vw, -10vh) rotate(35deg) scale(0.8);
+  }
+}
+
+.ufo {
+  position: absolute;
+  font-size: 34px;
+  animation: flyUfo 18s linear infinite;
+  filter: drop-shadow(0 0 15px rgba(59, 201, 219, 0.8));
+}
+
+@keyframes flyUfo {
+  0% {
+    transform: translate(110vw, 40vh) rotate(-10deg);
+  }
+  50% {
+    transform: translate(50vw, 20vh) rotate(10deg);
+  }
+  100% {
+    transform: translate(-10vw, 55vh) rotate(-10deg);
+  }
+}
+
+.astronaut {
+  position: absolute;
+  font-size: 36px;
+  animation: floatAstronaut 12s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));
+}
+
+@keyframes floatAstronaut {
+  0% {
+    transform: translate(75vw, 65vh) rotate(0deg);
+  }
+  100% {
+    transform: translate(78vw, 58vh) rotate(15deg);
+  }
+}
+
+.alien {
+  position: absolute;
+  font-size: 32px;
+  animation: floatAlien 10s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 12px rgba(81, 207, 102, 0.6));
+}
+
+@keyframes floatAlien {
+  0% {
+    transform: translate(15vw, 30vh) scale(0.9) rotate(-10deg);
+  }
+  100% {
+    transform: translate(18vw, 36vh) scale(1.1) rotate(10deg);
   }
 }
 
