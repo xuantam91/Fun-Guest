@@ -2,6 +2,7 @@ import React from 'react'
 import { useApp } from '@/context/AppContext'
 import { AVATAR_LIST, AvatarImage } from './Avatars'
 import Leaderboard from './Leaderboard'
+import ThemeBackground from './ThemeBackground'
 import styles from './Dashboard.module.css'
 import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key, HelpCircle, BookOpen, X, CheckCircle2, CheckCircle, Shield, Heart, Volume2 } from 'lucide-react'
 
@@ -188,6 +189,9 @@ export default function Dashboard({ onSelectLevel }) {
 
   return (
     <div className={styles.dashboard}>
+      {/* Animated Thematic Background for Forest, Sea & Space */}
+      <ThemeBackground theme={theme} />
+
       {/* 1. Header Section */}
       <header className={styles.header}>
         <div className={styles.brand}>
@@ -203,9 +207,11 @@ export default function Dashboard({ onSelectLevel }) {
             }} 
           />
           <div>
-            <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
               <span>GLOBY Fun Quest</span>
-              <Sparkles size={18} color="#ffd43b" />
+              <span style={{ fontSize: '11px', fontWeight: 800, padding: '3px 9px', borderRadius: '14px', background: 'var(--bg-gradient)', border: '1.5px solid var(--card-border)', color: 'var(--primary-color)', letterSpacing: '0.5px' }}>
+                {theme === 'sea' ? '🌊 ĐẠI DƯƠNG BAO LA' : theme === 'space' ? '🚀 VŨ TRỤ BAO LA' : '🌴 RỪNG XANH KỲ DIỆU'}
+              </span>
             </h1>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
               <span>Chào mừng</span>
