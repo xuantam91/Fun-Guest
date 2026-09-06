@@ -27,11 +27,15 @@ const emergencyFallbacks = {
 /**
  * Deduplicates question objects strictly by normalized question text string.
  */
+/**
+ * Deduplicates question objects strictly by normalized question text string.
+ * Prevents identical question sentences from repeating.
+ */
 function deduplicateQuestions(list) {
   const seen = new Set()
   return list.filter(q => {
     if (!q || !q.question) return false
-    const key = `${q.question.trim().toLowerCase()}_${(q.option_left || '').trim().toLowerCase()}_${(q.option_right || '').trim().toLowerCase()}`
+    const key = q.question.trim().toLowerCase()
     if (seen.has(key)) return false
     seen.add(key)
     return true
@@ -39,7 +43,7 @@ function deduplicateQuestions(list) {
 }
 
 /**
- * Ensures returned questions list always has exactly the target count (10)
+ * Ensures returned questions list always has target count (10) without duplicate questions.
  */
 function ensureTargetCount(list, targetCount = 10) {
   if (!list || list.length === 0) return []
@@ -78,23 +82,65 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Ngôn ngữ hoặc môn học không hợp lệ.' }, { status: 400 })
     }
 
-    // 1. Query full pool for level from Supabase
+    // 1. Query random slice from Supabase cache to ensure fresh questions every play
     try {
-      const { data: cachedQuestions, error: fetchError } = await supabaseAdmin
+      const { count: totalCount } = await supabaseAdmin
+        .from('question_cache')
+        .select('id', { count: 'exact', head: true })
+        .eq('language', lang)
+        .eq('level', level)
+
+      let query = supabaseAdmin
         .from('question_cache')
         .select('id, question, option_left, option_right, correct_option, explanation')
         .eq('language', lang)
         .eq('level', level)
-        .limit(200)
+
+      if (totalCount && totalCount > 20) {
+        const maxOffset = Math.max(0, totalCount - 50)
+        const randomOffset = Math.floor(Math.random() * maxOffset)
+        query = query.range(randomOffset, randomOffset + 49)
+      } else {
+        query = query.limit(100)
+      }
+
+      const { data: cachedQuestions, error: fetchError } = await query
 
       if (!fetchError && cachedQuestions && cachedQuestions.length > 0) {
         const uniqueQuestions = deduplicateQuestions(cachedQuestions)
         const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
 
+        // If we have enough unique questions for this level, return them directly
+        if (shuffled.length >= count) {
+          return NextResponse.json({
+            questions: shuffled.slice(0, count),
+            refill: false,
+            source: 'cache'
+          })
+        }
+
+        // If cache slice was small, try fetching a wider slice from the same language
+        const { data: backupQuestions } = await supabaseAdmin
+          .from('question_cache')
+          .select('id, question, option_left, option_right, correct_option, explanation')
+          .eq('language', lang)
+          .limit(200)
+
+        if (backupQuestions && backupQuestions.length > 0) {
+          const combined = deduplicateQuestions([...shuffled, ...backupQuestions.sort(() => 0.5 - Math.random())])
+          if (combined.length >= count) {
+            return NextResponse.json({
+              questions: combined.slice(0, count),
+              refill: false,
+              source: 'cache-combined'
+            })
+          }
+        }
+
         return NextResponse.json({
           questions: ensureTargetCount(shuffled, count),
           refill: false,
-          source: 'cache'
+          source: 'cache-padded'
         })
       }
     } catch (dbErr) {
