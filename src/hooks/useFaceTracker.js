@@ -58,6 +58,9 @@ export default function useFaceTracker(isTouchMode = false) {
       setIsLoading(false)
       setCameraReady(false)
       setFaceDetected(false)
+      setTiltDirection('center')
+      setTiltAngle(0)
+      rawAngleRef.current = 0
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop())
         streamRef.current = null

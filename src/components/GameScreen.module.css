@@ -206,6 +206,40 @@
   background-color: var(--balloon-right);
 }
 
+.themeTag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--bg-gradient);
+  color: var(--primary-color);
+  border: 1.5px solid var(--card-border);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.leftBubble {
+  animation: floatLeftBubble 4s ease-in-out infinite alternate;
+}
+
+.rightBubble {
+  animation: floatRightBubble 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatLeftBubble {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(2px); }
+}
+
+@keyframes floatRightBubble {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(-4px); }
+}
+
 .optionText {
   font-size: 24px;
   font-weight: 800;

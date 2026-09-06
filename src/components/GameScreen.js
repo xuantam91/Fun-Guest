@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext'
 import useFaceTracker from '@/hooks/useFaceTracker'
 import { AvatarImage } from './Avatars'
 import CameraView from './CameraView'
+import ThemeBackground from './ThemeBackground'
 import styles from './GameScreen.module.css'
 import { speakText, autoDetectLang } from '@/lib/tts'
 import { Sparkles, Trophy, Home, RotateCcw, Volume2, ArrowRight, CheckCircle, XCircle, Flag } from 'lucide-react'
@@ -43,7 +44,7 @@ export function playIncorrectSound() {
 }
 
 export default function GameScreen({ language, level, onBackToLobby }) {
-  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender } = useApp()
+  const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender, theme } = useApp()
   const [isTouchMode, setIsTouchMode] = useState(false)
   const tracker = useFaceTracker(isTouchMode)
   const { tiltDirection, faceDetected } = tracker
@@ -223,8 +224,10 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
   // 3. Handle option charging (head tilting integration)
   useEffect(() => {
-    // If already answered or in calibration, don't charge
-    if (answered || showCalibration || showScoreboard || loadingQuestions || questions.length === 0) {
+    // If touch mode is active, or already answered / in calibration / scoreboard, disable head tilt charging!
+    if (isTouchMode || answered || showCalibration || showScoreboard || loadingQuestions || questions.length === 0) {
+      setSelectedOption(null)
+      setChargePercent(0)
       if (chargeTimerRef.current) clearInterval(chargeTimerRef.current)
       return
     }
@@ -289,7 +292,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
     return () => {
       if (chargeTimerRef.current) clearInterval(chargeTimerRef.current)
     }
-  }, [tiltDirection, selectedOption, answered, showCalibration, showExplanation, showScoreboard, loadingQuestions, questions])
+  }, [isTouchMode, tiltDirection, selectedOption, answered, showCalibration, showExplanation, showScoreboard, loadingQuestions, questions])
 
   const handleAnswer = (choice) => {
     if (answeredRef.current) return
@@ -462,6 +465,9 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
   return (
     <div className={styles.gameLayout}>
+      {/* Animated Thematic Background for Forest, Sea & Space */}
+      <ThemeBackground theme={theme} />
+
       {/* Game Header */}
       <header className={styles.gameHeader}>
         <button className={styles.quitBtn} onClick={onBackToLobby}>
@@ -484,6 +490,9 @@ export default function GameScreen({ language, level, onBackToLobby }) {
       {/* Question Box */}
       {currentQuestion && (
         <section className={styles.questionBox}>
+          <span className={styles.themeTag}>
+            {theme === 'sea' ? '🌊 ĐẠI DƯƠNG BAO LA 🫧' : theme === 'space' ? '🚀 VŨ TRỤ BAO LA 🪐' : '🌴 RỪNG XANH KỲ DIỆU 🍃'}
+          </span>
           <h2 className={styles.questionText}>{currentQuestion.question}</h2>
           <button className={styles.ttsBtn} onClick={speakCurrentQuestion} title="Nghe lại câu hỏi">
             <Volume2 size={20} />
