@@ -44,7 +44,8 @@ export function playIncorrectSound() {
 
 export default function GameScreen({ language, level, onBackToLobby }) {
   const { addPoints, incrementStreak, customApiKey, avatar, ttsEngine, ttsGender } = useApp()
-  const tracker = useFaceTracker()
+  const [isTouchMode, setIsTouchMode] = useState(false)
+  const tracker = useFaceTracker(isTouchMode)
   const { tiltDirection, faceDetected } = tracker
 
   // Game States
@@ -530,9 +531,11 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
           {/* Center Webcam Preview */}
           <div className={styles.centerCamera}>
-            <CameraView tracker={tracker} />
+            <CameraView tracker={tracker} isTouchMode={isTouchMode} avatar={avatar} />
             <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', margin: 0, textAlign: 'center' }}>
-              {showExplanation ? 'Nghiêng đầu để tiếp tục!' : 'Nghiêng đầu Trái / Phải để chọn!'}
+              {isTouchMode
+                ? '👆 Chế độ cảm ứng tay (Bé chạm vào đáp án nhé!)'
+                : (showExplanation ? 'Nghiêng đầu để tiếp tục!' : 'Nghiêng đầu Trái / Phải để chọn!')}
             </p>
           </div>
 
@@ -658,6 +661,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
               <button 
                 className="playful-btn"
                 onClick={() => {
+                  setIsTouchMode(false)
                   tracker.calibrate()
                   setShowCalibration(false)
                 }}
@@ -676,7 +680,10 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
               <button 
                 className="playful-btn playful-btn-secondary"
-                onClick={() => setShowCalibration(false)}
+                onClick={() => {
+                  setIsTouchMode(true)
+                  setShowCalibration(false)
+                }}
                 style={{ 
                   width: '100%', 
                   fontSize: '13px', 

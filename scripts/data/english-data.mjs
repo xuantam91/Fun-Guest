@@ -387,24 +387,29 @@ export function generateEnglishQuestions(level, targetCount = 5000) {
   const seen = new Set()
 
   const templates = [
-    (item) => ({ q: `Từ nào có nghĩa là "${item.vn}"?`, exp: `"${item.word}" có nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Từ "${item.word}" trong tiếng Việt có nghĩa là gì?`, exp: `"${item.word}" dịch sang tiếng Việt nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Chọn từ tiếng Anh chính xác cho: "${item.vn}"`, exp: `Chính xác! "${item.word}" chính là ${item.vn}.` }),
-    (item) => ({ q: `Khi nhắc đến "${item.vn}", bé sẽ dùng từ nào sau đây?`, exp: `Từ phù hợp nhất là "${item.word}".` }),
-    (item) => ({ q: `Đố bé: Từ nào dịch chuẩn nhất cho "${item.vn}"?`, exp: `Đáp án đúng là "${item.word}".` }),
-    (item) => ({ q: `Nghĩa của từ "${item.word}" là gì nào?`, exp: `"${item.word}" nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Từ tiếng Anh nào đồng nghĩa với "${item.vn}"?`, exp: `Đó chính là từ "${item.word}".` }),
-    (item) => ({ q: `Bé hãy tìm từ tiếng Anh biểu thị: "${item.vn}"`, exp: `"${item.word}" mang nghĩa là ${item.vn}.` })
+    // 1. VN -> EN (Target option is English)
+    (item) => ({ type: 'vn_to_en', q: `Từ nào có nghĩa là "${item.vn}"?`, exp: `"${item.word.replace('_color', '')}" có nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'vn_to_en', q: `Chọn từ tiếng Anh chính xác cho: "${item.vn}"`, exp: `Chính xác! "${item.word.replace('_color', '')}" chính là ${item.vn}.` }),
+    (item) => ({ type: 'vn_to_en', q: `Khi nhắc đến "${item.vn}", bé sẽ dùng từ nào sau đây?`, exp: `Từ phù hợp nhất là "${item.word.replace('_color', '')}".` }),
+    (item) => ({ type: 'vn_to_en', q: `Đố bé: Từ nào dịch chuẩn nhất cho "${item.vn}"?`, exp: `Đáp án đúng là "${item.word.replace('_color', '')}".` }),
+    (item) => ({ type: 'vn_to_en', q: `Từ tiếng Anh nào tương ứng với "${item.vn}"?`, exp: `Đó chính là từ "${item.word.replace('_color', '')}".` }),
+    (item) => ({ type: 'vn_to_en', q: `Bé hãy tìm từ tiếng Anh biểu thị: "${item.vn}"`, exp: `"${item.word.replace('_color', '')}" mang nghĩa là ${item.vn}.` }),
+
+    // 2. EN -> VN (Target option is Vietnamese)
+    (item) => ({ type: 'en_to_vn', q: `Từ "${item.word.replace('_color', '')}" trong tiếng Việt có nghĩa là gì?`, exp: `"${item.word.replace('_color', '')}" dịch sang tiếng Việt nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'en_to_vn', q: `Nghĩa của từ "${item.word.replace('_color', '')}" là gì nào?`, exp: `"${item.word.replace('_color', '')}" nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'en_to_vn', q: `Trong tiếng Việt, từ "${item.word.replace('_color', '')}" nghĩa là gì?`, exp: `"${item.word.replace('_color', '')}" mang nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'en_to_vn', q: `Bé có biết từ "${item.word.replace('_color', '')}" nghĩa tiếng Việt là gì không?`, exp: `Đó là ${item.vn}.` })
   ]
 
   let attempts = 0
-  while (questions.length < targetCount && attempts < targetCount * 10) {
+  while (questions.length < targetCount && attempts < targetCount * 15) {
     attempts++
     const item = bank[Math.floor(Math.random() * bank.length)]
     
     // Pick 1 distinct distractor
     let other = bank[Math.floor(Math.random() * bank.length)]
-    while (other.word === item.word && bank.length > 1) {
+    while ((other.word === item.word || other.vn === item.vn) && bank.length > 1) {
       other = bank[Math.floor(Math.random() * bank.length)]
     }
 
@@ -412,13 +417,16 @@ export function generateEnglishQuestions(level, targetCount = 5000) {
     const tpl = templates[tplIdx](item)
     const isLeft = Math.random() < 0.5
 
-    const hashKey = tpl.q.trim().toLowerCase()
+    const targetVal = tpl.type === 'vn_to_en' ? item.word.replace('_color', '') : item.vn
+    const otherVal = tpl.type === 'vn_to_en' ? other.word.replace('_color', '') : other.vn
+
+    const hashKey = `${tpl.q.trim().toLowerCase()}_${targetVal.trim().toLowerCase()}_${otherVal.trim().toLowerCase()}`
     if (!seen.has(hashKey)) {
       seen.add(hashKey)
       questions.push({
         question: tpl.q,
-        option_left: isLeft ? item.word : other.word,
-        option_right: isLeft ? other.word : item.word,
+        option_left: isLeft ? targetVal : otherVal,
+        option_right: isLeft ? otherVal : targetVal,
         correct_option: isLeft ? 'left' : 'right',
         explanation: tpl.exp
       })
@@ -427,3 +435,4 @@ export function generateEnglishQuestions(level, targetCount = 5000) {
 
   return questions
 }
+

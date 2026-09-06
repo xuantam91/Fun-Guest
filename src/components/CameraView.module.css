@@ -31,6 +31,30 @@
   box-shadow: 0 0 25px rgba(255, 205, 60, 0.6);
 }
 
+.borderReady {
+  border-color: #51cf66 !important;
+  box-shadow: 0 0 25px rgba(81, 207, 102, 0.6) !important;
+}
+
+.borderPending {
+  border-color: #fcc419 !important;
+  box-shadow: 0 0 20px rgba(252, 196, 25, 0.5) !important;
+}
+
+.borderError {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.5) !important;
+}
+
+.touchAvatarWrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+}
+
 .videoFeed {
   width: 100%;
   height: 100%;

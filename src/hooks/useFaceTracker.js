@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
-export default function useFaceTracker() {
+export default function useFaceTracker(isTouchMode = false) {
   const videoRef = useRef(null)
   const requestRef = useRef(null)
   const landmarkerRef = useRef(null)
   const streamRef = useRef(null)
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(!isTouchMode)
   const [error, setError] = useState(null)
   const [tiltAngle, setTiltAngle] = useState(0)
   const [tiltDirection, setTiltDirection] = useState('center')
@@ -54,6 +54,21 @@ export default function useFaceTracker() {
 
   // 1. Camera Initialization Effect
   useEffect(() => {
+    if (isTouchMode) {
+      setIsLoading(false)
+      setCameraReady(false)
+      setFaceDetected(false)
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop())
+        streamRef.current = null
+      }
+      if (landmarkerRef.current) {
+        try { landmarkerRef.current.close() } catch (e) {}
+        landmarkerRef.current = null
+      }
+      return
+    }
+
     let active = true
 
     const safetyTimer = setTimeout(() => {
@@ -78,7 +93,7 @@ export default function useFaceTracker() {
         initMediaPipe()
       } catch (err) {
         console.error('Lỗi khởi tạo camera:', err)
-        setError('Không thể mở camera. Bạn hãy chọn "Bỏ qua Camera" để chơi bằng chạm ngón tay nhé!')
+        setError('Không thể mở camera. Bạn hãy chọn "Bỏ qua Camera" để chơi bằng cảm ứng ngón tay nhé!')
         setIsLoading(false)
       }
     }
@@ -203,10 +218,12 @@ export default function useFaceTracker() {
         } catch (e) {}
       }
     }
-  }, [])
+  }, [isTouchMode])
 
   // 2. Persistent Playback Keeper: Runs continuously to guarantee video stream is ALWAYS bound & playing!
   useEffect(() => {
+    if (isTouchMode) return
+
     const keepPlaying = () => {
       const video = videoRef.current
       const stream = streamRef.current
@@ -228,7 +245,7 @@ export default function useFaceTracker() {
     keepPlaying()
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isTouchMode])
 
   return {
     videoRef,
@@ -241,3 +258,4 @@ export default function useFaceTracker() {
     faceDetected,
   }
 }
+

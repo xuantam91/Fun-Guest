@@ -8,6 +8,7 @@ import { Flame, Trophy, Palette, Smile, Sparkles, Sun, Moon, LogIn, LogOut, Key,
 export default function Dashboard({ onSelectLevel }) {
   const {
     user,
+    profile,
     theme,
     mode,
     avatar,
@@ -23,6 +24,7 @@ export default function Dashboard({ onSelectLevel }) {
     setTheme,
     toggleMode,
     setAvatar,
+    updateProfileNameAndAvatar,
     loginWithGoogle,
     logout
   } = useApp()
@@ -97,6 +99,36 @@ export default function Dashboard({ onSelectLevel }) {
   const [showKeyModal, setShowKeyModal] = React.useState(false)
   const [showGuideModal, setShowGuideModal] = React.useState(false)
   const [showVoiceModal, setShowVoiceModal] = React.useState(false)
+  const [showProfileModal, setShowProfileModal] = React.useState(false)
+  const [editName, setEditName] = React.useState('')
+  const [selectedAvatarId, setSelectedAvatarId] = React.useState(avatar)
+  const [isSavingProfile, setIsSavingProfile] = React.useState(false)
+  const [profileSaveMsg, setProfileSaveMsg] = React.useState('')
+
+  const handleOpenProfileModal = () => {
+    const currentName = profile?.full_name || user?.user_metadata?.full_name || (typeof window !== 'undefined' ? localStorage.getItem('globy_user_name') : '') || ''
+    setEditName(currentName)
+    setSelectedAvatarId(avatar)
+    setProfileSaveMsg('')
+    setShowProfileModal(true)
+  }
+
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true)
+    setProfileSaveMsg('')
+    try {
+      await updateProfileNameAndAvatar(editName, selectedAvatarId)
+      setProfileSaveMsg('✅ Đã cập nhật tên và Avatar thành công!')
+      setTimeout(() => {
+        setShowProfileModal(false)
+        setProfileSaveMsg('')
+      }, 900)
+    } catch (err) {
+      setProfileSaveMsg('❌ Lỗi cập nhật, thử lại sau!')
+    } finally {
+      setIsSavingProfile(false)
+    }
+  }
 
   // Sync state with customApiKey when customApiKey changes/loads
   React.useEffect(() => {
@@ -175,12 +207,28 @@ export default function Dashboard({ onSelectLevel }) {
               <span>GLOBY Fun Quest</span>
               <Sparkles size={18} color="#ffd43b" />
             </h1>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
               <span>Chào mừng</span>
               <AvatarImage id={avatar} size={22} />
               <strong style={{ color: 'var(--text-color)' }}>
-                {user ? (user.user_metadata?.full_name || user.email) : 'Bé Thám Hiểm'}!
+                {profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Bé Thám Hiểm'}!
               </strong>
+              <button 
+                onClick={handleOpenProfileModal}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--primary-color, #55a630)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: '0 2px'
+                }}
+                title="Bấm để đổi tên hoặc avatar"
+              >
+                ✏️ Đổi tên/Avatar
+              </button>
             </p>
           </div>
         </div>
@@ -198,8 +246,17 @@ export default function Dashboard({ onSelectLevel }) {
             <span className={styles.statValue}>{score} đ</span>
           </div>
 
-          {/* Header Action Buttons: Guide, Key & Auth */}
+          {/* Header Action Buttons: Profile Edit, Guide, Key & Auth */}
           <div className={styles.headerActions}>
+            {/* Profile Edit Button */}
+            <button 
+              className={styles.iconHeaderBtn} 
+              onClick={handleOpenProfileModal}
+              title="Đổi Tên & Chọn Avatar cho Bé"
+            >
+              <Smile size={17} />
+            </button>
+
             {/* Guide Button */}
             <button 
               className={styles.guideHeaderBtn} 
@@ -815,6 +872,100 @@ export default function Dashboard({ onSelectLevel }) {
               style={{ width: '100%', fontSize: '14px', padding: '11px', borderRadius: '16px' }}
             >
               Hoàn Tất Chọn Giọng Đọc 🔊
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: Cấu Hình Hồ Sơ (Đổi Tên & Avatar) */}
+      {showProfileModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowProfileModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px' }}>
+            <button className={styles.modalCloseBtn} onClick={() => setShowProfileModal(false)}>
+              <X size={18} />
+            </button>
+
+            <h3 className={styles.modalTitle}>
+              <Smile size={22} color="var(--primary-color)" />
+              <span>Hồ Sơ & Avatar Của Bé</span>
+            </h3>
+
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.4 }}>
+              Bé có thể tự do đặt tên hiển thị và chọn linh vật đáng yêu đại diện bất cứ lúc nào!
+            </p>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-color)' }}>
+                Tên hiển thị của bé:
+              </label>
+              <input
+                type="text"
+                placeholder="Nhập tên bé (ví dụ: Bé Bi, Pikachu...)"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '11px 14px',
+                  borderRadius: '14px',
+                  border: '2px solid var(--card-border)',
+                  backgroundColor: 'var(--bg-gradient)',
+                  color: 'var(--text-color)',
+                  fontSize: '14px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '18px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-color)' }}>
+                Chọn Avatar đại diện:
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+                {AVATAR_LIST.map((item) => {
+                  const isSelected = selectedAvatarId === item.id
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setSelectedAvatarId(item.id)}
+                      style={{
+                        background: isSelected ? 'rgba(85, 166, 48, 0.12)' : 'var(--card-bg)',
+                        border: isSelected ? '3.5px solid var(--primary-color, #55a630)' : '2px solid var(--card-border)',
+                        borderRadius: '16px',
+                        padding: '8px 4px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'transform 0.15s, border-color 0.15s'
+                      }}
+                      title={item.name}
+                    >
+                      <AvatarImage id={item.id} size={48} />
+                      <span style={{ fontSize: '10.5px', fontWeight: 700, color: isSelected ? 'var(--primary-color)' : 'var(--text-muted)', textAlign: 'center' }}>
+                        {item.name}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {profileSaveMsg && (
+              <p style={{ fontSize: '13px', fontWeight: 700, color: profileSaveMsg.includes('✅') ? 'var(--correct-color, #2b8a3e)' : 'var(--incorrect-color, #e03131)', marginBottom: '12px', textAlign: 'center' }}>
+                {profileSaveMsg}
+              </p>
+            )}
+
+            <button
+              className="playful-btn"
+              onClick={handleSaveProfile}
+              disabled={isSavingProfile}
+              style={{ width: '100%', fontSize: '15px', padding: '12px', borderRadius: '18px' }}
+            >
+              {isSavingProfile ? '⏳ Đang lưu...' : 'Lưu Thay Đổi 🚀'}
             </button>
           </div>
         </div>

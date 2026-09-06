@@ -315,7 +315,7 @@ export const chineseVocabulary = {
     { hanzi: '春节', pinyin: 'Chūnjié', vn: 'Tết Nguyên Đán' },
     { hanzi: '中秋节', pinyin: 'Zhōngqiūjié', vn: 'Tết Trung Thu' },
     { hanzi: '端午节', pinyin: 'Duānwǔjié', vn: 'Tết Đoan Ngọ' },
-    { hanzi: '红包', pinyin: 'hóngbāo', vn: 'Bao lì xì' },
+    { hanzi: '红包', pinyin: 'hóngbā', vn: 'Bao lì xì' },
     { hanzi: '饺子', pinyin: 'jiǎozi', vn: 'Bánh sủi cảo' },
     { hanzi: '月饼', pinyin: 'yuèbǐng', vn: 'Bánh trung thu' },
     { hanzi: '舞龙', pinyin: 'wǔlóng', vn: 'Múa rồng' },
@@ -348,24 +348,27 @@ export function generateChineseQuestions(level, targetCount = 5000) {
   const seen = new Set()
 
   const templates = [
-    (item) => ({ q: `Từ nào nghĩa là "${item.vn}"?`, exp: `${item.hanzi} (${item.pinyin}) có nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Chữ Hán "${item.hanzi}" (${item.pinyin}) có nghĩa là gì?`, exp: `"${item.hanzi}" nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Chọn chữ Hán đúng cho nghĩa: "${item.vn}"`, exp: `"${item.vn}" trong tiếng Trung là ${item.hanzi} (${item.pinyin}).` }),
-    (item) => ({ q: `Đố bạn: Chữ "${item.hanzi}" dịch sang tiếng Việt là gì?`, exp: `Chính xác! "${item.hanzi}" nghĩa là ${item.vn}.` }),
-    (item) => ({ q: `Khi muốn nói "${item.vn}" bằng tiếng Trung, bạn dùng từ nào?`, exp: `Dùng từ ${item.hanzi} (${item.pinyin}).` }),
-    (item) => ({ q: `Từ nào sau đây mang ý nghĩa "${item.vn}"?`, exp: `${item.hanzi} chính là ${item.vn}.` }),
-    (item) => ({ q: `Tìm nghĩa tiếng Việt của từ: "${item.hanzi}" (${item.pinyin})`, exp: `"${item.hanzi}" mang nghĩa ${item.vn}.` }),
-    (item) => ({ q: `Bé hãy chọn từ tiếng Trung biểu thị: "${item.vn}"`, exp: `Từ đúng là ${item.hanzi} (${item.pinyin}).` })
+    // 1. VN -> ZH (Options are Hanzi + Pinyin)
+    (item) => ({ type: 'vn_to_zh', q: `Từ nào nghĩa là "${item.vn}"?`, exp: `${item.hanzi} (${item.pinyin}) có nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'vn_to_zh', q: `Chọn chữ Hán đúng cho nghĩa: "${item.vn}"`, exp: `"${item.vn}" trong tiếng Trung là ${item.hanzi} (${item.pinyin}).` }),
+    (item) => ({ type: 'vn_to_zh', q: `Khi muốn nói "${item.vn}" bằng tiếng Trung, bạn dùng từ nào?`, exp: `Dùng từ ${item.hanzi} (${item.pinyin}).` }),
+    (item) => ({ type: 'vn_to_zh', q: `Từ nào sau đây mang ý nghĩa "${item.vn}"?`, exp: `${item.hanzi} chính là ${item.vn}.` }),
+    (item) => ({ type: 'vn_to_zh', q: `Bé hãy chọn từ tiếng Trung biểu thị: "${item.vn}"`, exp: `Từ đúng là ${item.hanzi} (${item.pinyin}).` }),
+
+    // 2. ZH -> VN (Options are Vietnamese)
+    (item) => ({ type: 'zh_to_vn', q: `Chữ Hán "${item.hanzi}" (${item.pinyin}) có nghĩa là gì?`, exp: `"${item.hanzi}" nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'zh_to_vn', q: `Đố bạn: Chữ "${item.hanzi}" dịch sang tiếng Việt là gì?`, exp: `Chính xác! "${item.hanzi}" nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'zh_to_vn', q: `Tìm nghĩa tiếng Việt của từ: "${item.hanzi}" (${item.pinyin})`, exp: `"${item.hanzi}" mang nghĩa ${item.vn}.` })
   ]
 
   let attempts = 0
-  while (questions.length < targetCount && attempts < targetCount * 10) {
+  while (questions.length < targetCount && attempts < targetCount * 15) {
     attempts++
     const item = bank[Math.floor(Math.random() * bank.length)]
     
     // Pick 1 distinct distractor
     let other = bank[Math.floor(Math.random() * bank.length)]
-    while (other.hanzi === item.hanzi && bank.length > 1) {
+    while ((other.hanzi === item.hanzi || other.vn === item.vn) && bank.length > 1) {
       other = bank[Math.floor(Math.random() * bank.length)]
     }
 
@@ -373,16 +376,16 @@ export function generateChineseQuestions(level, targetCount = 5000) {
     const tpl = templates[tplIdx](item)
     const isLeft = Math.random() < 0.5
 
-    const optLeft = isLeft ? `${item.hanzi} (${item.pinyin})` : `${other.hanzi} (${other.pinyin})`
-    const optRight = isLeft ? `${other.hanzi} (${other.pinyin})` : `${item.hanzi} (${item.pinyin})`
+    const targetVal = tpl.type === 'vn_to_zh' ? `${item.hanzi} (${item.pinyin})` : item.vn
+    const otherVal = tpl.type === 'vn_to_zh' ? `${other.hanzi} (${other.pinyin})` : other.vn
 
-    const hashKey = tpl.q.trim().toLowerCase()
+    const hashKey = `${tpl.q.trim().toLowerCase()}_${targetVal.trim().toLowerCase()}_${otherVal.trim().toLowerCase()}`
     if (!seen.has(hashKey)) {
       seen.add(hashKey)
       questions.push({
         question: tpl.q,
-        option_left: optLeft,
-        option_right: optRight,
+        option_left: isLeft ? targetVal : otherVal,
+        option_right: isLeft ? otherVal : targetVal,
         correct_option: isLeft ? 'left' : 'right',
         explanation: tpl.exp
       })

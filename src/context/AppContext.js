@@ -138,12 +138,16 @@ export function AppProvider({ children }) {
     const localAvatar = localStorage.getItem('globy_avatar') || 'dino'
     const localScore = parseInt(localStorage.getItem('globy_score') || '0', 10)
     const localStreak = parseInt(localStorage.getItem('globy_streak') || '0', 10)
+    const localName = localStorage.getItem('globy_user_name') || ''
 
     setTheme(localTheme)
     setMode(localMode)
     setAvatar(localAvatar)
     setScore(localScore)
     setStreak(localStreak)
+    if (localName) {
+      setProfile({ full_name: localName })
+    }
   }
 
   // 3. Update HTML attributes when theme or mode changes
@@ -189,6 +193,33 @@ export function AppProvider({ children }) {
         .then(({ error }) => {
           if (error) console.error('Error syncing avatar with Supabase:', error)
         })
+    }
+  }
+
+  const updateProfileNameAndAvatar = async (name, newAvatar) => {
+    const trimmedName = (name || '').trim()
+    if (newAvatar) {
+      setAvatar(newAvatar)
+      localStorage.setItem('globy_avatar', newAvatar)
+    }
+    if (trimmedName) {
+      localStorage.setItem('globy_user_name', trimmedName)
+      setProfile(prev => ({ ...(prev || {}), full_name: trimmedName }))
+    }
+
+    if (user) {
+      const updates = {}
+      if (trimmedName) updates.full_name = trimmedName
+      if (newAvatar) updates.selected_avatar = newAvatar
+
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id)
+
+      if (error) {
+        console.error('Lỗi cập nhật hồ sơ trên Supabase:', error)
+      }
     }
   }
 
@@ -282,6 +313,7 @@ export function AppProvider({ children }) {
         setTheme: changeTheme,
         toggleMode,
         setAvatar: changeAvatar,
+        updateProfileNameAndAvatar,
         addPoints,
         incrementStreak,
         loginWithGoogle,
