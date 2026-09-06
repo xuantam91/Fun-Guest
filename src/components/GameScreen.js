@@ -64,7 +64,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
   const [showScoreboard, setShowScoreboard] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
   const [reportStatus, setReportStatus] = useState(null)
-  const [timeLeft, setTimeLeft] = useState(15) // 15 seconds per question
+  const [timeLeft, setTimeLeft] = useState(60) // 60 seconds per question (600s / 10 minutes total max per 10-question turn)
 
   const handleReportQuestion = async () => {
     if (!currentQuestion) return
@@ -223,13 +223,13 @@ export default function GameScreen({ language, level, onBackToLobby }) {
     }
   }, [currentIndex, questions, showCalibration, showScoreboard, language, ttsEngine, ttsGender])
 
-  // 3. Question Countdown Timer (15s per question)
+  // 3. Question Countdown Timer (60s per question)
   useEffect(() => {
     if (answered || showCalibration || showExplanation || showScoreboard || loadingQuestions || questions.length === 0) {
       return
     }
 
-    setTimeLeft(15)
+    setTimeLeft(60)
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -515,8 +515,8 @@ export default function GameScreen({ language, level, onBackToLobby }) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Cute Hourglass Timer */}
-          <div className={`${styles.hourglassTimer} ${timeLeft <= 5 ? styles.hourglassWarning : ''}`} title="Đồng hồ cát đếm ngược">
+          {/* Cute Hourglass Timer (60s / question) */}
+          <div className={`${styles.hourglassTimer} ${timeLeft <= 10 ? styles.hourglassWarning : ''}`} title="Đồng hồ cát đếm ngược 60 giây mỗi câu (Tổng lượt chơi 10 phút)">
             <span className={styles.hourglassIcon}>⏳</span>
             <span>{timeLeft}s</span>
           </div>
