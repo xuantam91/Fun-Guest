@@ -25,8 +25,24 @@ const emergencyFallbacks = {
 }
 
 /**
- * Deduplicates question objects strictly by normalized question text string.
+ * Deduplicates question objects by target answer concept.
+ * Ensures no two questions in a single round test the exact same concept/answer.
  */
+function deduplicateByConcept(list) {
+  const seenConcepts = new Set()
+  return list.filter(q => {
+    if (!q || !q.question) return false
+    const left = (q.option_left || '').trim().toLowerCase()
+    const right = (q.option_right || '').trim().toLowerCase()
+    const correct = q.correct_option === 'left' ? left : right
+    const conceptKey = correct.replace(/\(.*?\)/g, '').trim().toLowerCase()
+
+    if (seenConcepts.has(conceptKey)) return false
+    seenConcepts.add(conceptKey)
+    return true
+  })
+}
+
 /**
  * Deduplicates question objects strictly by normalized question text string.
  * Prevents identical question sentences from repeating.
@@ -107,7 +123,9 @@ export async function GET(request) {
       const { data: cachedQuestions, error: fetchError } = await query
 
       if (!fetchError && cachedQuestions && cachedQuestions.length > 0) {
-        const uniqueQuestions = deduplicateQuestions(cachedQuestions)
+        // Concept-level deduplication: ensure distinct target concepts
+        const conceptUnique = deduplicateByConcept(cachedQuestions)
+        const uniqueQuestions = deduplicateQuestions(conceptUnique)
         const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
 
         // If we have enough unique questions for this level, return them directly
@@ -127,7 +145,7 @@ export async function GET(request) {
           .limit(200)
 
         if (backupQuestions && backupQuestions.length > 0) {
-          const combined = deduplicateQuestions([...shuffled, ...backupQuestions.sort(() => 0.5 - Math.random())])
+          const combined = deduplicateQuestions(deduplicateByConcept([...shuffled, ...backupQuestions.sort(() => 0.5 - Math.random())]))
           if (combined.length >= count) {
             return NextResponse.json({
               questions: combined.slice(0, count),
