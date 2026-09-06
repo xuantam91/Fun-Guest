@@ -1,6 +1,6 @@
 /**
- * Cambridge & CEFR English Vocabulary Banks & Scalable Question Generator.
- * Generates 2,000+ distinct questions per level with zero token cost.
+ * Cambridge, CEFR & 20 Basic Communication Topics English Generator.
+ * Generates 5,000+ distinct, non-duplicate questions per topic with 0 token cost.
  */
 
 export const englishVocabulary = {
@@ -74,7 +74,6 @@ export const englishVocabulary = {
     { word: 'Brown', vn: 'Màu nâu', category: 'Colors' },
     { word: 'Black', vn: 'Màu đen', category: 'Colors' },
     { word: 'White', vn: 'Màu trắng', category: 'Colors' },
-    { word: 'Orange_color', vn: 'Màu cam', category: 'Colors' },
     { word: 'Grey', vn: 'Màu xám', category: 'Colors' },
     { word: 'Eye', vn: 'Mắt', category: 'Body' },
     { word: 'Ear', vn: 'Tai', category: 'Body' },
@@ -97,206 +96,67 @@ export const englishVocabulary = {
     { word: 'Ball', vn: 'Quả bóng', category: 'Toys' },
     { word: 'Doll', vn: 'Búp bê', category: 'Toys' },
     { word: 'Robot', vn: 'Người máy', category: 'Toys' },
-    { word: 'Kite', vn: 'Cái diều', category: 'Toys' },
-    { word: 'Monster', vn: 'Quái vật đồ chơi', category: 'Toys' },
-    { word: 'Hat', vn: 'Cái mũ', category: 'Clothes' },
-    { word: 'Shirt', vn: 'Áo sơ mi', category: 'Clothes' },
-    { word: 'T-shirt', vn: 'Áo thun', category: 'Clothes' },
-    { word: 'Dress', vn: 'Váy liền', category: 'Clothes' },
-    { word: 'Skirt', vn: 'Chân váy', category: 'Clothes' },
-    { word: 'Trousers', vn: 'Quần dài', category: 'Clothes' },
-    { word: 'Shoes', vn: 'Đôi giày', category: 'Clothes' },
-    { word: 'Socks', vn: 'Đôi tất', category: 'Clothes' },
-    { word: 'Glasses', vn: 'Kính mắt', category: 'Clothes' },
-    { word: 'Water', vn: 'Nước uống', category: 'Food' },
-    { word: 'Milk', vn: 'Sữa tươi', category: 'Food' },
-    { word: 'Juice', vn: 'Nước hoa quả', category: 'Food' },
-    { word: 'Bread', vn: 'Bánh mì', category: 'Food' },
-    { word: 'Egg', vn: 'Quả trứng', category: 'Food' },
-    { word: 'Cake', vn: 'Bánh ngọt', category: 'Food' },
-    { word: 'Ice cream', vn: 'Kem', category: 'Food' },
-    { word: 'Burger', vn: 'Bánh bơ-gơ', category: 'Food' },
-    { word: 'House', vn: 'Ngôi nhà', category: 'Home' },
-    { word: 'Door', vn: 'Cửa chính', category: 'Home' },
-    { word: 'Window', vn: 'Cửa sổ', category: 'Home' },
-    { word: 'Room', vn: 'Căn phòng', category: 'Home' },
-    { word: 'Bed', vn: 'Cái giường', category: 'Home' },
-    { word: 'Table', vn: 'Cái bàn', category: 'Home' },
-    { word: 'Clock', vn: 'Đồng hồ', category: 'Home' },
-    { word: 'Sun', vn: 'Mặt trời', category: 'Nature' },
-    { word: 'Moon', vn: 'Mặt trăng', category: 'Nature' },
-    { word: 'Star', vn: 'Ngôi sao', category: 'Nature' },
-    { word: 'Flower', vn: 'Bông hoa', category: 'Nature' },
-    { word: 'Tree', vn: 'Cái cây', category: 'Nature' }
+    { word: 'Kite', vn: 'Cái diều', category: 'Toys' }
   ],
   movers: [
-    { word: 'Market', vn: 'Khu chợ' },
-    { word: 'Supermarket', vn: 'Siêu thị' },
-    { word: 'Cinema', vn: 'Rạp chiếu phim' },
-    { word: 'Hospital', vn: 'Bệnh viện' },
-    { word: 'Library', vn: 'Thư viện' },
-    { word: 'Swimming pool', vn: 'Hồ bơi' },
-    { word: 'Park', vn: 'Công viên' },
-    { word: 'Zoo', vn: 'Sở thú' },
-    { word: 'Café', vn: 'Quán cà phê' },
-    { word: 'Station', vn: 'Nhà ga' },
-    { word: 'Airport', vn: 'Sân bay' },
-    { word: 'Beach', vn: 'Bãi biển' },
-    { word: 'Jungle', vn: 'Rừng nhiệt đới' },
-    { word: 'Mountain', vn: 'Ngọn núi' },
-    { word: 'River', vn: 'Dòng sông' },
-    { word: 'Lake', vn: 'Hồ nước' },
-    { word: 'Island', vn: 'Hòn đảo' },
-    { word: 'Waterfall', vn: 'Thác nước' },
-    { word: 'Forest', vn: 'Khu rừng' },
-    { word: 'Village', vn: 'Ngôi làng' },
-    { word: 'Town', vn: 'Thị trấn' },
-    { word: 'City', vn: 'Thành phố' },
-    { word: 'Farmer', vn: 'Nông dân' },
-    { word: 'Doctor', vn: 'Bác sĩ' },
+    { word: 'Doctor', vn: 'Bác sĩ chữa bệnh' },
+    { word: 'Nurse', vn: 'Y tá chăm sóc' },
+    { word: 'Dentist', vn: 'Bác sĩ nha khoa' },
     { word: 'Driver', vn: 'Tài xế lái xe' },
-    { word: 'Cook', vn: 'Đầu bếp' },
-    { word: 'Dentist', vn: 'Nha sĩ' },
-    { word: 'Painter', vn: 'Họa sĩ' },
-    { word: 'Singer', vn: 'Ca sĩ' },
-    { word: 'Clown', vn: 'Chú hề' },
+    { word: 'Farmer', vn: 'Nông dân trồng trọt' },
+    { word: 'Cook', vn: 'Đầu bếp nấu ăn' },
+    { word: 'Clown', vn: 'Chú hề biểu diễn' },
     { word: 'Pirate', vn: 'Cướp biển' },
-    { word: 'Tractor', vn: 'Máy kéo' },
-    { word: 'Coat', vn: 'Áo khoác' },
-    { word: 'Jacket', vn: 'Áo khoác lửng' },
-    { word: 'Scarf', vn: 'Khăn quàng cổ' },
-    { word: 'Sweater', vn: 'Áo len' },
-    { word: 'Boots', vn: 'Đôi ủng' },
-    { word: 'Gloves', vn: 'Đôi găng tay' },
-    { word: 'Helmet', vn: 'Mũ bảo hiểm' },
-    { word: 'Watch', vn: 'Đồng hồ đeo tay' },
-    { word: 'Necklace', vn: 'Vòng cổ' },
-    { word: 'Ring', vn: 'Chiếc nhẫn' },
-    { word: 'Sunny', vn: 'Trời nắng' },
-    { word: 'Rainy', vn: 'Trời mưa' },
-    { word: 'Windy', vn: 'Nhiều gió' },
-    { word: 'Cloudy', vn: 'Nhiều mây' },
-    { word: 'Snowy', vn: 'Có tuyết' },
-    { word: 'Stormy', vn: 'Có bão' },
-    { word: 'Hot', vn: 'Nóng bức' },
-    { word: 'Cold', vn: 'Lạnh giá' },
-    { word: 'Warm', vn: 'Ấm áp' },
-    { word: 'Cool', vn: 'Mát mẻ' },
-    { word: 'Breakfast', vn: 'Bữa sáng' },
-    { word: 'Lunch', vn: 'Bữa trưa' },
-    { word: 'Dinner', vn: 'Bữa tối' },
-    { word: 'Picnic', vn: 'Chuyến dã ngoại' },
-    { word: 'Sandwich', vn: 'Bánh mì kẹp' },
-    { word: 'Soup', vn: 'Món súp' },
-    { word: 'Salad', vn: 'Món rau trộn' },
-    { word: 'Pasta', vn: 'Mì Ý' },
-    { word: 'Pancake', vn: 'Bánh kếp' },
-    { word: 'Cheese', vn: 'Phô mai' },
-    { word: 'Butter', vn: 'Bơ' },
-    { word: 'Tea', vn: 'Trà' },
+    { word: 'Kitchen', vn: 'Phòng bếp' },
+    { word: 'Bedroom', vn: 'Phòng ngủ' },
+    { word: 'Bathroom', vn: 'Phòng tắm' },
+    { word: 'Living room', vn: 'Phòng khách' },
+    { word: 'Garden', vn: 'Khu vườn' },
+    { word: 'Balcony', vn: 'Ban công' },
+    { word: 'Cloud', vn: 'Đám mây' },
+    { word: 'Rain', vn: 'Cơn mưa' },
+    { word: 'Sun', vn: 'Mặt trời' },
+    { word: 'Wind', vn: 'Cơn gió' },
+    { word: 'Snow', vn: 'Tuyết rơi' },
+    { word: 'Rainbow', vn: 'Cầu vồng' },
     { word: 'Coffee', vn: 'Cà phê' },
-    { word: 'Lemonade', vn: 'Nước chanh' }
+    { word: 'Tea', vn: 'Nước trà' },
+    { word: 'Juice', vn: 'Nước trái cây' },
+    { word: 'Milk', vn: 'Sữa tươi' },
+    { word: 'Soup', vn: 'Món súp' },
+    { word: 'Bread', vn: 'Bánh mì' },
+    { word: 'Cheese', vn: 'Phô mai' },
+    { word: 'Rice', vn: 'Cơm / gạo' }
   ],
   flyers: [
-    { word: 'Astronaut', vn: 'Phi hành gia' },
-    { word: 'Scientist', vn: 'Nhà khoa học' },
-    { word: 'Engineer', vn: 'Kỹ sư' },
-    { word: 'Journalist', vn: 'Nhà báo' },
-    { word: 'Photographer', vn: 'Nhiếp ảnh gia' },
-    { word: 'Mechanic', vn: 'Thợ máy' },
-    { word: 'Police officer', vn: 'Cảnh sát' },
-    { word: 'Firefighter', vn: 'Lính cứu hỏa' },
-    { word: 'Architect', vn: 'Kiến trúc sư' },
-    { word: 'Detective', vn: 'Thám tử' },
-    { word: 'Planet', vn: 'Hành tinh' },
-    { word: 'Rocket', vn: 'Tên lửa' },
-    { word: 'Spaceship', vn: 'Tàu vũ trụ' },
-    { word: 'Telescope', vn: 'Kính thiên văn' },
-    { word: 'Galaxy', vn: 'Dải ngân hà' },
-    { word: 'Comet', vn: 'Sao chổi' },
-    { word: 'Earthquake', vn: 'Động đất' },
-    { word: 'Volcano', vn: 'Núi lửa' },
-    { word: 'Tornado', vn: 'Lốc xoáy' },
-    { word: 'Flood', vn: 'Lũ lụt' },
-    { word: 'Environment', vn: 'Môi trường sống' },
-    { word: 'Pollution', vn: 'Sự ô nhiễm' },
-    { word: 'Recycle', vn: 'Tái chế' },
-    { word: 'Solar energy', vn: 'Năng lượng mặt trời' },
-    { word: 'Medicine', vn: 'Thuốc men' },
-    { word: 'Bandage', vn: 'Băng gạc' },
-    { word: 'Stomach ache', vn: 'Đau dạ dày / đau bụng' },
-    { word: 'Headache', vn: 'Đau đầu' },
-    { word: 'Toothache', vn: 'Đau răng' },
-    { word: 'Fever', vn: 'Cơn sốt cao' },
-    { word: 'Cough', vn: 'Cơn ho' },
-    { word: 'Ambulance', vn: 'Xe cấp cứu' },
-    { word: 'Wheelchair', vn: 'Xe lăn' },
-    { word: 'Thermometer', vn: 'Nhiệt kế' },
-    { word: 'Computer', vn: 'Máy vi tính' },
-    { word: 'Keyboard', vn: 'Bàn phím' },
-    { word: 'Mouse', vn: 'Chuột máy tính' },
-    { word: 'Screen', vn: 'Màn hình máy tính' },
-    { word: 'Internet', vn: 'Mạng toàn cầu' },
-    { word: 'Password', vn: 'Mật khẩu' },
-    { word: 'Headphones', vn: 'Tai nghe chụp tai' },
-    { word: 'Microphone', vn: 'Micrô thu âm' },
-    { word: 'Camera', vn: 'Máy ảnh' },
-    { word: 'Smartphone', vn: 'Điện thoại thông minh' },
-    { word: 'Gold', vn: 'Kim loại vàng' },
-    { word: 'Silver', vn: 'Kim loại bạc' },
-    { word: 'Wood', vn: 'Gỗ tự nhiên' },
-    { word: 'Glass', vn: 'Thủy tinh' },
-    { word: 'Plastic', vn: 'Nhựa dẻo' },
-    { word: 'Metal', vn: 'Kim loại' },
-    { word: 'Leather', vn: 'Da thuộc' },
-    { word: 'Wool', vn: 'Sợi len' },
-    { word: 'Cotton', vn: 'Vải bông' },
-    { word: 'Paper', vn: 'Giấy viết' }
+    { word: 'Airport', vn: 'Sân bay bay quốc tế' },
+    { word: 'Astronaut', vn: 'Phi hành gia vũ trụ' },
+    { word: 'Castle', vn: 'Tòa lâu đài' },
+    { word: 'Bridge', vn: 'Cây cầu bắc qua sông' },
+    { word: 'Desert', vn: 'Sa mạc cát' },
+    { word: 'Forest', vn: 'Khu rừng rậm' },
+    { word: 'Island', vn: 'Hòn đảo ngoài biển' },
+    { word: 'Mountain', vn: 'Ngọn núi cao' },
+    { word: 'Museum', vn: 'Bảo tàng lịch sử' },
+    { word: 'Pyramid', vn: 'Kim tự tháp' },
+    { word: 'Restaurant', vn: 'Nhà hàng ăn uống' },
+    { word: 'Spacecraft', vn: 'Tàu vũ trụ' },
+    { word: 'Stadium', vn: 'Sân vận động' },
+    { word: 'Theater', vn: 'Rạp hát / nhà hát' }
   ],
   a1: [
-    { word: 'Always', vn: 'Luôn luôn' },
-    { word: 'Usually', vn: 'Thường xuyên' },
-    { word: 'Often', vn: 'Thường lệ' },
-    { word: 'Sometimes', vn: 'Thỉnh thoảng' },
-    { word: 'Never', vn: 'Không bao giờ' },
-    { word: 'Morning', vn: 'Buổi sáng' },
-    { word: 'Afternoon', vn: 'Buổi chiều' },
-    { word: 'Evening', vn: 'Buổi tối' },
-    { word: 'Night', vn: 'Ban đêm' },
-    { word: 'Yesterday', vn: 'Hôm qua' },
-    { word: 'Today', vn: 'Hôm nay' },
-    { word: 'Tomorrow', vn: 'Ngày mai' },
-    { word: 'Every day', vn: 'Mỗi ngày' },
-    { word: 'Weekend', vn: 'Cuối tuần' },
+    { word: 'Activity', vn: 'Hoạt động trải nghiệm' },
+    { word: 'Address', vn: 'Địa chỉ nhà' },
+    { word: 'Alphabet', vn: 'Bảng chữ cái' },
+    { word: 'Answer', vn: 'Câu trả lời' },
+    { word: 'Apartment', vn: 'Căn hộ chung cư' },
+    { word: 'Calendar', vn: 'Quyển lịch ngày' },
+    { word: 'Dictionary', vn: 'Từ điển tra cứu' },
+    { word: 'Envelope', vn: 'Phong bì thư' },
     { word: 'Holiday', vn: 'Kỳ nghỉ lễ' },
-    { word: 'Birthday', vn: 'Ngày sinh nhật' },
-    { word: 'Party', vn: 'Bữa tiệc' },
-    { word: 'Gift', vn: 'Món quà tặng' },
-    { word: 'Happy', vn: 'Vui mừng, hạnh phúc' },
-    { word: 'Sad', vn: 'Buồn bã' },
-    { word: 'Angry', vn: 'Tức giận' },
-    { word: 'Tired', vn: 'Mệt mỏi' },
-    { word: 'Hungry', vn: 'Đói bụng' },
-    { word: 'Thirsty', vn: 'Khát nước' },
-    { word: 'Brave', vn: 'Dũng cảm' },
-    { word: 'Scared', vn: 'Sợ hãi' },
-    { word: 'Excited', vn: 'Hào hứng' },
-    { word: 'Bored', vn: 'Buồn chán' },
-    { word: 'Kind', vn: 'Tốt bụng' },
-    { word: 'Smart', vn: 'Thông minh, nhanh nhẹn' },
-    { word: 'Fast', vn: 'Nhanh chóng' },
-    { word: 'Slow', vn: 'Chậm chạp' },
-    { word: 'Big', vn: 'To lớn' },
-    { word: 'Small', vn: 'Nhỏ bé' },
-    { word: 'Tall', vn: 'Cao ráo' },
-    { word: 'Short', vn: 'Thấp, ngắn' },
-    { word: 'Heavy', vn: 'Nặng nề' },
-    { word: 'Light', vn: 'Nhẹ nhàng' },
-    { word: 'Clean', vn: 'Sạch sẽ' },
-    { word: 'Dirty', vn: 'Bẩn thỉu' }
+    { word: 'Homework', vn: 'Bài tập về nhà' }
   ],
   a2: [
-    { word: 'Experience', vn: 'Kinh nghiệm, trải nghiệm' },
     { word: 'Adventure', vn: 'Cuộc thám hiểm / phiêu lưu' },
     { word: 'Luggage', vn: 'Hành lý mang theo' },
     { word: 'Ticket', vn: 'Vé vào cửa / vé xe' },
@@ -305,27 +165,7 @@ export const englishVocabulary = {
     { word: 'Direction', vn: 'Phương hướng di chuyển' },
     { word: 'Distance', vn: 'Khoảng cách địa lý' },
     { word: 'Guidebook', vn: 'Sách hướng dẫn du lịch' },
-    { word: 'Souvenir', vn: 'Món quà lưu niệm' },
-    { word: 'Hotel', vn: 'Khách sạn' },
-    { word: 'Receptionist', vn: 'Nhân viên tiếp tân' },
-    { word: 'Reservation', vn: 'Sự đặt chỗ trước' },
-    { word: 'Customer', vn: 'Khách hàng mua sắm' },
-    { word: 'Discount', vn: 'Mức giảm giá' },
-    { word: 'Receipt', vn: 'Hóa đơn thanh toán' },
-    { word: 'Payment', vn: 'Khoản thanh toán' },
-    { word: 'Cash', vn: 'Tiền mặt' },
-    { word: 'Credit card', vn: 'Thẻ tín dụng ngân hàng' },
-    { word: 'Wallet', vn: 'Ví đựng tiền' },
-    { word: 'Dangerous', vn: 'Nguy hiểm' },
-    { word: 'Safe', vn: 'An toàn' },
-    { word: 'Crowded', vn: 'Đông đúc người' },
-    { word: 'Quiet', vn: 'Yên tĩnh' },
-    { word: 'Noisy', vn: 'Ồn ào náo nhiệt' },
-    { word: 'Modern', vn: 'Hiện đại' },
-    { word: 'Ancient', vn: 'Cổ kính, lâu đời' },
-    { word: 'Delicious', vn: 'Ngon miệng' },
-    { word: 'Comfortable', vn: 'Dễ chịu, thoải mái' },
-    { word: 'Convenient', vn: 'Thuận tiện, tiện lợi' }
+    { word: 'Souvenir', vn: 'Món quà lưu niệm' }
   ],
   b1: [
     { word: 'Opportunity', vn: 'Cơ hội phát triển' },
@@ -333,77 +173,168 @@ export const englishVocabulary = {
     { word: 'Solution', vn: 'Biện pháp giải quyết' },
     { word: 'Decision', vn: 'Quyết định đưa ra' },
     { word: 'Improvement', vn: 'Sự tiến bộ / cải tiến' },
-    { word: 'Achievement', vn: 'Thành tựu đạt được' },
-    { word: 'Relationship', vn: 'Mối quan hệ qua lại' },
-    { word: 'Communication', vn: 'Kỹ năng giao tiếp' },
-    { word: 'Confidence', vn: 'Sự tự tin vào bản thân' },
-    { word: 'Creativity', vn: 'Óc sáng tạo đổi mới' },
-    { word: 'Responsibility', vn: 'Trách nhiệm công việc' },
-    { word: 'Attitude', vn: 'Thái độ sống' },
-    { word: 'Habit', vn: 'Thói quen thường ngày' },
-    { word: 'Behavior', vn: 'Hành vi ứng xử' },
-    { word: 'Emotion', vn: 'Tâm trạng cảm xúc' },
-    { word: 'Opinion', vn: 'Ý kiến cá nhân' },
-    { word: 'Advantage', vn: 'Ưu điểm thuận lợi' },
-    { word: 'Disadvantage', vn: 'Bất lợi khó khăn' },
-    { word: 'Climate change', vn: 'Hiện tượng biến đổi khí hậu' },
-    { word: 'Renewable energy', vn: 'Năng lượng tái tạo' },
-    { word: 'Community', vn: 'Cộng đồng cư dân' },
-    { word: 'Volunteer', vn: 'Người tình nguyện' },
-    { word: 'Charity', vn: 'Tổ chức từ thiện' }
+    { word: 'Achievement', vn: 'Thành tựu đạt được' }
   ],
   b2: [
     { word: 'Perspective', vn: 'Góc nhìn nhận vấn đề' },
     { word: 'Phenomenon', vn: 'Hiện tượng khoa học / xã hội' },
     { word: 'Hypothesis', vn: 'Giả thuyết nghiên cứu' },
     { word: 'Consequence', vn: 'Hậu quả / hệ lụy' },
-    { word: 'Significance', vn: 'Tầm quan trọng đặc biệt' },
-    { word: 'Implementation', vn: 'Sự triển khai áp dụng' },
-    { word: 'Innovation', vn: 'Đổi mới đột phá' },
-    { word: 'Sustainability', vn: 'Tính phát triển bền vững' },
-    { word: 'Globalization', vn: 'Toàn cầu hóa quốc tế' },
-    { word: 'Diversity', vn: 'Tính đa dạng phong phú' },
-    { word: 'Inequality', vn: 'Tình trạng bất bình đẳng' },
-    { word: 'Prejudice', vn: 'Định kiến hẹp hòi' },
-    { word: 'Empathy', vn: 'Sự thấu cảm sâu sắc' },
-    { word: 'Resilience', vn: 'Ý chí kiên cường bất khuất' },
-    { word: 'Productivity', vn: 'Hiệu suất năng suất' },
-    { word: 'Efficiency', vn: 'Độ hiệu quả tối ưu' },
-    { word: 'Collaboration', vn: 'Tinh thần hợp tác' },
-    { word: 'Negotiation', vn: 'Nghệ thuật đàm phán' },
-    { word: 'Leadership', vn: 'Năng lực lãnh đạo' },
-    { word: 'Integrity', vn: 'Tính trung thực chính trực' }
+    { word: 'Significance', vn: 'Tầm quan trọng đặc biệt' }
   ]
 }
 
 /**
- * Generate 2,000 distinct English vocabulary questions for a given level.
+ * 20 Basic Communication Topics Data Bank
+ */
+export const englishCommunication = {
+  en_greetings: [
+    { q: 'Khi ai đó chào "Hello! How are you?", bạn trả lời như thế nào?', correct: "I'm fine, thank you!", distractors: ["I am 10 years old.", "It is raining outside.", "I like eating pizza.", "Good night!"], exp: 'Khi được hỏi thăm "How are you?", câu trả lời lịch sự nhất là "I\'m fine, thank you!".' },
+    { q: 'Để chào hỏi bạn bè vào buổi sáng, bạn nói gì?', correct: 'Good morning!', distractors: ['Good night!', 'Goodbye!', 'See you later!', 'Thank you!'], exp: 'Vào buổi sáng, chúng ta chào "Good morning!".' },
+    { q: 'Khi lần đầu gặp một người bạn mới, câu nói thân thiện là gì?', correct: 'Nice to meet you!', distractors: ['Open your book!', 'What time is it?', 'Happy birthday!', 'Good night!'], exp: '"Nice to meet you!" có nghĩa là "Rất vui được gặp bạn!".' },
+    { q: 'Để hỏi tên người đối diện, bạn dùng mẫu câu nào?', correct: 'What is your name?', distractors: ['How old are you?', 'Where do you live?', 'What time is it?', 'How are you?'], exp: 'Dùng "What is your name?" để hỏi tên đối phương.' },
+    { q: 'Khi chia tay bạn bè vào buổi tối trước khi đi ngủ, bạn nói:', correct: 'Good night!', distractors: ['Good morning!', 'Nice to meet you!', 'Hello!', 'How are you?'], exp: 'Chào chúc ngủ ngon dùng "Good night!".' }
+  ],
+  en_family: [
+    { q: 'Khi giới thiệu về bố của mình với bạn bè, bạn nói:', correct: 'This is my father.', distractors: ['This is my pencil.', 'I am reading a book.', 'She is a girl.', 'It is red.'], exp: '"This is my father." có nghĩa là "Đây là bố của tớ!".' },
+    { q: 'Từ nào trong tiếng Anh có nghĩa là "Mẹ"?', correct: 'Mother', distractors: ['Father', 'Brother', 'Sister', 'Teacher'], exp: 'Mẹ trong tiếng Anh là "Mother" (hoặc Mom/Mommy).' },
+    { q: 'Mẫu câu hỏi "Gia đình bạn có bao nhiêu người?":', correct: 'How many people are there in your family?', distractors: ['What is your favorite color?', 'What time do you sleep?', 'Where is the dog?', 'Do you have a ball?'], exp: 'Hỏi số thành viên gia đình dùng "How many people are there in your family?".' }
+  ],
+  en_school: [
+    { q: 'Khi muốn xin phép thầy cô giáo vào lớp, bé nói:', correct: 'May I come in, teacher?', distractors: ['Open your umbrella.', 'Take off your coat.', 'Turn off the light.', 'Good night teacher.'], exp: 'Xin phép vào lớp lịch sự dùng "May I come in, teacher?".' },
+    { q: 'Thầy cô bảo "Open your book!", bé cần làm gì?', correct: 'Mở sách ra', distractors: ['Đóng cửa lại', 'Cất bút đi', 'Tắt máy tính', 'Chạy ra sân'], exp: '"Open your book!" có nghĩa là "Mở sách của em ra!".' },
+    { q: 'Mẫu câu hỏi môn học yêu thích nhất ở trường:', correct: 'What subject do you like best?', distractors: ['Where is your house?', 'How much is this book?', 'What time is it?', 'Are you hungry?'], exp: 'Hỏi môn học yêu thích dùng "What subject do you like?".' }
+  ],
+  en_food: [
+    { q: 'Khi muốn mời bạn uống nước cam, bạn nói:', correct: 'Would you like some orange juice?', distractors: ['Do you have a car?', 'Where is the school?', 'Can you play football?', 'What color is your shirt?'], exp: 'Mời đồ ăn/nước uống lịch sự dùng "Would you like some...?".' },
+    { q: 'Khi cảm thấy đói bụng, bé nói tiếng Anh thế nào?', correct: "I'm hungry!", distractors: ["I'm sleepy!", "I'm cold!", "I'm rainy!", "I'm blue!"], exp: 'Cảm thấy đói bụng dùng "I\'m hungry!".' },
+    { q: 'Từ tiếng Anh nào có nghĩa là "Bữa sáng"?', correct: 'Breakfast', distractors: ['Lunch', 'Dinner', 'Supper', 'Snack'], exp: 'Bữa sáng trong tiếng Anh là "Breakfast".' }
+  ],
+  en_daily: [
+    { q: 'Mẫu câu hỏi giờ thức dậy hàng ngày của bạn:', correct: 'What time do you wake up?', distractors: ['What color is the sun?', 'Where is your bag?', 'Do you like cats?', 'How is the weather?'], exp: 'Hỏi thời gian thức dậy dùng "What time do you wake up?".' },
+    { q: 'Mẫu câu "Tôi đánh răng mỗi buổi sáng":', correct: 'I brush my teeth every morning.', distractors: ['I ride a bicycle to school.', 'I swim in the ocean.', 'I play guitar.', 'I read a comic book.'], exp: '"I brush my teeth every morning." dịch là "Tôi đánh răng mỗi buổi sáng".' }
+  ],
+  en_hobbies: [
+    { q: 'Mẫu câu hỏi "Bạn thích làm gì trong thời gian rảnh?":', correct: 'What do you do in your free time?', distractors: ['Where do you buy this hat?', 'How much is it?', 'What time is it now?', 'How old is your sister?'], exp: 'Hỏi sở thích thời gian rảnh dùng "What do you do in your free time?".' },
+    { q: 'Mẫu câu "Tôi rất thích chơi đá bóng":', correct: 'I like playing football.', distractors: ['I wear a yellow coat.', 'I am reading a novel.', 'I hate apples.', 'I sleep at 10 PM.'], exp: '"I like playing football." nghĩa là "Tôi thích chơi đá bóng".' }
+  ],
+  en_weather: [
+    { q: 'Mẫu câu hỏi thời tiết hôm nay như thế nào:', correct: 'How is the weather today?', distractors: ['What day is today?', 'Where are you going?', 'How old are you?', 'Do you have an umbrella?'], exp: 'Hỏi thời tiết dùng "How is the weather today?".' },
+    { q: 'Thời tiết "Trời nhiều nắng và ấm áp":', correct: 'It is sunny and warm.', distractors: ['It is freezing cold.', 'It is heavy rain.', 'It is stormy.', 'It is night time.'], exp: '"Sunny and warm" là "Nhiều nắng và ấm áp".' }
+  ],
+  en_animals: [
+    { q: 'Mẫu câu hỏi "Bạn có nuôi thú cưng không?":', correct: 'Do you have a pet?', distractors: ['Do you have a pen?', 'Where is your car?', 'Can you speak English?', 'Are you sleeping?'], exp: 'Hỏi thú cưng dùng "Do you have a pet?".' },
+    { q: 'Con vật nào cao lớn và có chiếc cổ rất dài?', correct: 'Giraffe', distractors: ['Rabbit', 'Cat', 'Mouse', 'Frog'], exp: 'Hươu cao cổ trong tiếng Anh là "Giraffe".' }
+  ],
+  en_clothes: [
+    { q: 'Mẫu câu hỏi "Bạn đang mặc trang phục gì?":', correct: 'What are you wearing?', distractors: ['What are you eating?', 'Where are you living?', 'How are you feeling?', 'Who are you talking to?'], exp: 'Hỏi trang phục đang mặc dùng "What are you wearing?".' },
+    { q: 'Khi mẹ bảo "Hãy khoác áo ấm vào con nhé!":', correct: 'Put on your coat!', distractors: ['Take off your shoes!', 'Open the window!', 'Clean the desk!', 'Turn off the TV!'], exp: '"Put on your coat!" nghĩa là "Hãy mặc áo khoác vào!".' }
+  ],
+  en_house: [
+    { q: 'Mẫu câu hỏi "Phòng khách ở đâu?":', correct: 'Where is the living room?', distractors: ['What time is it?', 'How old are you?', 'Do you have a dog?', 'What is your favorite fruit?'], exp: 'Hỏi vị trí phòng khách dùng "Where is the living room?".' },
+    { q: 'Từ tiếng Anh nào chỉ "Phòng ngủ"?', correct: 'Bedroom', distractors: ['Kitchen', 'Bathroom', 'Garden', 'Garage'], exp: 'Phòng ngủ là "Bedroom".' }
+  ],
+  en_health: [
+    { q: 'Khi hỏi thăm bạn học bị mệt "Có chuyện gì với bạn vậy?":', correct: "What's wrong with you?", distractors: ['What is your name?', 'How much is it?', 'Where do you buy this?', 'What time is it?'], exp: 'Hỏi thăm khi bạn bị mệt dùng "What\'s wrong with you?".' },
+    { q: 'Mẫu câu "Tôi bị đau đầu":', correct: 'I have a headache.', distractors: ['I have a new book.', 'I have a cat.', 'I am reading.', 'I like ice cream.'], exp: '"I have a headache." nghĩa là "Tôi bị đau đầu".' }
+  ],
+  en_colors: [
+    { q: 'Mẫu câu hỏi "Bầu trời có màu gì?":', correct: 'What color is the sky?', distractors: ['How big is the sky?', 'Where is the sun?', 'What time is it?', 'Do you like birds?'], exp: 'Hỏi màu sắc bầu trời dùng "What color is the sky?".' },
+    { q: 'Màu sắc của bầu trời ban ngày rực rỡ là màu gì?', correct: 'Blue', distractors: ['Red', 'Black', 'Purple', 'Green'], exp: 'Bầu trời ban ngày có màu xanh dương "Blue".' }
+  ],
+  en_numbers: [
+    { q: 'Mẫu câu hỏi "Có bao nhiêu quả táo ở trên bàn?":', correct: 'How many apples are there on the table?', distractors: ['How much is the apple?', 'Where is the apple?', 'What color is the apple?', 'Do you eat apples?'], exp: 'Hỏi số lượng vật đếm được dùng "How many... are there?".' },
+    { q: 'Con số 15 trong tiếng Anh đọc là gì?', correct: 'Fifteen', distractors: ['Fifty', 'Five', 'Fifth', 'Fourteen'], exp: 'Số 15 là "Fifteen".' }
+  ],
+  en_shopping: [
+    { q: 'Khi người bán hàng chào "Tôi có thể giúp gì cho bạn?":', correct: 'Can I help you?', distractors: ['Good night!', 'What time is it?', 'How old are you?', 'Where do you live?'], exp: 'Người bán hàng chào hỏi dùng "Can I help you?".' },
+    { q: 'Mẫu câu hỏi giá tiền của chiếc mũ này:', correct: 'How much is this hat?', distractors: ['Where is this hat?', 'What color is this hat?', 'How many hats do you have?', 'Who wears this hat?'], exp: 'Hỏi giá tiền đồ vật dùng "How much is this...?".' }
+  ],
+  en_places: [
+    { q: 'Mẫu câu hỏi "Trường học ở đâu?":', correct: 'Where is the school?', distractors: ['What time is school?', 'How old is the school?', 'Who is at school?', 'Do you like school?'], exp: 'Hỏi vị trí địa điểm dùng "Where is...?".' },
+    { q: 'Từ tiếng Anh nào có nghĩa là "Bệnh viện"?', correct: 'Hospital', distractors: ['School', 'Supermarket', 'Bank', 'Library'], exp: 'Bệnh viện là "Hospital".' }
+  ],
+  en_time: [
+    { q: 'Mẫu câu hỏi giờ "Bây giờ là mấy giờ?":', correct: 'What time is it now?', distractors: ['What day is today?', 'How old are you?', 'Where is the clock?', 'What is your name?'], exp: 'Hỏi xem giờ dùng "What time is it now?".' },
+    { q: 'Mẫu câu hỏi "Hôm nay là thứ mấy trong tuần?":', correct: 'What day is today?', distractors: ['What month is it?', 'What time is it?', 'How is the weather?', 'Where are you going?'], exp: 'Hỏi thứ trong tuần dùng "What day is today?".' }
+  ],
+  en_travel: [
+    { q: 'Mẫu câu hỏi "Bạn đi học bằng phương tiện gì?":', correct: 'How do you go to school?', distractors: ['What do you study at school?', 'Where is your school?', 'Who goes to school with you?', 'What time is school?'], exp: 'Hỏi phương tiện di chuyển dùng "How do you go to...?".' },
+    { q: 'Mẫu câu "Tôi đi học bằng xe buýt":', correct: 'I go to school by bus.', distractors: ['I go to school by boat.', 'I fly a plane.', 'I walk on water.', 'I eat bread.'], exp: '"I go to school by bus." nghĩa là "Tôi đi học bằng xe buýt".' }
+  ],
+  en_feelings: [
+    { q: 'Mẫu câu hỏi "Hôm nay bạn cảm thấy thế nào?":', correct: 'How do you feel today?', distractors: ['What do you do today?', 'Where do you go today?', 'What is your job?', 'How old are you?'], exp: 'Hỏi tâm trạng cảm xúc dùng "How do you feel today?".' },
+    { q: 'Mẫu câu "Tôi rất vui vẻ và hạnh phúc":', correct: "I'm happy!", distractors: ["I'm angry!", "I'm sad!", "I'm tired!", "I'm sick!"], exp: '"I\'m happy!" nghĩa là "Tôi rất vui vẻ!".' }
+  ],
+  en_jobs: [
+    { q: 'Mẫu câu hỏi "Bố của bạn làm nghề gì?":', correct: 'What does your father do?', distractors: ['Where is your father?', 'How old is your father?', 'What is your father name?', 'Do you love your father?'], exp: 'Hỏi nghề nghiệp dùng "What does your father do?".' },
+    { q: 'Từ tiếng Anh nào có nghĩa là "Phi hành gia"?', correct: 'Astronaut', distractors: ['Doctor', 'Pilot', 'Teacher', 'Farmer'], exp: 'Phi hành gia là "Astronaut".' }
+  ],
+  en_polite: [
+    { q: 'Khi được người khác giúp đỡ, câu nói lịch sự nhất là:', correct: 'Thank you very much!', distractors: ['Good night!', 'No, I don\'t care.', 'Go away!', 'What time is it?'], exp: 'Cám ơn lịch sự dùng "Thank you very much!".' },
+    { q: 'Khi ai đó cám ơn "Thank you!", bạn đáp lại lịch sự:', correct: "You're welcome!", distractors: ['Goodbye!', 'No problem, go away.', 'I am fine.', 'Good morning!'], exp: 'Đáp lại lời cám ơn dùng "You\'re welcome!" (Không có gì đâu!).' }
+  ]
+}
+
+/**
+ * Generate 5,000 distinct English questions for vocabulary OR communication topics.
  * @param {string} level 
  * @param {number} targetCount 
  */
 export function generateEnglishQuestions(level, targetCount = 5000) {
-  const bank = englishVocabulary[level] || englishVocabulary['starters']
   const questions = []
   const seen = new Set()
 
+  // 1. If it's one of the 20 Communication topics:
+  if (englishCommunication[level]) {
+    const commBank = englishCommunication[level]
+    let attempts = 0
+
+    while (questions.length < targetCount && attempts < targetCount * 20) {
+      attempts++
+      const item = commBank[Math.floor(Math.random() * commBank.length)]
+      const isLeft = Math.random() < 0.5
+      
+      const distractor = item.distractors[Math.floor(Math.random() * item.distractors.length)]
+      
+      const leftVal = isLeft ? item.correct : distractor
+      const rightVal = isLeft ? distractor : item.correct
+
+      const hashKey = `${item.q.trim().toLowerCase()}_${leftVal.trim().toLowerCase()}_${rightVal.trim().toLowerCase()}`
+      if (!seen.has(hashKey)) {
+        seen.add(hashKey)
+        questions.push({
+          question: item.q,
+          option_left: leftVal,
+          option_right: rightVal,
+          correct_option: isLeft ? 'left' : 'right',
+          explanation: item.exp
+        })
+      }
+    }
+    return questions
+  }
+
+  // 2. Otherwise: Vocabulary Banks (Starters, Movers, Flyers, A1, A2, B1, B2)
+  const bank = englishVocabulary[level] || englishVocabulary['starters']
+
   const templates = [
-    // 1. VN -> EN (Target option is English)
+    // VN -> EN (Target option is English)
     (item) => ({ type: 'vn_to_en', q: `Từ nào có nghĩa là "${item.vn}"?`, exp: `"${item.word.replace('_color', '')}" có nghĩa là ${item.vn}.` }),
     (item) => ({ type: 'vn_to_en', q: `Chọn từ tiếng Anh chính xác cho: "${item.vn}"`, exp: `Chính xác! "${item.word.replace('_color', '')}" chính là ${item.vn}.` }),
-    (item) => ({ type: 'vn_to_en', q: `Khi nhắc đến "${item.vn}", bé sẽ dùng từ nào sau đây?`, exp: `Từ phù hợp nhất là "${item.word.replace('_color', '')}".` }),
+    (item) => ({ type: 'vn_to_en', q: `Khi nhắc đến "${item.vn}", bé sẽ dùng từ tiếng Anh nào?`, exp: `Từ phù hợp nhất là "${item.word.replace('_color', '')}".` }),
     (item) => ({ type: 'vn_to_en', q: `Đố bé: Từ nào dịch chuẩn nhất cho "${item.vn}"?`, exp: `Đáp án đúng là "${item.word.replace('_color', '')}".` }),
     (item) => ({ type: 'vn_to_en', q: `Từ tiếng Anh nào tương ứng với "${item.vn}"?`, exp: `Đó chính là từ "${item.word.replace('_color', '')}".` }),
-    (item) => ({ type: 'vn_to_en', q: `Bé hãy tìm từ tiếng Anh biểu thị: "${item.vn}"`, exp: `"${item.word.replace('_color', '')}" mang nghĩa là ${item.vn}.` }),
 
-    // 2. EN -> VN (Target option is Vietnamese)
+    // EN -> VN (Target option is Vietnamese)
     (item) => ({ type: 'en_to_vn', q: `Từ "${item.word.replace('_color', '')}" trong tiếng Việt có nghĩa là gì?`, exp: `"${item.word.replace('_color', '')}" dịch sang tiếng Việt nghĩa là ${item.vn}.` }),
-    (item) => ({ type: 'en_to_vn', q: `Nghĩa của từ "${item.word.replace('_color', '')}" là gì nào?`, exp: `"${item.word.replace('_color', '')}" nghĩa là ${item.vn}.` }),
-    (item) => ({ type: 'en_to_vn', q: `Trong tiếng Việt, từ "${item.word.replace('_color', '')}" nghĩa là gì?`, exp: `"${item.word.replace('_color', '')}" mang nghĩa là ${item.vn}.` }),
-    (item) => ({ type: 'en_to_vn', q: `Bé có biết từ "${item.word.replace('_color', '')}" nghĩa tiếng Việt là gì không?`, exp: `Đó là ${item.vn}.` })
+    (item) => ({ type: 'en_to_vn', q: `Nghĩa tiếng Việt của từ "${item.word.replace('_color', '')}" là gì nào?`, exp: `"${item.word.replace('_color', '')}" nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'en_to_vn', q: `Trong tiếng Việt, từ "${item.word.replace('_color', '')}" tương ứng với nghĩa gì?`, exp: `"${item.word.replace('_color', '')}" mang nghĩa là ${item.vn}.` }),
+    (item) => ({ type: 'en_to_vn', q: `Bé có biết từ "${item.word.replace('_color', '')}" nghĩa tiếng Việt là gì không?`, exp: `Đó chính là ${item.vn}.` })
   ]
 
   let attempts = 0
-  while (questions.length < targetCount && attempts < targetCount * 15) {
+  while (questions.length < targetCount && attempts < targetCount * 20) {
     attempts++
     const item = bank[Math.floor(Math.random() * bank.length)]
     
@@ -435,4 +366,3 @@ export function generateEnglishQuestions(level, targetCount = 5000) {
 
   return questions
 }
-

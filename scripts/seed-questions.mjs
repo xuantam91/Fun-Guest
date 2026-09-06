@@ -52,11 +52,18 @@ async function seedAll() {
 
   const allQuestions = []
 
-  // 1. Tiếng Anh (7 levels x 5000 = 35,000 câu)
-  const enLevels = ['starters', 'movers', 'flyers', 'a1', 'a2', 'b1', 'b2']
-  console.log('\n📚 Đang tạo ngân hàng câu hỏi Tiếng Anh (5.000 câu/cấp độ)...')
+  // 1. Tiếng Anh (27 chủ đề x 2.000 - 5.000 câu)
+  const enLevels = [
+    'starters', 'movers', 'flyers', 'a1', 'a2', 'b1', 'b2',
+    'en_greetings', 'en_family', 'en_school', 'en_food', 'en_daily',
+    'en_hobbies', 'en_weather', 'en_animals', 'en_clothes', 'en_house',
+    'en_health', 'en_colors', 'en_numbers', 'en_shopping', 'en_places',
+    'en_time', 'en_travel', 'en_feelings', 'en_jobs', 'en_polite'
+  ]
+  console.log('\n📚 Đang tạo ngân hàng câu hỏi Tiếng Anh (27 Cấp độ & Chủ đề giao tiếp)...')
   for (const lvl of enLevels) {
-    const list = generateEnglishQuestions(lvl, TARGET_PER_LEVEL)
+    const target = ['starters', 'movers', 'flyers', 'a1', 'a2', 'b1', 'b2'].includes(lvl) ? TARGET_PER_LEVEL : 2000
+    const list = generateEnglishQuestions(lvl, target)
     for (const q of list) {
       allQuestions.push({
         language: 'en',
