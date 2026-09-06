@@ -31,11 +31,38 @@ function deduplicateQuestions(list) {
   const seen = new Set()
   return list.filter(q => {
     if (!q || !q.question) return false
-    const key = q.question.trim().toLowerCase()
+    const key = `${q.question.trim().toLowerCase()}_${(q.option_left || '').trim().toLowerCase()}_${(q.option_right || '').trim().toLowerCase()}`
     if (seen.has(key)) return false
     seen.add(key)
     return true
   })
+}
+
+/**
+ * Ensures returned questions list always has exactly the target count (10)
+ */
+function ensureTargetCount(list, targetCount = 10) {
+  if (!list || list.length === 0) return []
+  if (list.length >= targetCount) return list.slice(0, targetCount)
+
+  const padded = [...list]
+  let idx = 0
+  while (padded.length < targetCount) {
+    const base = list[idx % list.length]
+    const isSwap = Math.random() < 0.5
+    padded.push({
+      id: `${base.id || 'pad'}-${padded.length}`,
+      question: base.question,
+      option_left: isSwap ? base.option_right : base.option_left,
+      option_right: isSwap ? base.option_left : base.option_right,
+      correct_option: isSwap 
+        ? (base.correct_option === 'left' ? 'right' : 'left')
+        : base.correct_option,
+      explanation: base.explanation
+    })
+    idx++
+  }
+  return padded
 }
 
 export async function GET(request) {
@@ -51,62 +78,35 @@ export async function GET(request) {
       return NextResponse.json({ error: 'Ngôn ngữ hoặc môn học không hợp lệ.' }, { status: 400 })
     }
 
-    // 1. Fetch a broad random range from Supabase (up to 60 rows)
-    const offset = Math.floor(Math.random() * 50)
-
+    // 1. Query full pool for level from Supabase
     try {
       const { data: cachedQuestions, error: fetchError } = await supabaseAdmin
         .from('question_cache')
         .select('id, question, option_left, option_right, correct_option, explanation')
         .eq('language', lang)
         .eq('level', level)
-        .range(offset, offset + 60)
+        .limit(200)
 
       if (!fetchError && cachedQuestions && cachedQuestions.length > 0) {
-        // Filter out duplicate questions and shuffle
         const uniqueQuestions = deduplicateQuestions(cachedQuestions)
         const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
 
-        if (shuffled.length >= Math.min(count, 3)) {
-          return NextResponse.json({
-            questions: shuffled.slice(0, count),
-            refill: false,
-            source: 'cache'
-          })
-        }
+        return NextResponse.json({
+          questions: ensureTargetCount(shuffled, count),
+          refill: false,
+          source: 'cache'
+        })
       }
     } catch (dbErr) {
       console.warn('Cảnh báo DB Cache:', dbErr)
     }
 
-    // 2. Fallback: Query full level pool up to 80 rows
-    try {
-      const { data: fallbackDbData } = await supabaseAdmin
-        .from('question_cache')
-        .select('id, question, option_left, option_right, correct_option, explanation')
-        .eq('language', lang)
-        .eq('level', level)
-        .limit(80)
-
-      if (fallbackDbData && fallbackDbData.length > 0) {
-        const uniqueQuestions = deduplicateQuestions(fallbackDbData)
-        const shuffled = [...uniqueQuestions].sort(() => 0.5 - Math.random())
-        return NextResponse.json({
-          questions: shuffled.slice(0, count),
-          refill: false,
-          source: 'cache-fallback'
-        })
-      }
-    } catch (fbDbErr) {
-      console.warn('Cảnh báo DB Fallback:', fbDbErr)
-    }
-
-    // 3. Call Gemini API if cache is completely empty
+    // 2. Call Gemini API if cache is completely empty
     try {
       const newQuestions = await generateQuestionsFromGemini(lang, level, count, customKey)
       const uniqueNew = deduplicateQuestions(newQuestions)
       return NextResponse.json({
-        questions: uniqueNew.map((q, idx) => ({ id: `temp-${idx}`, ...q })),
+        questions: ensureTargetCount(uniqueNew.map((q, idx) => ({ id: `temp-${idx}`, ...q })), count),
         refill: false,
         source: 'gemini-direct'
       })
@@ -114,10 +114,10 @@ export async function GET(request) {
       console.error('Lỗi Gemini Direct:', geminiErr)
     }
 
-    // 4. Emergency Fallback
+    // 3. Emergency Fallback
     const list = emergencyFallbacks[lang] || emergencyFallbacks.vi || emergencyFallbacks.en
     return NextResponse.json({
-      questions: deduplicateQuestions(list),
+      questions: ensureTargetCount(deduplicateQuestions(list), count),
       refill: false,
       source: 'emergency-fallback'
     })

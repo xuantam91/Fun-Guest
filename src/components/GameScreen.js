@@ -186,13 +186,29 @@ export default function GameScreen({ language, level, onBackToLobby }) {
         const seenText = new Set()
         const uniqueList = rawList.filter(q => {
           if (!q || !q.question) return false
-          const key = q.question.trim().toLowerCase()
+          const key = `${q.question.trim().toLowerCase()}_${(q.option_left || '').trim().toLowerCase()}_${(q.option_right || '').trim().toLowerCase()}`
           if (seenText.has(key)) return false
           seenText.add(key)
           return true
         })
 
-        setQuestions(uniqueList)
+        // Guarantee 10 questions in fullList
+        const fullList = [...uniqueList]
+        let padIdx = 0
+        while (fullList.length < 10 && rawList.length > 0) {
+          const base = rawList[padIdx % rawList.length]
+          const isSwap = Math.random() < 0.5
+          fullList.push({
+            ...base,
+            id: `${base.id || 'pad'}-${fullList.length}`,
+            option_left: isSwap ? base.option_right : base.option_left,
+            option_right: isSwap ? base.option_left : base.option_right,
+            correct_option: isSwap ? (base.correct_option === 'left' ? 'right' : 'left') : base.correct_option
+          })
+          padIdx++
+        }
+
+        setQuestions(fullList.slice(0, 10))
         currentIndexRef.current = 0
         answeredRef.current = false
         
