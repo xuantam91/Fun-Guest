@@ -95,13 +95,13 @@
 
 @keyframes floatBee {
   0% {
-    transform: translate(0, 0) rotate(-5deg);
+    transform: translate(0, 0) scaleX(-1) rotate(-5deg);
   }
   50% {
-    transform: translate(40px, -30px) rotate(10deg);
+    transform: translate(40px, -30px) scaleX(-1) rotate(10deg);
   }
   100% {
-    transform: translate(-20px, 40px) rotate(-8deg);
+    transform: translate(-20px, 40px) scaleX(-1) rotate(-8deg);
   }
 }
 
@@ -112,15 +112,16 @@
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
 }
 
+/* Bird flies from Right (110vw) to Left (-10vw). 🐦 defaults facing Left, so scaleX(1) keeps it facing forward! */
 @keyframes flyBird {
   0% {
-    transform: translate(110vw, 15vh) scaleX(-1);
+    transform: translate(110vw, 15vh) scaleX(1);
   }
   50% {
-    transform: translate(50vw, 25vh) scaleX(-1) rotate(5deg);
+    transform: translate(50vw, 25vh) scaleX(1) rotate(-5deg);
   }
   100% {
-    transform: translate(-10vw, 10vh) scaleX(-1);
+    transform: translate(-10vw, 10vh) scaleX(1);
   }
 }
 
@@ -166,6 +167,7 @@
   }
 }
 
+/* Swimming from Left to Right (-10vw -> 110vw). Emojis default facing Left, so scaleX(-1) flips them to face RIGHT (FORWARD)! */
 .swimmingFish {
   position: absolute;
   font-size: 32px;
@@ -173,6 +175,19 @@
   animation: swimRight 16s linear infinite;
 }
 
+@keyframes swimRight {
+  0% {
+    transform: translateX(-10vw) translateY(0) scaleX(-1);
+  }
+  50% {
+    transform: translateX(50vw) translateY(-20px) scaleX(-1);
+  }
+  100% {
+    transform: translateX(110vw) translateY(10px) scaleX(-1);
+  }
+}
+
+/* Swimming from Right to Left (110vw -> -10vw). Emojis default facing Left, so scaleX(1) keeps them facing LEFT (FORWARD)! */
 .swimmingFishLeft {
   position: absolute;
   font-size: 32px;
@@ -180,27 +195,15 @@
   animation: swimLeft 18s linear infinite;
 }
 
-@keyframes swimRight {
-  0% {
-    transform: translateX(-10vw) translateY(0) scaleX(1);
-  }
-  50% {
-    transform: translateX(50vw) translateY(-20px) scaleX(1);
-  }
-  100% {
-    transform: translateX(110vw) translateY(10px) scaleX(1);
-  }
-}
-
 @keyframes swimLeft {
   0% {
-    transform: translateX(110vw) translateY(0) scaleX(-1);
+    transform: translateX(110vw) translateY(0) scaleX(1);
   }
   50% {
-    transform: translateX(50vw) translateY(20px) scaleX(-1);
+    transform: translateX(50vw) translateY(20px) scaleX(1);
   }
   100% {
-    transform: translateX(-10vw) translateY(-10px) scaleX(-1);
+    transform: translateX(-10vw) translateY(-10px) scaleX(1);
   }
 }
 
@@ -242,6 +245,7 @@
   }
 }
 
+/* Rocket flying Bottom-Left to Top-Right. 🚀 tip defaults Up-Left, so scaleX(-1) rotates tip to point UP-RIGHT (FORWARD)! */
 .rocket {
   position: absolute;
   font-size: 36px;
@@ -251,13 +255,13 @@
 
 @keyframes flyRocket {
   0% {
-    transform: translate(-10vw, 85vh) rotate(35deg) scale(0.8);
+    transform: translate(-10vw, 85vh) scaleX(-1) rotate(-15deg) scale(0.8);
   }
   50% {
-    transform: translate(50vw, 45vh) rotate(45deg) scale(1.1);
+    transform: translate(50vw, 45vh) scaleX(-1) rotate(-10deg) scale(1.1);
   }
   100% {
-    transform: translate(110vw, -10vh) rotate(35deg) scale(0.8);
+    transform: translate(110vw, -10vh) scaleX(-1) rotate(-15deg) scale(0.8);
   }
 }
 

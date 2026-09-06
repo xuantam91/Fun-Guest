@@ -82,9 +82,9 @@ export default function ThemeBackground({ theme = 'forest' }) {
 
       {/* Cute Peeking Forest Animals at Edges */}
       <div className={styles.forestAnimal} style={{ top: '14%', right: '2%', fontSize: 34 }}>🦉</div>
-      <div className={styles.forestAnimal} style={{ bottom: '12%', left: '2%', fontSize: 36 }}>🐿️</div>
+      <div className={styles.forestAnimal} style={{ bottom: '12%', left: '2%', fontSize: 36, transform: 'scaleX(-1)' }}>🐿️</div>
       <div className={styles.forestAnimal} style={{ bottom: '25%', right: '3%', fontSize: 32 }}>🦊</div>
-      <div className={styles.forestAnimal} style={{ top: '60%', left: '1%', fontSize: 34 }}>🐻</div>
+      <div className={styles.forestAnimal} style={{ top: '60%', left: '1%', fontSize: 34, transform: 'scaleX(-1)' }}>🐻</div>
     </div>
   )
 }
