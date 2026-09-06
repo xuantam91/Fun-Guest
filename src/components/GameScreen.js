@@ -64,6 +64,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
   const [showScoreboard, setShowScoreboard] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
   const [reportStatus, setReportStatus] = useState(null)
+  const [timeLeft, setTimeLeft] = useState(15) // 15 seconds per question
 
   const handleReportQuestion = async () => {
     if (!currentQuestion) return
@@ -222,7 +223,39 @@ export default function GameScreen({ language, level, onBackToLobby }) {
     }
   }, [currentIndex, questions, showCalibration, showScoreboard, language, ttsEngine, ttsGender])
 
-  // 3. Handle option charging (head tilting integration)
+  // 3. Question Countdown Timer (15s per question)
+  useEffect(() => {
+    if (answered || showCalibration || showExplanation || showScoreboard || loadingQuestions || questions.length === 0) {
+      return
+    }
+
+    setTimeLeft(15)
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          handleTimeOut()
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [currentIndex, questions, answered, showCalibration, showExplanation, showScoreboard, loadingQuestions])
+
+  const handleTimeOut = () => {
+    if (answeredRef.current) return
+    answeredRef.current = true
+    playIncorrectSound()
+    setShowExplanation(true)
+    const q = questions[currentIndexRef.current]
+    const correctText = q ? (q.correct_option === 'left' ? q.option_left : q.option_right) : ''
+    speakText(`Hết giờ rồi bé ơi! Đáp án đúng là: ${correctText}. ${q?.explanation || ''}`, language, ttsEngine, ttsGender)
+  }
+
+  // 4. Handle option charging (head tilting integration)
   useEffect(() => {
     // If touch mode is active, or already answered / in calibration / scoreboard, disable head tilt charging!
     if (isTouchMode || answered || showCalibration || showScoreboard || loadingQuestions || questions.length === 0) {
@@ -481,15 +514,23 @@ export default function GameScreen({ language, level, onBackToLobby }) {
           />
         </div>
 
-        <div className={styles.scoreBadge}>
-          <Trophy size={16} fill="var(--accent-color)" color="var(--accent-color)" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-          <span>{sessionPoints} điểm</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Cute Hourglass Timer */}
+          <div className={`${styles.hourglassTimer} ${timeLeft <= 5 ? styles.hourglassWarning : ''}`} title="Đồng hồ cát đếm ngược">
+            <span className={styles.hourglassIcon}>⏳</span>
+            <span>{timeLeft}s</span>
+          </div>
+
+          <div className={styles.scoreBadge}>
+            <Trophy size={16} fill="var(--accent-color)" color="var(--accent-color)" style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+            <span>{sessionPoints} điểm</span>
+          </div>
         </div>
       </header>
 
       {/* Question Box */}
       {currentQuestion && (
-        <section className={styles.questionBox}>
+        <section className={`${styles.questionBox} ${theme === 'sea' ? styles.seaQuestionBox : theme === 'space' ? styles.spaceQuestionBox : styles.forestQuestionBox}`}>
           <span className={styles.themeTag}>
             {theme === 'sea' ? '🌊 ĐẠI DƯƠNG BAO LA 🫧' : theme === 'space' ? '🚀 VŨ TRỤ BAO LA 🪐' : '🌴 RỪNG XANH KỲ DIỆU 🍃'}
           </span>
@@ -514,7 +555,9 @@ export default function GameScreen({ language, level, onBackToLobby }) {
             }`}
             onClick={() => !answered && handleAnswer('left')}
           >
-            <span className={styles.optionLabel}>Nghiêng Trái 👈</span>
+            <span className={styles.optionLabel}>
+              {theme === 'sea' ? '🐠 Nghiêng Trái 👈' : theme === 'space' ? '🚀 Nghiêng Trái 👈' : '🍃 Nghiêng Trái 👈'}
+            </span>
             <span className={styles.optionText}>{currentQuestion.option_left}</span>
             {selectedOption === 'left' && !answered && (
               <svg className={styles.borderProgressSvg}>
@@ -540,7 +583,7 @@ export default function GameScreen({ language, level, onBackToLobby }) {
 
           {/* Center Webcam Preview */}
           <div className={styles.centerCamera}>
-            <CameraView tracker={tracker} isTouchMode={isTouchMode} avatar={avatar} />
+            <CameraView tracker={tracker} isTouchMode={isTouchMode} avatar={avatar} theme={theme} />
             <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', margin: 0, textAlign: 'center' }}>
               {isTouchMode
                 ? '👆 Chế độ cảm ứng tay (Bé chạm vào đáp án nhé!)'
@@ -559,7 +602,9 @@ export default function GameScreen({ language, level, onBackToLobby }) {
             }`}
             onClick={() => !answered && handleAnswer('right')}
           >
-            <span className={styles.optionLabel}>Nghiêng Phải 👉</span>
+            <span className={styles.optionLabel}>
+              {theme === 'sea' ? '🐙 Nghiêng Phải 👉' : theme === 'space' ? '🪐 Nghiêng Phải 👉' : '🌿 Nghiêng Phải 👉'}
+            </span>
             <span className={styles.optionText}>{currentQuestion.option_right}</span>
             {selectedOption === 'right' && !answered && (
               <svg className={styles.borderProgressSvg}>

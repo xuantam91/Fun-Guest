@@ -61,16 +61,75 @@
   border: 2px solid var(--card-border);
 }
 
+/* Hourglass Countdown Timer Widget */
+.hourglassTimer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--card-bg);
+  border: 2px solid var(--card-border);
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.hourglassIcon {
+  font-size: 18px;
+  display: inline-block;
+  animation: floatHourglass 2s ease-in-out infinite alternate;
+}
+
+@keyframes floatHourglass {
+  0% { transform: rotate(-12deg) scale(0.95); }
+  100% { transform: rotate(12deg) scale(1.15); }
+}
+
+.hourglassWarning {
+  border-color: #ff6b6b !important;
+  color: #e03131 !important;
+  background-color: #ffe3e3 !important;
+  animation: pulseWarning 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulseWarning {
+  0% { transform: scale(1); box-shadow: 0 0 8px #ff6b6b; }
+  100% { transform: scale(1.08); box-shadow: 0 0 20px #ff6b6b; }
+}
+
 /* Question Area */
 .questionBox {
   background: var(--card-bg);
-  border: 3px solid var(--card-border);
-  border-radius: 24px;
-  padding: 24px;
+  border: 3.5px solid var(--card-border);
+  border-radius: 26px;
+  padding: 26px;
   text-align: center;
   box-shadow: var(--shadow);
   margin-bottom: 24px;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Theme Question Boxes */
+.forestQuestionBox {
+  background: linear-gradient(135deg, rgba(234, 249, 231, 0.95), rgba(249, 251, 231, 0.95)) !important;
+  border: 3.5px solid #55a630 !important;
+  box-shadow: 0 10px 30px rgba(44, 74, 36, 0.15), inset 0 0 15px rgba(85, 166, 48, 0.1) !important;
+}
+
+.seaQuestionBox {
+  background: linear-gradient(135deg, rgba(224, 242, 254, 0.95), rgba(240, 253, 244, 0.95)) !important;
+  border: 3.5px solid #0284c7 !important;
+  box-shadow: 0 10px 30px rgba(12, 74, 110, 0.18), inset 0 0 15px rgba(2, 132, 199, 0.12) !important;
+}
+
+.spaceQuestionBox {
+  background: linear-gradient(135deg, rgba(250, 245, 255, 0.95), rgba(253, 242, 248, 0.95)) !important;
+  border: 3.5px solid #9333ea !important;
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.2), inset 0 0 15px rgba(168, 85, 247, 0.15) !important;
 }
 
 .questionText {

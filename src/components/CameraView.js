@@ -3,7 +3,7 @@ import styles from './CameraView.module.css'
 import { AlertCircle } from 'lucide-react'
 import { AvatarImage } from './Avatars'
 
-export default function CameraView({ tracker, isTouchMode = false, avatar = 'dino' }) {
+export default function CameraView({ tracker, isTouchMode = false, avatar = 'dino', theme = 'forest' }) {
   const {
     videoRef,
     isLoading,
@@ -12,6 +12,9 @@ export default function CameraView({ tracker, isTouchMode = false, avatar = 'din
     tiltDirection,
     faceDetected
   } = tracker
+
+  // Theme border class
+  const themeClass = theme === 'sea' ? styles.seaCameraContainer : theme === 'space' ? styles.spaceCameraContainer : styles.forestCameraContainer
 
   // Border status class logic:
   // Green (Ready): Touch Mode OR Face Detected
@@ -29,7 +32,7 @@ export default function CameraView({ tracker, isTouchMode = false, avatar = 'din
   }
 
   return (
-    <div className={`${styles.cameraContainer} ${statusBorderClass}`}>
+    <div className={`${styles.cameraContainer} ${themeClass} ${statusBorderClass}`}>
       {isTouchMode ? (
         <div className={styles.touchAvatarWrap}>
           <AvatarImage id={avatar} size={110} />
