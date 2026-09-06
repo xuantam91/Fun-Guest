@@ -196,126 +196,119 @@ export default function Dashboard({ onSelectLevel }) {
 
       {/* 1. Header Section */}
       <header className={styles.header}>
-        <div className={styles.brand}>
-          <img 
-            src="/logo.svg" 
-            alt="Globy Logo" 
-            width={52} 
-            height={52} 
-            style={{ 
-              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.12))', 
-              animation: 'float 3s ease-in-out infinite',
-              flexShrink: 0
-            }} 
-          />
-          <div>
-            <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-              <span>GLOBY Fun Quest</span>
-              <span style={{ fontSize: '11px', fontWeight: 800, padding: '3px 9px', borderRadius: '14px', background: 'var(--bg-gradient)', border: '1.5px solid var(--card-border)', color: 'var(--primary-color)', letterSpacing: '0.5px' }}>
-                {theme === 'sea' ? '🌊 ĐẠI DƯƠNG BAO LA' : theme === 'space' ? '🚀 VŨ TRỤ BAO LA' : '🌴 RỪNG XANH KỲ DIỆU'}
-              </span>
-            </h1>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0, display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-              <span>Chào mừng</span>
-              <AvatarImage id={avatar} size={22} />
-              <strong style={{ color: 'var(--text-color)' }}>
-                {profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Bé Thám Hiểm'}!
-              </strong>
-              <button 
-                onClick={handleOpenProfileModal}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--primary-color, #55a630)',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                  padding: '0 2px'
-                }}
-                title="Bấm để đổi tên hoặc avatar"
-              >
-                ✏️ Đổi tên/Avatar
-              </button>
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.stats}>
-          {/* Streak */}
-          <div className={styles.statItem} title="Chuỗi ngày học liên tục!">
-            <Flame size={18} color="#ff922b" fill="#ff922b" />
-            <span className={styles.statValue}>{streak} ngày</span>
+        {/* Row 1: Brand Logo & Title on Left | Guide & Auth Buttons on Right */}
+        <div className={styles.headerRowTop}>
+          <div className={styles.brand}>
+            <img 
+              src="/logo.svg" 
+              alt="Globy Logo" 
+              width={46} 
+              height={46} 
+              className={styles.brandLogo}
+            />
+            <div>
+              <h1 className={styles.title}>
+                <span>GLOBY Fun Quest</span>
+                <span className={styles.themeBadge}>
+                  {theme === 'sea' ? '🌊 ĐẠI DƯƠNG' : theme === 'space' ? '🚀 VŨ TRỤ' : '🌴 RỪNG XANH'}
+                </span>
+              </h1>
+            </div>
           </div>
 
-          {/* Points */}
-          <div className={styles.statItem} title="Tổng điểm của bé">
-            <Trophy size={18} color="#fcc419" fill="#fcc419" />
-            <span className={styles.statValue}>{score} đ</span>
-          </div>
-
-          {/* Header Action Buttons: Profile Edit, Guide, Key & Auth */}
-          <div className={styles.headerActions}>
-            {/* Profile Edit Button */}
-            <button 
-              className={styles.iconHeaderBtn} 
-              onClick={handleOpenProfileModal}
-              title="Đổi Tên & Chọn Avatar cho Bé"
-            >
-              <Smile size={17} />
-            </button>
-
+          <div className={styles.headerTopActions}>
             {/* Guide Button */}
             <button 
               className={styles.guideHeaderBtn} 
               onClick={() => setShowGuideModal(true)}
               title="Hướng dẫn cách chơi cho bé"
             >
-              <BookOpen size={16} color="var(--primary-color)" />
+              <BookOpen size={15} color="var(--primary-color)" />
               <span className={styles.guideBtnText}>Hướng Dẫn</span>
             </button>
 
-            {/* Gemini API Key Button */}
-            <button 
-              className={styles.iconHeaderBtn} 
-              onClick={() => setShowKeyModal(true)}
-              title={customApiKey ? "Đang dùng Gemini API Key cá nhân" : "Cấu hình Gemini API Key"}
-            >
-              {customApiKey && <span className={styles.activeIndicatorDot} />}
-              <Key size={17} />
-            </button>
-
-            {/* Voice Engine Selector Button (Microsoft Neural AI vs Browser) */}
-            <button 
-              className={styles.iconHeaderBtn} 
-              onClick={() => setShowVoiceModal(true)}
-              title={ttsEngine === 'ms' ? "Đang chọn: Giọng đọc Microsoft AI Neural (Siêu tự nhiên)" : "Đang chọn: Giọng đọc Mặc định Trình duyệt"}
-            >
-              {ttsEngine === 'ms' && <span className={styles.activeIndicatorDot} style={{ background: '#339af0', boxShadow: '0 0 6px #339af0' }} />}
-              <Volume2 size={17} />
-            </button>
-
-            {/* Background Ambient Audio Toggle Button */}
-            <button 
-              className={styles.iconHeaderBtn} 
-              onClick={toggleBgMusic}
-              title={bgMusicEnabled ? "Đang bật Âm thanh nền chủ đề (Bấm để Tắt)" : "Âm thanh nền đang Tắt (Bấm để Bật)"}
-            >
-              {bgMusicEnabled && <span className={styles.activeIndicatorDot} style={{ background: '#51cf66', boxShadow: '0 0 6px #51cf66' }} />}
-              {bgMusicEnabled ? <Music size={17} color="var(--primary-color)" /> : <VolumeX size={17} color="#888" />}
-            </button>
-
-            {/* Auth Button */}
+            {/* Auth Login / Logout Button - ALWAYS PROMINENT & VISIBLE */}
             {user ? (
               <button className={styles.logoutBtn} onClick={logout} title="Đăng xuất tài khoản">
-                <LogOut size={16} />
+                <LogOut size={15} />
+                <span className={styles.authBtnText}>Thoát</span>
               </button>
             ) : (
-              <button className="playful-btn playful-btn-secondary" onClick={loginWithGoogle} style={{ fontSize: '13px', padding: '7px 14px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <LogIn size={14} />
+              <button className={styles.loginBtn} onClick={loginWithGoogle} title="Đăng nhập tài khoản Google">
+                <LogIn size={15} />
                 <span>Đăng nhập</span>
               </button>
             )}
+          </div>
+        </div>
+
+        {/* Row 2: User Greeting on Left | Stats & Settings Icons on Right */}
+        <div className={styles.headerRowBottom}>
+          <div className={styles.userGreetingBar}>
+            <AvatarImage id={avatar} size={24} />
+            <strong className={styles.userName}>
+              {profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Bé Thám Hiểm'}!
+            </strong>
+            <button 
+              onClick={handleOpenProfileModal}
+              className={styles.editProfileBtn}
+              title="Bấm để đổi tên hoặc avatar"
+            >
+              ✏️ Đổi tên
+            </button>
+          </div>
+
+          <div className={styles.statsAndIconsGroup}>
+            {/* Streak & Score */}
+            <div className={styles.statBadgesGroup}>
+              <div className={styles.statItem} title="Chuỗi ngày học liên tục!">
+                <Flame size={15} color="#ff922b" fill="#ff922b" />
+                <span className={styles.statValue}>{streak}d</span>
+              </div>
+
+              <div className={styles.statItem} title="Tổng điểm của bé">
+                <Trophy size={15} color="#fcc419" fill="#fcc419" />
+                <span className={styles.statValue}>{score}đ</span>
+              </div>
+            </div>
+
+            {/* Quick Action Icon Buttons */}
+            <div className={styles.controlIconGroup}>
+              <button 
+                className={styles.iconHeaderBtn} 
+                onClick={handleOpenProfileModal}
+                title="Đổi Tên & Chọn Avatar cho Bé"
+              >
+                <Smile size={16} />
+              </button>
+
+              <button 
+                className={styles.iconHeaderBtn} 
+                onClick={() => setShowKeyModal(true)}
+                title={customApiKey ? "Đang dùng Gemini API Key cá nhân" : "Cấu hình Gemini API Key"}
+              >
+                {customApiKey && <span className={styles.activeIndicatorDot} />}
+                <Key size={16} />
+              </button>
+
+              <button 
+                className={styles.iconHeaderBtn} 
+                onClick={() => setShowVoiceModal(true)}
+                title={ttsEngine === 'ms' ? "Đang chọn: Giọng đọc Microsoft AI Neural" : "Đang chọn: Giọng đọc Mặc định Trình duyệt"}
+              >
+                {ttsEngine === 'ms' && <span className={styles.activeIndicatorDot} style={{ background: '#339af0', boxShadow: '0 0 6px #339af0' }} />}
+                <Volume2 size={16} />
+              </button>
+
+              <button 
+                className={styles.iconHeaderBtn} 
+                onClick={toggleBgMusic}
+                title={bgMusicEnabled ? "Đang bật Âm thanh nền chủ đề (Bấm để Tắt)" : "Âm thanh nền đang Tắt (Bấm để Bật)"}
+              >
+                {bgMusicEnabled && <span className={styles.activeIndicatorDot} style={{ background: '#51cf66', boxShadow: '0 0 6px #51cf66' }} />}
+                {bgMusicEnabled ? <Music size={16} color="var(--primary-color)" /> : <VolumeX size={16} color="#888" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>

@@ -8,69 +8,230 @@
 /* Header styling */
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   background: var(--card-bg);
-  border: 3px solid var(--card-border);
+  border: 3.5px solid var(--card-border);
   border-radius: 24px;
-  padding: 14px 20px;
+  padding: 14px 18px;
   margin-bottom: 16px;
   box-shadow: var(--shadow);
   transition: all 0.3s ease;
 }
 
-@media (max-width: 640px) {
-  .header {
-    padding: 12px 14px;
-    border-radius: 20px;
-  }
-  .title {
-    font-size: 22px !important;
-  }
-  .stats {
-    gap: 8px !important;
-  }
-  .statItem {
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    border-radius: 12px !important;
-  }
+/* Header Row Top: Logo/Title + Auth/Guide Buttons */
+.headerRowTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+}
+
+.brandLogo {
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+  animation: float 3s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .title {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 800;
   color: var(--primary-color);
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.stats {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.themeBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: var(--bg-gradient);
+  border: 1.5px solid var(--card-border);
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.headerTopActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.loginBtn {
+  background: linear-gradient(135deg, #ff922b, #fcc419);
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 146, 43, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(255, 146, 43, 0.4);
+}
+
+.logoutBtn {
+  background: rgba(255, 107, 107, 0.12);
+  color: #e03131;
+  border: 1.5px solid #ff8787;
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.logoutBtn:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+/* Header Row Bottom: User greeting + Stats & Settings Icons */
+.headerRowBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-top: 1.5px dashed var(--card-border);
+  padding-top: 8px;
+  width: 100%;
+}
+
+.userGreetingBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+.userName {
+  font-weight: 800;
+  color: var(--text-color);
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editProfileBtn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 2px;
+  white-space: nowrap;
+}
+
+.statsAndIconsGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statBadgesGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.controlIconGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .statItem {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background-color: var(--bg-gradient);
-  padding: 8px 14px;
-  border-radius: 16px;
+  padding: 6px 12px;
+  border-radius: 14px;
   font-weight: 700;
-  border: 2px solid var(--card-border);
+  border: 1.5px solid var(--card-border);
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .statValue {
   color: var(--primary-color);
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 10px 12px;
+    border-radius: 18px;
+    gap: 8px;
+  }
+  .title {
+    font-size: 17px !important;
+    gap: 4px !important;
+  }
+  .themeBadge {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+  }
+  .brandLogo {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  .headerRowBottom {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .statsAndIconsGroup {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .guideBtnText {
+    display: none;
+  }
+  .guideHeaderBtn {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    border-radius: 16px !important;
+  }
+  .loginBtn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    border-radius: 16px !important;
+  }
+  .iconHeaderBtn {
+    width: 32px !important;
+    height: 32px !important;
+  }
 }
 
 /* Category Navigation Pill Tabs */
